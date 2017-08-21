@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+  <title> Stat 36-315 </title>
+
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/main.css">
+  
+  <style>
+  .dropbtn {
+    color: #0000EE;
+    cursor: pointer;
+  }
+
+  .dropbtn:hover, .dropbtn:focus {
+    color: #551A8B;
+    text-decoration:underline;
+  }
+
+
+
+  .dropdown-content {
+    display: none;
+    min-width: 140px;
+    overflow: auto;
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    color: #0000EE;
+    padding: 0px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown a:hover {
+    color: #551A8B;
+    text-decoration:underline;
+  }
+
+
+  .show {display:block;}
+
+  </style>
+
+</head>
+
+
+<body style="max-width:900px">
+
+  <script>
+  /* When the user clicks on the button, 
+  toggle between hiding and showing the dropdown content */
+  function mydropdownFunction() {
+      document.getElementById("myDropdown").classList.toggle("show");
+  }
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+
+      var dropdowns = document.getElementsByClassName("dropdown-content");
+      var i;
+      for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+  </script>
+
+
+
+  <div class = "container-fluid" style = "float:center">
+    <div class = "row" style = "float:center">
+      
+      
+
+      <div class = "col-xs-12 col-md-6 right">
+        <h2>
+          <a href = "" style="color:black">
+          Statistics 36-315
+          </a>
+        </h2>
+        <p>
+          Statistical Graphics 
+          <br>
+          and Visualization
+          <hr>
+          
+          <div>
+            <a href = "#", class = "dropbtn">
+              Syllabus
+            </a>
+          </div>
+
+          <div class = "dropdown">
+            <div onclick ="mydropdownFunction()" class = "dropbtn">
+              Lectures
+            </div>
+            <div id = "myDropdown" class = "dropdown-content">
+            <a href = "lectures/lecture1.html"> Lecture 1 </a>
+            <a href = "#"> Lecture 2 </a>
+
+            </div>
+          </div>
+          
+
+
+        </p>
+        <hr>
+
+        <div style = "float:center">
+          <center>
+          <a href="https://piazza.com/class/j2huf8frzlx1j2" target="_blank">
+            <img src = "../images/external_links/piazza_color.png", width = "35", height = "35">
+          </a>
+        
+          <a href="https://cmu.instructure.com/courses/541" target="_blank" >
+            <img src ="../images/external_links/canvas_color.png", width = "35", height = "35" >
+          </a>
+          <center>
+        </div>
+      </div>
+
+        <div class = "clearfix visible-xs"></div>
+
+      <div class = "col-xs-12 col-md-6 center">
+        <img src="../images/pittsburgh_mt_washington.jpg" width="400" height="240" title="Mount Washington, PA">
+
+        <a href = "../pages/teaching.html" style = "float:right"> &larr; Teaching </a>
+      </div>  
+
+    </div>
+  </div>
+
+
+
+
+</body>
+
+
+</html>
