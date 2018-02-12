@@ -3,6 +3,21 @@
 
 
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+		$(window).resize(function(){
+
+	    $('.container').css({
+	        position:'absolute',
+	        left: ($(window).width() - $('.container').outerWidth())/2,
+	        top: ($(window).height() - $('.container').outerHeight())/2
+	    });
+
+	});
+
+	<title> About </title>
+	$(window).resize();
+
+	</script>
 	<title> Teaching </title>
 
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap/css/bootstrap-theme.min.css">
@@ -14,90 +29,90 @@
 </head>
 
 
-<body style="max-width:900px">
-
-	<div class = "container-fluid" style = "float:center">
-		<div class = "row" style = "float:center">
-			
-			
-
-			<div class = "col-xs-12 col-md-6 right">
-				<h2>
-					<a href = "../index.html" style="color:black">
-					Benjamin LeRoy
-					</a>
-				</h2>
-				<p>
-					Doctoral Student
-					<br>
-					Statistics and Data Science
-					<br>
-					Carnegie Mellon University
-					<hr>
-					
-					<div>
-						<a href = "about.html">
-							About
-						</a>
-					</div>
-					
-					<div>
-						<a href = "#">
-							Teaching
-						</a>
-					</div>
-
-					<div>
-						<a href = "cv.html">
-							Resume/CV
-						</a>
-					</div> 
-				</p>
-				<hr>
-				<p>
-				Contact: <a href="mailto:bpleroy@stat.cmu.edu" data-external="true">bpleroy@stat.cmu.edu</a>
-				</p>
-				<div style = "float:center">
-					<center>
-					<a href="https://github.com/benjaminleroy" target="_blank">
-						<img src = "../images/external_links/Github.png", width = "35", height = "35">
-					</a>
+<body>
+	<div class="container">
+		<div class = "container-fluid" style = "float:center">
+			<div class = "row" style = "float:center">
 				
-					<a href="https://www.linkedin.com/in/benjamin-leroy-b5640344/" target="_blank" >
-						<img src ="../images/external_links/Linkedin.png", width = "35", height = "35" >
-					</a>
-					<center>
+				
+
+				<div class = "col-xs-12 col-md-6 right">
+					<h2>
+						<a href = "../index.html" style="color:black">
+						Benjamin LeRoy
+						</a>
+					</h2>
+					<p>
+						Doctoral Student
+						<br>
+						Statistics and Data Science
+						<br>
+						Carnegie Mellon University
+						<hr>
+						
+						<div>
+							<a href = "about.html">
+								About
+							</a>
+						</div>
+						
+						<div>
+							<a href = "#">
+								Teaching
+							</a>
+						</div>
+
+						<div>
+							<a href = "cv.html">
+								Resume/CV
+							</a>
+						</div> 
+					</p>
+					<hr>
+					<p>
+					Contact: <a href="mailto:bpleroy@stat.cmu.edu" data-external="true">bpleroy@stat.cmu.edu</a>
+					</p>
+					<div style = "float:center">
+						<center>
+						<a href="https://github.com/benjaminleroy" target="_blank">
+							<img src = "../images/external_links/Github.png", width = "35", height = "35">
+						</a>
+					
+						<a href="https://www.linkedin.com/in/benjamin-leroy-b5640344/" target="_blank" >
+							<img src ="../images/external_links/Linkedin.png", width = "35", height = "35" >
+						</a>
+						</center>
+					</div>
 				</div>
+
+	    		<div class = "clearfix visible-xs"></div>
+
+				<div class = "col-xs-12 col-md-6 center">
+
+				<h3> Teaching </h3>
+				<p style = "font-size:90%">
+				<!-- I am currently a Teaching Assistant for 36-315 with Professor Matey Neykov. -->
+
+				</p>
+
+				<p style = "font-size:90%">
+				Currently I am TAing for <a href = "http://www.stat.cmu.edu/people/faculty/mgsell">Max G'Sell</a> in <a href = "https://www.cmu.edu/mscf/">MSCF's</a> <b>46-926 Statistics and Machine Learning I and II</b> where I am assisting in converting the class into <tt>python</tt> from <tt>R</tt>.
+
+				</p>
+
+				<p style = "font-size:90%">
+
+
+				During the Summer of 2017 I taught <!--<a href = "../stat315/index.html"> --> <b>36-315 Statistical Graphics and Visualization</b> 
+					<!-- </a> --> (for the first time it was offered in the summer). I ended up revamping the material taught in the course, with new Lectures and Assignments. <!-- The link will be directed to a set of online notes as I create it. -->
+				</p>
+
+
+				</div>	
+
 			</div>
-
-    		<div class = "clearfix visible-xs"></div>
-
-			<div class = "col-xs-12 col-md-6 center">
-
-			<h3> Teaching </h3>
-			<p style = "font-size:90%">
-			<!-- I am currently a Teaching Assistant for 36-315 with Professor Matey Neykov. -->
-
-			</p>
-
-			<p style = "font-size:90%">
-			Currently I am TAing for <a href = "http://www.stat.cmu.edu/people/faculty/mgsell">Max G'Sell</a> in <a href = "https://www.cmu.edu/mscf/">MSCF's</a> <b>46-926 Statistics and Machine Learning I and II</b> where I am assisting in converting the class into <tt>python</tt> from <tt>R</tt>.
-
-			</p>
-
-			<p style = "font-size:90%">
-
-
-			During the Summer of 2017 I taught <!--<a href = "../stat315/index.html"> --> <b>36-315 Statistical Graphics and Visualization</b> 
-				<!-- </a> --> (for the first time it was offered in the summer). I ended up revamping the material taught in the course, with new Lectures and Assignments. <!-- The link will be directed to a set of online notes as I create it. -->
-			</p>
-
-
-			</div>	
-
 		</div>
 	</div>
-
 
 
 

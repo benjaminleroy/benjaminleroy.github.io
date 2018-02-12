@@ -3,7 +3,21 @@
 
 
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+		$(window).resize(function(){
+
+	    $('.container').css({
+	        position:'absolute',
+	        left: ($(window).width() - $('.container').outerWidth())/2,
+	        top: ($(window).height() - $('.container').outerHeight())/2
+	    });
+
+	});
+
 	<title> About </title>
+	$(window).resize();
+
+	</script>
 
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap/css/bootstrap.min.css">
@@ -14,83 +28,81 @@
 </head>
 
 
-<body style="max-width:900px">
-
-	<div class = "container-fluid" style = "float:center">
-		<div class = "row" style = "float:center">
-			
-			
-
-			<div class = "col-xs-12 col-md-6 right">
-				<h2>
-					<a href = "../index.html" style="color:black">
-					Benjamin LeRoy
-					</a>
-				</h2>
-				<p>
-					Doctoral Student					
-					<br>
-					Statistics and Data Science
-					<br>
-					Carnegie Mellon University
-					<hr>
-					
-					<div>
-						<a href = "">
-							About
-						</a>
-					</div>
-					
-					<div>
-						<a href = "teaching.html">
-							Teaching
-						</a>
-					</div>
-
-					<div>
-						<a href = "cv.html">
-							Resume/CV
-						</a>
-					</div> 
-				</p>
-				<hr>
-				<p>
-				Contact: <a href="mailto:bpleroy@stat.cmu.edu" data-external="true">bpleroy@stat.cmu.edu</a>
-				</p>
-				<div style = "float:center">
-					<center>
-					<a href="https://github.com/benjaminleroy" target="_blank">
-						<img src = "../images/external_links/Github.png", width = "35", height = "35">
-					</a>
+<body>
+	<div class="container">
+		<div class = "container-fluid" style = "float:center">
+			<div class = "row" style = "float:center">
 				
-					<a href="https://www.linkedin.com/in/benjamin-leroy-b5640344/" target="_blank" >
-						<img src ="../images/external_links/Linkedin.png", width = "35", height = "35" >
-					</a>
-					<center>
+				
+
+				<div class = "col-xs-12 col-md-6 right">
+					<h2>
+						<a href = "../index.html" style="color:black">
+						Benjamin LeRoy
+						</a>
+					</h2>
+					<p>
+						Doctoral Student					
+						<br>
+						Statistics and Data Science
+						<br>
+						Carnegie Mellon University
+						<hr>
+						
+						<div>
+							<a href = "">
+								About
+							</a>
+						</div>
+						
+						<div>
+							<a href = "teaching.html">
+								Teaching
+							</a>
+						</div>
+
+						<div>
+							<a href = "cv.html">
+								Resume/CV
+							</a>
+						</div> 
+					</p>
+					<hr>
+					<p>
+					Contact: <a href="mailto:bpleroy@stat.cmu.edu" data-external="true">bpleroy@stat.cmu.edu</a>
+					</p>
+					<div style = "float:center">
+						<center>
+						<a href="https://github.com/benjaminleroy" target="_blank">
+							<img src = "../images/external_links/Github.png", width = "35", height = "35">
+						</a>
+					
+						<a href="https://www.linkedin.com/in/benjamin-leroy-b5640344/" target="_blank" >
+							<img src ="../images/external_links/Linkedin.png", width = "35", height = "35" >
+						</a>
+						</center>
+					</div>
 				</div>
+
+	    		<div class = "clearfix visible-xs"></div>
+
+				<div class = "col-xs-12 col-md-6 center">
+
+				<h3> About </h3>
+				<p style = "font-size:90%">
+				I am a second year PhD student in the <a href ="http://www.stat.cmu.edu">Statistics and Data Science Department </a> at Carnegie Mellon University. I am currently working under Professor  <a href = "http://www.stat.cmu.edu/people/faculty/mgsell">Max G'Sell</a> on projects surrounding statistical questions in immunology. I also worked with Max on my Advanced Data Analysis (ADA) project on batch corrections, imputation and cell proportion estimation for immunology data. I am also currently working on credible interval estimation with tropical cyclones with fellow grad students Robin Dunn and Nic Dalmasso.  I am interested in studying high dimensional statistics and am a member of the <a href = "http://statml.cs.cmu.edu/">Stat ML</a> group and a semi-formal Inference group.
+				</p>
+
+				<p style = "font-size:90%">
+				I was born and raised in Santa Rosa, California, one and a half hours drive north of San Francisco on the coast. I transferred from Santa Rosa Junior College (with AAs in Math and Economics) to the University of California, Berkeley where I obtained bachelor degrees in <a href ="http://statistics.berkeley.edu/"> Statistics </a> and Mathematics. During my undergraduate program, I visited Carnegie Mellon to participate in the Statistic Department's Summer Undergraduate Research Experience  (<a href = "http://summer.stat.cmu.edu">SURE</a>).
+				</p>
+
+				</div>	
+
 			</div>
-
-    		<div class = "clearfix visible-xs"></div>
-
-			<div class = "col-xs-12 col-md-6 center">
-
-			<h3> About </h3>
-			<p style = "font-size:90%">
-			I am a second year PhD student in the <a href ="http://www.stat.cmu.edu">Statistics and Data Science Department </a> at Carnegie Mellon University. I am currently working under Professor  <a href = "http://www.stat.cmu.edu/people/faculty/mgsell">Max G'Sell</a> on projects surrounding statistical questions in immunology. I also worked with Max on my Advanced Data Analysis (ADA) project on batch corrections, imputation and cell proportion estimation for immunology data. I am also currently working on credible interval estimation with tropical cyclones with fellow grad students Robin Dunn and Nic Dalmasso.  I am interested in studying high dimensional statistics and am a member of the <a href = "http://statml.cs.cmu.edu/">Stat ML</a> group and a semi-formal Inference group.
-			</p>
-
-			<p style = "font-size:90%">
-			I was born and raised in Santa Rosa, California, one and a half hours drive north of San Francisco on the coast. I transferred from Santa Rosa Junior College (with AAs in Math and Economics) to the University of California, Berkeley where I obtained bachelor degrees in <a href ="http://statistics.berkeley.edu/"> Statistics </a> and Mathematics. During my undergraduate program, I visited Carnegie Mellon to participate in the Statistic Department's Summer Undergraduate Research Experience  (<a href = "http://summer.stat.cmu.edu">SURE</a>).
-			</p>
-
-			</div>	
-
 		</div>
+
 	</div>
-
-
-
-
 </body>
 
 

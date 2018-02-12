@@ -18,10 +18,15 @@
 }
 
 
+.container{
+    max-width: 991px;
+}
+
 
 h1 {
 	color:black;
 }
+
 
 .bg-1 { 
  	background-color: #1abc9c;
@@ -40,6 +45,21 @@ h1 {
 	padding-bottom: 70px;
 }
 
+
+
+a:link{
+	color: #A0BAEC;
+}
+a:visited{
+	color: #A0BAEC;
+}
+a:hover{
+	color: black;
+}
+
+a:active{
+	color: black;
+}
 
 
 
