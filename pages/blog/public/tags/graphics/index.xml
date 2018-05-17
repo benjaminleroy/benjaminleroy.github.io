@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Graphics on Benjamin LeRoy&#39;s Blog</title>
-    <link>/cmu.edu/~bpleroy/pages/blog/public/tags/graphics/</link>
+    <link>/~bpleroy/pages/blog/public/tags/graphics/</link>
     <description>Recent content in Graphics on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 16 May 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/cmu.edu/~bpleroy/pages/blog/public/tags/graphics/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/~bpleroy/pages/blog/public/tags/graphics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Review of Tufte’s &#34;The Visual Display of Quantitative Information&#34;</title>
-      <link>/cmu.edu/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</link>
+      <link>/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/cmu.edu/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</guid>
+      <guid>/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</guid>
       <description>Before reading Tufte’s book “The visual Display of Quantitative Information”, I always saw Tufte as someone that presented views on Graphics that were a little to extreme for my taste. Largely a thinker reacting to horrible graphics of the time, and not a thinker that would be remembered for much beyond that.
 Now that I’ve read his text I have a much larger appreciation for this thoughts. In mind this book has 4 major points:</description>
     </item>

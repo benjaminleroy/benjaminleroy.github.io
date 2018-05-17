@@ -2,29 +2,29 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Benjamin LeRoy&#39;s Blog</title>
-    <link>/cmu.edu/~bpleroy/pages/blog/public/categories/</link>
+    <link>/~bpleroy/pages/blog/public/categories/</link>
     <description>Recent content in Categories on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
-	<atom:link href="/cmu.edu/~bpleroy/pages/blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/~bpleroy/pages/blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Graphic Theory</title>
-      <link>/cmu.edu/~bpleroy/pages/blog/public/categories/graphic-theory/</link>
+      <link>/~bpleroy/pages/blog/public/categories/graphic-theory/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/cmu.edu/~bpleroy/pages/blog/public/categories/graphic-theory/</guid>
+      <guid>/~bpleroy/pages/blog/public/categories/graphic-theory/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Graphics</title>
-      <link>/cmu.edu/~bpleroy/pages/blog/public/categories/graphics/</link>
+      <link>/~bpleroy/pages/blog/public/categories/graphics/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/cmu.edu/~bpleroy/pages/blog/public/categories/graphics/</guid>
+      <guid>/~bpleroy/pages/blog/public/categories/graphics/</guid>
       <description></description>
     </item>
     

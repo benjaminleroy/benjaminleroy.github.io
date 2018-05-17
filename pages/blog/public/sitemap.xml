@@ -3,62 +3,62 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</loc>
+    <loc>/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/about/</loc>
+    <loc>/~bpleroy/pages/blog/public/about/</loc>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/</loc>
+    <loc>/~bpleroy/pages/blog/public/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/categories/</loc>
+    <loc>/~bpleroy/pages/blog/public/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/categories/graphic-theory/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/tags/graphic-theory/</loc>
+    <loc>/~bpleroy/pages/blog/public/categories/graphic-theory/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/tags/graphics/</loc>
+    <loc>/~bpleroy/pages/blog/public/tags/graphic-theory/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/categories/graphics/</loc>
+    <loc>/~bpleroy/pages/blog/public/categories/graphics/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/tags/plot/</loc>
+    <loc>/~bpleroy/pages/blog/public/tags/graphics/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/post/</loc>
+    <loc>/~bpleroy/pages/blog/public/tags/plot/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/cmu.edu/~bpleroy/pages/blog/public/tags/</loc>
+    <loc>/~bpleroy/pages/blog/public/post/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/~bpleroy/pages/blog/public/tags/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
