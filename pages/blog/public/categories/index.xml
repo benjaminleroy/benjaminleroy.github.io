@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Benjamin LeRoy&#39;s Blog</title>
+    <link>/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/categories/</link>
+    <description>Recent content in Categories on Benjamin LeRoy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Graphic Theory</title>
+      <link>/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/categories/graphic-theory/</link>
+      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/categories/graphic-theory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Graphics</title>
+      <link>/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/categories/graphics/</link>
+      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/categories/graphics/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
