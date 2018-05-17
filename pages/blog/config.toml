@@ -1,4 +1,4 @@
-baseurl = "/Users/BenjaminLeRoy/Desktop/CMU/benjaminleroy.github.io/pages/blog/public/"
+baseurl = "http://stat/cmu.edu/~bpleroy/pages/blog/public/"
 languageCode = "en-us"
 title = "Benjamin LeRoy's Blog"
 googleAnalytics = ""
