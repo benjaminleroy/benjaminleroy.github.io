@@ -32,7 +32,7 @@ Before presenting these points, Tufte answers 2 questions:
 
 1. **"Why graphics?"**: Where he presents examples like Anscombe's data (pg 14) which poses the problem of complex an nontrivial patterns not being able to be understood with summary statistics (means, etc).
 
-```{r echo = F, message = F, warning = F, fig.cap = "Anscombe Data, 4 different datasets with same linear regression estimation (Beta, Sigma, and R^2)", fig.asp=1}
+```{r echo = F, message = F, warning = F, fig.cap = "Anscombe Data, 4 different datasets with same linear regression estimation (Beta, Sigma, and R^2)", fig.align='center'}
 library(imager)
 image_path <- "../../static/images/anscombe.png"
 im <- load.image(image_path)
@@ -63,7 +63,7 @@ Below I propose a slight reordering of these guidelines.
 
 ### 1.1 Represent the data as truthfully as possible
 
-```{r fuel, echo = F, message = F, warning = F, fig.cap = "Fuel Standards Graphic From the NY Times \\label{fig:fuel} "}
+```{r fuel, echo = F, message = F, warning = F, fig.cap = "Fuel Standards Graphic From the NY Times \\label{fig:fuel}", fig.align='center'}
 image_path <- "../../static/images/fuel_standards_distortion.png"
 im <- load.image(image_path)
 plot(im,frame = F,axes = F)
@@ -83,7 +83,7 @@ Relative to incorrect treatment of the data points, implicit distortion of true 
 
 **Second**, abusing visual expectations of readers can lead to implicit distortion. Tufte's favorite example is graphics that show change in 1 variable but visualize the change in multiple dimensions of an object (either 2 or 3 dimensional). Figure 3 showcases an example where both the height and the width of the doctor relates to the change in the ratio of doctors per person. Sadly, such thinks cause a multiplier effect, having the reader see $(\text{proportion change})^2$ instead of the true proportion changed. 
 
-```{r doc, echo = F, message = F, warning = F, fig.cap = "Shrinking Doctor Graphic from LA Times."}
+```{r doc, echo = F, message = F, warning = F, fig.cap = "Shrinking Doctor Graphic from LA Times.", fig.align='center'}
 image_path <- "../../static/images/shrinking_docs_distortion.png"
 im <- load.image(image_path)
 plot(im,frame = F,axes = F)
@@ -99,7 +99,7 @@ If one has read Cleveland's text, we're really looking at a compounding of direc
 
 Maybe one of Tufte's most remembered views is that Tufte thought graphics tended to have too much ink on them. Although sadly, this is generally associated with his extreme example show in figure 4, his ideas and recommendations have merit.
 
-```{r extemereduct, echo = F, message = F, warning = F, fig.cap = "An extreme example of Tufte's reduction in unnecessary ink in graphics. *Tufte proposed moving from the figure on the left, to the reduced figure on the right (the center is what was dropped out)*"}
+```{r extemereduct, echo = F, message = F, warning = F, fig.cap = "An extreme example of Tufte's reduction in unnecessary ink in graphics. *Tufte proposed moving from the figure on the left, to the reduced figure on the right (the center is what was dropped out)*", fig.align='center'}
 image_path <- "../../static/images/extreme_reduction.png"
 im <- load.image(image_path)
 plot(im,frame = F,axes = F)
@@ -123,7 +123,7 @@ This can manifest itself with the example provided above as well as excessive nu
 
 For the reader interested in cool applications / recommendations that follow this reduction of redundant data-ink, Tufte does propose good ideas to convert graphics like box plots to more simplistic graphics (see figure 5) and redesigns of scatter plots (keeping the actual points) is pretty smart use of the principles (chapter 6).
 
-```{r boxreduction, echo = F, message = F, warning = F, fig.cap = "Data-ink ratio increase to create a new type of box plot"}
+```{r boxreduction, echo = F, message = F, warning = F, fig.cap = "Data-ink ratio increase to create a new type of box plot", fig.align='center'}
 image_path <- "../../static/images/box_reduction.png"
 im <- load.image(image_path)
 plot(im,frame = F,axes = F)
