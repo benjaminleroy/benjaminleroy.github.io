@@ -32,11 +32,13 @@
 </div>
 
 <main>
-<p>Before reading Tufte’s book “The visual Display of Quantitative Information”, I always saw Tufte as someone that presented views on Graphics that were a little to extreme for my taste. Largely a thinker reacting to horrible graphics of the time, and not a thinker that would be remembered for much beyond that.</p>
+<p>The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the <a href="http://stat.cmu.edu">Statistics and Data Science Department</a> at Carnegie Mellon University.</p>
+<hr />
+<p>Before reading Tufte’s book “The Visual Display of Quantitative Information”, I always saw Tufte as someone that presented views on Graphics that were a little to extreme for my taste. Largely a thinker reacting to horrible graphics of the time, and not a thinker that would be remembered for much beyond that.</p>
 <p>Now that I’ve read his text I have a much larger appreciation for this thoughts. In mind this book has 4 major points:</p>
 <ol style="list-style-type: decimal">
 <li>Don’t Lie / Distort the Data / Mislead the Reader with your graphics (Associated with <em>lie factor</em>)</li>
-<li>Provide a clean graphic (avoid distractions) and avoid excessive unnecessary <em>non-data-ink</em>, also leaverage multifunctionality of graphic display elements.</li>
+<li>Provide a clean graphic (avoid distractions) and avoid excessive unnecessary <em>non-data-ink</em>, also leverage multifunctionality of graphic display elements.</li>
 <li>Create graphics that showcase complex ideas and patterns (Associated with <em>data density</em>) with encouragement of multiple graphics in 1.</li>
 <li>What it means to create an amazing graphic, and how to do so within your texts and full presentations.</li>
 </ol>
@@ -45,13 +47,102 @@
 <h2>Introduction</h2>
 <p>Before presenting these points, Tufte answers 2 questions:</p>
 <ol style="list-style-type: decimal">
-<li><strong>“Why graphics?”</strong>: Where he presents examples like Anscombe’s data (pg 14) possing the problem of complex an nontrivial patterns not being able to be understood with summary statsitics (means, etc).</li>
-<li><strong>When graphics?</strong>: Twice in the text (pg 20 and pg 178), Tufte states that “Tables usually outpreform graphics in reporting on small data sets of 20 numbers or less”.</li>
+<li><strong>“Why graphics?”</strong>: Where he presents examples like Anscombe’s data (pg 14) which poses the problem of complex an nontrivial patterns not being able to be understood with summary statistics (means, etc).</li>
+</ol>
+<div class="figure"><span id="fig:unnamed-chunk-1"></span>
+<img src="/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/unnamed-chunk-1-1.png" alt="Anscombe Data, 4 different datasets with same linear regression estimation (Beta, Sigma, and R^2)" width="672" />
+<p class="caption">
+Figure 1: Anscombe Data, 4 different datasets with same linear regression estimation (Beta, Sigma, and R^2)
+</p>
+</div>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>When graphics?</strong>: Twice in the text (pg 20 and pg 178), Tufte states that “Tables usually outperform graphics in reporting on small data sets of 20 numbers or less”.</li>
 </ol>
 </div>
 <div id="dont-lie-distort-the-data-mislead-the-reader" class="section level2">
 <h2>1. Don’t Lie / Distort the Data / Mislead the Reader</h2>
-<p>Generally I imagine most people don’t get past this section. It contains Tufte’s classic “Lie Factor”, and his railing against shitty graphics.</p>
+<p>Distortion in graphics comes in many shapes and sizes, one can lie with graphics by changing scales so correct comparisons are hard or impossible (<em>Lie factor, design variation, not data variation, lack of data standardization</em>), one can trick the reader through abusing visual expectations (<em>changes in multiple dimensions for the same variable</em>), and one can confuse the reader with poor labeling and ambiguity in presentation.</p>
+<p>Tufte sets out principles to avoid such distortions with as set of guidance:</p>
+<blockquote>
+<p>Graphical integrity is more likely to result if these six principles are followed:</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>The representation of numbers, as physically measured on the surface of the graphic itself, show be directly proportional to the nubmer of guantities represented.</li>
+<li>Clear, detailed, and thorough labeling should be used to defeat graphical distortion and ambiguity. Write out explainations of the data on the graphic. itself. Label important events in the data.</li>
+<li>Show data variation, not design variation</li>
+<li>In time-series displays of money, deflated and standardized units of monetary measurments are nearly always better then nominal units.</li>
+<li>The number of information-carrying (variable) dimensions depicted should not exceed the number of dimensions in the data.</li>
+<li>Graphics must not quote data out of context.</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>(<em>The Visual Display of Quantiative Information</em> pg 77)</p>
+</blockquote>
+<p>Below I propose a slight reordering of these guidelines.</p>
+<div id="represent-the-data-as-truthfully-as-possible" class="section level3">
+<h3>1.1 Represent the data as truthfully as possible</h3>
+<div class="figure"><span id="fig:fuel"></span>
+<img src="/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/fuel-1.png" alt="Fuel Standards Graphic From the NY Times \label{fig:fuel} " width="672" />
+<p class="caption">
+Figure 2: Fuel Standards Graphic From the NY Times 
+</p>
+</div>
+<p><strong>First</strong>, The most basic type of distortion comes when a graphic misrepresent the data in the graphic so that the comparisons of the representations of the data don’t preserve the true relationships between the data points. Though a little distortion in this regards might be ok, graphics like figure 2 distort the data too much. Tufte proposes we use the following metric:</p>
+<p><span class="math display">\[\text{Lie Factor} = \frac{\text{size of effect shown in graphic}}{\text{size of effect in data}}\]</span></p>
+<p>Using this metric, we can see that although the true change in fuel economy standards from ’78 to ’85 was a <span class="math inline">\((27.5-18)/18 = 53\%\)</span> change, the chart shows it as a <span class="math inline">\((5.3-.6)/.6 = 783\%\)</span>, or a Lie factor of <span class="math inline">\(14.8\)</span>, where we’d hope for a number around <span class="math inline">\(1\)</span> (note this example is just a re-presentation of the comments from Tufte).</p>
+<p>Although distortion from this type of “design variation” instead of “data variation” is more rare in statistical graphics from the scientific community, it does showcase a worrisome abuse of visualization. In Statistical graphics we may be more prone to see this type of direct distortion from manipulation of axes (which can be acceptable if they are pointed out) and incorrect treatment of the data points themselves.</p>
+<p>Relative to incorrect treatment of the data points, implicit distortion of true changes across time or across different groups in <em>economic data</em> can occur if the graphic creator is utilizes non-standardized or non-deflated versions of the data. Examples commonalty include using nominal prices instead of real prices ($ units in fixed units across time to account for inflation, etc), and use of total units instead of rates like GDP vs GDP per capita.</p>
+</div>
+<div id="avoid-abusing-assumptions-usually-associated-with-the-graphic" class="section level3">
+<h3>1.2 Avoid abusing assumptions usually associated with the graphic</h3>
+<p><strong>Second</strong>, abusing visual expectations of readers can lead to implicit distortion. Tufte’s favorite example is graphics that show change in 1 variable but visualize the change in multiple dimensions of an object (either 2 or 3 dimensional). Figure 3 showcases an example where both the height and the width of the doctor relates to the change in the ratio of doctors per person. Sadly, such thinks cause a multiplier effect, having the reader see <span class="math inline">\((\text{proportion change})^2\)</span> instead of the true proportion changed.</p>
+<div class="figure"><span id="fig:doc"></span>
+<img src="/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/doc-1.png" alt="Shrinking Doctor Graphic from LA Times." width="672" />
+<p class="caption">
+Figure 3: Shrinking Doctor Graphic from LA Times.
+</p>
+</div>
+<p>If one has read Cleveland’s text, we’re really looking at a compounding of direct distortion and the fact that readers have a harder time correctly estimating changes in area (even though in this graphic they should be just looking at changes in height).</p>
+</div>
+<div id="avoid-misleading-readers-with-good-labelings" class="section level3">
+<h3>1.3 Avoid misleading readers with good labelings</h3>
+<p><strong>Luckily</strong>, we can avoid and reduce misleading the reader by providing good captions and detailed labeling. For example, it’s common practice to select the range of y values of a scatter plot to regions that the data point lies, but making sure base values (like <span class="math inline">\(0\)</span>, <span class="math inline">\(100\%\)</span>, etc) are either specially marked or commented on their missingness in captions can reduce potential misleading.</p>
+</div>
+</div>
+<div id="cleaning-up-your-graphics" class="section level2">
+<h2>2. Cleaning up your graphics</h2>
+<p>Maybe one of Tufte’s most remembered views is that Tufte thought graphics tended to have too much ink on them. Although sadly, this is generally associated with his extreme example show in figure 4, his ideas and recommendations have merit.</p>
+<div class="figure"><span id="fig:extemereduct"></span>
+<img src="/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/extemereduct-1.png" alt="An extreme example of Tufte's reduction in unnecessary ink in graphics. *Tufte proposed moving from the figure on the left, to the reduced figure on the right (the center is what was dropped out)*" width="672" />
+<p class="caption">
+Figure 4: An extreme example of Tufte’s reduction in unnecessary ink in graphics. <em>Tufte proposed moving from the figure on the left, to the reduced figure on the right (the center is what was dropped out)</em>
+</p>
+</div>
+<p>To avoid unnecessary ink on graphics, Tufte proposed the following metric :</p>
+<p><span class="math display">\[
+\text{Data-ink ratio} = \frac{\text{data related ink}}{\text{total ink used to make graphic}}
+\]</span></p>
+<p>Figure 4 was just an example of reducing unnecessary ink (redundant) to make the amount of ink in the graphic minimalist.</p>
+<p>Tufte generally recommends that one “maximize(s) the data-ink ratio, within reason”. Smart reductions is pointless and unnecessary ink can include removing excessive grids (especially dark grids) or removing color added for no reason. Reduction of redundancies in graphics can be very smart, maybe not to the extreme of figure 4 but, removing redundant text number above points showcasing the numbers, and removing color differences in places where the axis or another variable already captures the distinctions is a good idea.</p>
+<p>What doesn’t come out immediately is that this kind of redundant and unnecessary ink can naturally be added by standard computer graphics packages like <code>ggplot2</code> in <code>R</code> and more. On of my favorite quotes from Tufte addresses this problem:</p>
+<blockquote>
+<p>… at least a few computer grpahics only evoke the response “Isn’t it remarkable that the computer can be programmed to draw like that?” instead of “My, what interesting data.” (pg 120)</p>
+</blockquote>
+<p>This can manifest itself with the example provided above as well as excessive number of axis markings (even where no data points lie) and the interest in creating “pretty graphics” when a table might do better. This is more addressed in section 4.</p>
+<p>For the reader interested in cool applications / recommendations that follow this reduction of redundant data-ink, Tufte does propose good ideas to convert graphics like box plots to more simplistic graphics (see figure 5) and redesigns of scatter plots (keeping the actual points) is pretty smart use of the principles (chapter 6).</p>
+<div class="figure"><span id="fig:boxreduction"></span>
+<img src="/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/boxreduction-1.png" alt="Data-ink ratio increase to create a new type of box plot" width="672" />
+<p class="caption">
+Figure 5: Data-ink ratio increase to create a new type of box plot
+</p>
+</div>
+</div>
+<div id="create-graphics-that-showcase-complex-ideas" class="section level2">
+<h2>3. Create Graphics that Showcase Complex Ideas</h2>
+</div>
+<div id="best-graphics" class="section level2">
+<h2>4. Best Graphics </h2>
 </div>
 
 </main>

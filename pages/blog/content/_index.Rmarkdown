@@ -2,8 +2,7 @@
 title: Blog Home
 ---
 
-# Blog Home
-
+# Home
 This blog is a location where I hope to provide (probably pretty unfiltered) thoughts on research, graphics and statistics in general. Maybe a little life too.
 
 ~Ben
