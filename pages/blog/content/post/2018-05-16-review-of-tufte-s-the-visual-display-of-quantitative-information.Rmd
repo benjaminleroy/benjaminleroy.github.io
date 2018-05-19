@@ -32,7 +32,7 @@ Before presenting these points, Tufte answers 2 questions:
 
 1. **"Why graphics?"**: Where he presents examples like Anscombe's data (pg 14) which poses the problem of complex an nontrivial patterns not being able to be understood with summary statistics (means, etc).
 
-```{r echo = F, message = F, warning = F, fig.cap = "Anscombe Data, 4 different datasets with same linear regression estimation (Beta, Sigma, and R^2)", fig.align='center'}
+```{r echo = F, message = F, warning = F, fig.cap = "Anscombe Data, 4 different datasets with same linear regression estimation (Beta, Sigma, and R^2), [image link](/static/images/anscombe.png)", fig.align='center'}
 library(imager)
 image_path <- "../../static/images/anscombe.png"
 im <- load.image(image_path)
@@ -63,7 +63,7 @@ Below I propose a slight reordering of these guidelines.
 
 ### 1.1 Represent the data as truthfully as possible
 
-```{r fuel, echo = F, message = F, warning = F, fig.cap = "Fuel Standards Graphic From the NY Times \\label{fig:fuel}", fig.align='center'}
+```{r fuel, echo = F, message = F, warning = F, fig.cap = "Fuel Standards Graphic From the NY Times \\label{fig:fuel} [image link](/static/images/fuel_standards_distortion.png)", fig.align='center'}
 image_path <- "../../static/images/fuel_standards_distortion.png"
 im <- load.image(image_path)
 plot(im,frame = F,axes = F)
