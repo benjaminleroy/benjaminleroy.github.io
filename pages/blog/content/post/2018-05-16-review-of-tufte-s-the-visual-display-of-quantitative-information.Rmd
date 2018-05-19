@@ -49,14 +49,14 @@ Distortion in graphics comes in many shapes and sizes, one can lie with graphics
 Tufte sets out principles to avoid such distortions with as set of guidance:
 
 > Graphical integrity is more likely to result if these six principles are followed:
-
+>
 > * The representation of numbers, as physically measured on the surface of the graphic itself, show be directly proportional to the nubmer of guantities represented.
 > * Clear, detailed, and thorough labeling should be used to defeat graphical distortion and ambiguity. Write out explainations of the data on the graphic. itself. Label important events in the data.
 > * Show data variation, not design variation
 > * In time-series displays of money, deflated and standardized units of monetary measurments are nearly always better then nominal units.
 > * The number of information-carrying (variable) dimensions depicted should not exceed the number of dimensions in the data. 
 > * Graphics must not quote data out of context.
-
+>
 > (pg 77)
 
 Below I propose a slight reordering of these guidelines.
@@ -152,7 +152,7 @@ Moreover, this complex graphics tend to help us focus on complex comparisons and
 Tufte summarized the strength of complex graphics (specially multiple grids):
 
 > Well desinged small multiples are 
-
+>
 > + inevitably compariative
 > + deftly multivariate
 > + shrunken, high-density grpahcis
@@ -160,7 +160,7 @@ Tufte summarized the strength of complex graphics (specially multiple grids):
 > + drawn almost entirely with data-ink
 > + efficient in interpretation
 > + oftern narrative in content, showing shifts in the relationship between variables as the index variable changes (thereby revealing interaction or multiplicative effects).
-
+>
 > (pg 175)
 
 
@@ -170,14 +170,11 @@ To me, an easy but good summary of how we should approach the creation of graphi
 
 To start off with 2 quotes:
 
-***
-
 > Graphical elegance is often found in simplicity of design and complexity of data. (pg 177)
 
-***
  
 > Attractive displays of statistical information
-
+>
 > + have a propertly chosen format and design (**)
 > + use words, numbers, and drawing together (**)
 > + reflect a balance, a proportion, a sense of relevant sale
@@ -185,8 +182,9 @@ To start off with 2 quotes:
 > + often have a narrative quality, a story to tell about the data (**)
 > + are drawn in a professional manner, with the technical details of production done with care (**)
 > + avoid content-free decoration, including chartjunk (**)
+>
+> (pg 177)
 
-***
 
 I "(\*\*)"ed the ones I liked / found most strongly connected to my views. **In other words**, make full use of our **communicative tools** (text, numbers and graphic) to display something with a **clear narrative** in a **professional** graphic clear of graphical elements that are not useful.**
 
