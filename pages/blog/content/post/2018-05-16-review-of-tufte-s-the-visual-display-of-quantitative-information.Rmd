@@ -11,7 +11,7 @@ tags:
   - graphic theory
 ---
 
-The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the  [Statistics and Data Science Department](http://stat.cmu.edu) at Carnegie Mellon University.
+The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the  [Statistics and Data Science Department](http://stat.cmu.edu) at Carnegie Mellon University. That means it may be less of book report / review as a summary highlight points I found most relevant.
 
 ***
 
@@ -57,7 +57,7 @@ Tufte sets out principles to avoid such distortions with as set of guidance:
 > * The number of information-carrying (variable) dimensions depicted should not exceed the number of dimensions in the data. 
 > * Graphics must not quote data out of context.
 
-> (*The Visual Display of Quantiative Information* pg 77)
+> (pg 77)
 
 Below I propose a slight reordering of these guidelines.
 
@@ -131,7 +131,83 @@ plot(im,frame = F,axes = F)
 
 ## 3. Create Graphics that Showcase Complex Ideas
 
+I really appreciate Tufte's approach on this topic of pushing the expectation that graphics should showcase complex ideas. In his text he walks through a sampling of publication of his day and focused on how many didn't spend that much time with complex graphics (lots with 1d visualizations or no statistical graphics taking up a large proportion of the graphics). 
+
+In light of this (or in spite of this), Tufte does a decent job arguing for complex ideas to be displayed in graphics.
+
+> More information is better than less information, especially when the marginal costs of handling and interpreting additional infomration are low, as they are for most graphics. (pg 168)
+
+As I think we've seen this type of pattern by now, Tufte developed a basic equation to optimize in order to get people to think about getting more complex data into the same graphical space, namely:
+
+$$
+\text{data density of a graphic} = \frac{\text{number of entries in data matrix}}{\text{area of data graphic}}
+$$
+
+Tufte wrote "maximize data density (...) *within reason*" (pg 168, italics are mine). Which makes sense as, when people have low "data density", the reader is often left with questions about "what has been left out?" or "what if this trend was caused by other variables?". On the other hand, visuals with a high "data density" must be designed with care, as elements like color and shapes have the potential to overwelm readers if not used correctly. 
+
+This push for a high "data density"/ complex visuals brought up a wonderful tool in graphics, which I like calling coplots (from Cleveland meaning "Conditional plots"), but more generally Tufte just introduced the use of multiple grids to increase data display. Each grid can showcase a new time increment, a different class from a new dimension and more.
+
+Moreover, this complex graphics tend to help us focus on complex comparisons and efficiently using the "ink" we have to show complex patterns.
+
+Tufte summarized the strength of complex graphics (specially multiple grids):
+
+> Well desinged small multiples are 
+
+> + inevitably compariative
+> + deftly multivariate
+> + shrunken, high-density grpahcis
+> + usually based on a large data matrix
+> + drawn almost entirely with data-ink
+> + efficient in interpretation
+> + oftern narrative in content, showing shifts in the relationship between variables as the index variable changes (thereby revealing interaction or multiplicative effects).
+
+> (pg 175)
 
 
 ## 4. Best Graphics \label{sec:bestgraphics}
+
+To me, an easy but good summary of how we should approach the creation of graphics and the inclusion of graphics in statistical writing lies in the final chapter of Tufte's book (a short read- can be found [here](www.humanities.ufl.edu/pdf/tufte-aesthetics_and_technique.pdf)).
+
+To start off with 2 quotes:
+
+***
+
+> Graphical elegance is often found in simplicity of design and complexity of data. (pg 177)
+
+***
+ 
+> Attractive displays of statistical information
+
+> + have a propertly chosen format and design (**)
+> + use words, numbers, and drawing together (**)
+> + reflect a balance, a proportion, a sense of relevant sale
+> + display an accessible complexity of detail
+> + often have a narrative quality, a story to tell about the data (**)
+> + are drawn in a professional manner, with the technical details of production done with care (**)
+> + avoid content-free decoration, including chartjunk (**)
+
+***
+
+I "(\*\*)"ed the ones I liked / found most strongly connected to my views. **In other words**, make full use of our **communicative tools** (text, numbers and graphic) to display something with a **clear narrative** in a **professional** graphic clear of graphical elements that are not useful.**
+
+To put an attractive display into a report, one should (1) make sure the caption for the graphic helps the reader's eye understand the graphic and avoid forcing the reader to jump back and forth with the real text and (2) make sure to put enough text and labels in the graphic for the reader to quickly pick up relevant points (3) make sure the graphics are included close to the text that is related to it (I'm talking to you $\LaTeX$).
+
+This chapter also comes back to the idea that the best form to express information might be even be a table (I really appreciated figure 6's table as a non-trivial example of this). I think in classes like 36-315 we focus a lot of which is the best graphic, but sometimes even another step back is wise.
+
+```{r tablefig, echo = F, message = F, warning = F, fig.cap = "An example where a complex data set (vies on the president per demographic group) has the potential to best be presented in a table.", fig.align='center'}
+image_path <- "../../static/images/good_table.png"
+im <- load.image(image_path)
+plot(im,frame = F,axes = F)
+```
+
+### 4.4 Extra Table by on attributes of a "friendly data graphic", one what is accessibly and open to the eye. From page 183.
+
+```{r friendlytable, echo = F, message = F, warning = F, fig.cap = "Data-ink ratio increase to create a new type of box plot", fig.align='center'}
+image_path <- "../../static/images/friendly_table.png"
+im <- load.image(image_path)
+plot(im,frame = F,axes = F)
+```
+
+
+
 

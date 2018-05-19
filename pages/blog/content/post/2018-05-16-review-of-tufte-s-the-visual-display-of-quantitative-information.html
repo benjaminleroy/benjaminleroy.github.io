@@ -13,7 +13,7 @@ tags:
 
 
 
-<p>The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the <a href="http://stat.cmu.edu">Statistics and Data Science Department</a> at Carnegie Mellon University.</p>
+<p>The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the <a href="http://stat.cmu.edu">Statistics and Data Science Department</a> at Carnegie Mellon University. That means it may be less of book report / review as a summary highlight points I found most relevant.</p>
 <hr />
 <p>Before reading Tufte’s book “The Visual Display of Quantitative Information”, I always saw Tufte as someone that presented views on Graphics that were a little to extreme for my taste. Largely a thinker reacting to horrible graphics of the time, and not a thinker that would be remembered for much beyond that.</p>
 <p>Now that I’ve read his text I have a much larger appreciation for this thoughts. In mind this book has 4 major points:</p>
@@ -58,7 +58,7 @@ Figure 1: Anscombe Data, 4 different datasets with same linear regression estima
 </ul>
 </blockquote>
 <blockquote>
-<p>(<em>The Visual Display of Quantiative Information</em> pg 77)</p>
+<p>(pg 77)</p>
 </blockquote>
 <p>Below I propose a slight reordering of these guidelines.</p>
 <div id="represent-the-data-as-truthfully-as-possible" class="section level3">
@@ -121,7 +121,77 @@ Figure 5: Data-ink ratio increase to create a new type of box plot
 </div>
 <div id="create-graphics-that-showcase-complex-ideas" class="section level2">
 <h2>3. Create Graphics that Showcase Complex Ideas</h2>
+<p>I really appreciate Tufte’s approach on this topic of pushing the expectation that graphics should showcase complex ideas. In his text he walks through a sampling of publication of his day and focused on how many didn’t spend that much time with complex graphics (lots with 1d visualizations or no statistical graphics taking up a large proportion of the graphics).</p>
+<p>In light of this (or in spite of this), Tufte does a decent job arguing for complex ideas to be displayed in graphics.</p>
+<blockquote>
+<p>More information is better than less information, especially when the marginal costs of handling and interpreting additional infomration are low, as they are for most graphics. (pg 168)</p>
+</blockquote>
+<p>As I think we’ve seen this type of pattern by now, Tufte developed a basic equation to optimize in order to get people to think about getting more complex data into the same graphical space, namely:</p>
+<p><span class="math display">\[
+\text{data density of a graphic} = \frac{\text{number of entries in data matrix}}{\text{area of data graphic}}
+\]</span></p>
+<p>Tufte wrote “maximize data density (…) <em>within reason</em>” (pg 168, italics are mine). Which makes sense as, when people have low “data density”, the reader is often left with questions about “what has been left out?” or “what if this trend was caused by other variables?”. On the other hand, visuals with a high “data density” must be designed with care, as elements like color and shapes have the optential to overwell readers if not used correctly.</p>
+<p>This push for a high “data density”/ complex visuals brought up a wonderful tool in graphics, which I like calling coplots (from Cleveland meaning “Conditional plots”), but more generally Tufte just introduced the use of multiple grids to increase data display. Each grid can showcase a new time increment, a different class from a new dimension and more.</p>
+<p>Moreover, this complex graphics tend to help us focus on complex comparisons and efficiently using the “ink” we have to show complex patterns.</p>
+<p>Tufte summarized the strength of complex graphics (specially multiple grids):</p>
+<blockquote>
+<p>Well desinged small multiples are</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>inevitably compariative</li>
+<li>deftly multivariate</li>
+<li>shrunken, high-density grpahcis</li>
+<li>usually based on a large data matrix</li>
+<li>drawn almost entirely with data-ink</li>
+<li>efficient in interpretation</li>
+<li>oftern narrative in content, showing shifts in the relationship between variables as the index variable changes (thereby revealing interaction or multiplicative effects).</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>(pg 175)</p>
+</blockquote>
 </div>
 <div id="best-graphics" class="section level2">
 <h2>4. Best Graphics </h2>
+<p>To me, an easy but good summary of how we should approach the creation of graphics and the inclusion of graphics in statistical writing lies in the final chapter of Tufte’s book (a short read- can be found <a href="www.humanities.ufl.edu/pdf/tufte-aesthetics_and_technique.pdf">here</a>).</p>
+<p>To start off with 2 quotes:</p>
+<hr />
+<blockquote>
+<p>Graphical elegance is often found in simplicity of design and complexity of data. (pg 177)</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>Attractive displays of statistical information</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>have a propertly chosen format and design (**)</li>
+<li>use words, numbers, and drawing together (**)</li>
+<li>reflect a balance, a proportion, a sense of relevant sale</li>
+<li>display an accessible complexity of detail</li>
+<li>often have a narrative quality, a story to tell about the data (**)</li>
+<li>are drawn in a professional manner, with the technical details of production done with care (**)</li>
+<li>avoid content-free decoration, including chartjunk (**)</li>
+</ul>
+</blockquote>
+<hr />
+<p>I “(**)”ed the ones I liked / found most strongly connected to my views. <strong>In other words</strong>, make full use of our <strong>communicative tools</strong> (text, numbers and graphic) to display something with a <strong>clear narrative</strong> in a <strong>professional</strong> graphic clear of graphical elements that are not useful.**</p>
+<p>To put an attractive display into a report, one should (1) make sure the caption for the graphic helps the reader’s eye understand the graphic and avoid forcing the reader to jump back and forth with the real text and (2) make sure to put enough text and labels in the graphic for the reader to quickly pick up relevant points (3) make sure the graphics are included close to the text that is related to it (I’m talking to you <span class="math inline">\(\LaTeX\)</span>).</p>
+<p>This chapter also comes back to the idea that the best form to express information might be even be a table (I really appreicated figure 6’s table as a non-trivial example of this). I think in classes like 36-315 we focus a lot of which is the best graphic, but sometimes even another step back is wise.</p>
+<div class="figure" style="text-align: center"><span id="fig:tablefig"></span>
+<img src="/~bpleroy/pages/blog/public/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/tablefig-1.png" alt="An example where a complex data set (vies on the president per demographic group) has the potential to best be presented in a table." width="672" />
+<p class="caption">
+Figure 6: An example where a complex data set (vies on the president per demographic group) has the potential to best be presented in a table.
+</p>
+</div>
+<div id="extra-table-by-on-attributes-of-a-friendly-data-graphic-one-what-is-accessibly-and-open-to-the-eye.-from-page-183." class="section level3">
+<h3>4.4 Extra Table by on attributes of a “friendly data graphic”, one what is accessibly and open to the eye. From page 183.</h3>
+<div class="figure" style="text-align: center"><span id="fig:friendlytable"></span>
+<img src="/~bpleroy/pages/blog/public/post/2018-05-16-review-of-tufte-s-the-visual-display-of-quantitative-information_files/figure-html/friendlytable-1.png" alt="Data-ink ratio increase to create a new type of box plot" width="672" />
+<p class="caption">
+Figure 7: Data-ink ratio increase to create a new type of box plot
+</p>
+</div>
+</div>
 </div>
