@@ -99,7 +99,7 @@ If one has read Cleveland's text, we're really looking at a compounding of direc
 
 Maybe one of Tufte's most remembered views is that Tufte thought graphics tended to have too much ink on them. Although sadly, this is generally associated with his extreme example show in figure 4, his ideas and recommendations have merit.
 
-```{r extemereduct, echo = F, message = F, warning = F, fig.cap = "An extreme example of Tufte's reduction in unnecessary ink in graphics. *Tufte proposed moving from the figure on the left, to the reduced figure on the right (the center is what was dropped out)* [image link](http://stat.cmu.edu//~bpleroy/pages/blog/static/images/extreme_reduction.png)", fig.align='center'}
+```{r extemereduct, echo = F, message = F, warning = F, fig.cap = "An extreme example of Tufte's reduction in unnecessary ink in graphics. *Tufte proposed moving from the figure on the left, to the reduced figure on the right (the center is what was dropped out)* [image link](http://stat.cmu.edu/~bpleroy/pages/blog/static/images/extreme_reduction.png)", fig.align='center'}
 image_path <- "../../static/images/extreme_reduction.png"
 im <- load.image(image_path)
 plot(im,frame = F,axes = F)
@@ -166,7 +166,7 @@ Tufte summarized the strength of complex graphics (specially multiple grids):
 
 ## 4. Best Graphics \label{sec:bestgraphics}
 
-To me, an easy but good summary of how we should approach the creation of graphics and the inclusion of graphics in statistical writing lies in the final chapter of Tufte's book (a short read- can be found [here](www.humanities.ufl.edu/pdf/tufte-aesthetics_and_technique.pdf)).
+To me, an easy but good summary of how we should approach the creation of graphics and the inclusion of graphics in statistical writing lies in the final chapter of Tufte's book (a short read- can be found [here](http://www.humanities.ufl.edu/pdf/tufte-aesthetics_and_technique.pdf)).
 
 To start off with 2 quotes:
 
