@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+	<title> Benjamin LeRoy </title>
+
+	<link rel="stylesheet" type="text/css" href="css/main.css"> 
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+	  $(function(){
+	    var includes = $('[data-include]');
+	    jQuery.each(includes, function(){
+	      var file = 'pages/' + $(this).data('include') + '.html';
+	      $(this).load(file);
+	    });
+	  });
+	</script> 
+
+
+
+</head>
+
+
+
+
+<body>
+
+
+	<!--
+		Nav Bar
+	-->
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" 
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+				<a class="nav-link" href="pages/about.html">About</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="pages/teaching.html">Teaching</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="pages/cv.html">Resume/CV</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="pages/blog/public/index.html">Blog</a>
+				</li>
+				</ul>
+			</div>
+	</nav> 
+
+	<!--
+	Header
+	-->
+		<div class="container">
+		<div class = "container-fluid" style = "float:center"> 
+			<div class = "row" style = "float:center">
+				<div class = "col-xs-12 col-md-6 right">
+					<h2>
+						Benjamin LeRoy 
+					</h2>
+					<p>
+						Doctoral Student
+						<br>
+						Statistics and Data Science
+						<br>
+						Carnegie Mellon University
+						<hr>
+					</p>
+					<p>
+					Contact: <a href="mailto:bpleroy@stat.cmu.edu" data-external="true">bpleroy@stat.cmu.edu</a>
+					</p>
+					<div style = "float:center">
+						<center>
+						<a href="https://github.com/benjaminleroy" target="_blank">
+							<img src = "images/external_links/Github.png", width = "35", height = "35">
+						</a>
+					
+						<a href="https://www.linkedin.com/in/benjamin-leroy-b5640344/" target="_blank" >
+							<img src ="images/external_links/Linkedin.png", width = "35", height = "35" >
+						</a>
+						</center>
+					</div>
+					<br>
+				</div>
+
+	    		<div class = "clearfix visible-xs"></div>
+
+				<div class = "col-xs-12 col-md-6 center">
+					<img src="images/me.jpg" width="320" height="240" title="me">
+				</div>	
+			</div>
+		</div> 
+	</div> 
+
+	<div class="container">
+		<div class = "container-fluid" style = "float:center"> 
+			<div class = "row" style = "float:center">
+				<div class = "col-xs-12 col-md-12 right">
+					<div data-include="test"></div>	
+				</div>	
+			</div>
+		</div> 
+	</div> 
+
+
+
+</body>
+
+
+
+</html>
