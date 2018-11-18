@@ -68,6 +68,10 @@ a:active{
 	color: black;
 }
 
+code{
+	color: #A0BAEC;
+}
+
 
 
 /* * {border:1px solid red !important;} */
