@@ -6,13 +6,21 @@
     <description>Recent content in Tags on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 May 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/~bpleroy/pages/blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Graphic theory</title>
+      <title>Tufte</title>
+      <link>/~bpleroy/pages/blog/public/tags/tufte/</link>
+      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/~bpleroy/pages/blog/public/tags/tufte/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>graphic theory</title>
       <link>/~bpleroy/pages/blog/public/tags/graphic-theory/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
@@ -21,7 +29,7 @@
     </item>
     
     <item>
-      <title>Graphics</title>
+      <title>graphics</title>
       <link>/~bpleroy/pages/blog/public/tags/graphics/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
@@ -30,20 +38,11 @@
     </item>
     
     <item>
-      <title>Plot</title>
+      <title>plot</title>
       <link>/~bpleroy/pages/blog/public/tags/plot/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/~bpleroy/pages/blog/public/tags/plot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tufte</title>
-      <link>/~bpleroy/pages/blog/public/tags/tufte/</link>
-      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/~bpleroy/pages/blog/public/tags/tufte/</guid>
       <description></description>
     </item>
     

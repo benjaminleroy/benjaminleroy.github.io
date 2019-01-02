@@ -4,17 +4,29 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
+    
     <link rel="stylesheet" href="{{ "/css/fonts.css" | relURL }}" />
     {{ partial "head_custom.html" . }}
+    <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
+    
+
   </head>
 
   <body>
-    <nav>
-    <ul class="menu">
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
+		<a class="navbar-brand" href="../../../index.html">Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-auto">
+				<!--<ul class="menu">-->
       {{ range .Site.Menus.main }}
-      <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+      <li class=nav-item><a href="{{ .URL | relURL }}" class="nav-link">{{ .Name }}</a></li>
       {{ end }}
     </ul>
-    <hr/>
-    </nav>
+				</li>
+				<!--</ul>-->
+			</div>
+	</nav>

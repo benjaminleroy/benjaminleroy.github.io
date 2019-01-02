@@ -28,25 +28,7 @@
   </url>
   
   <url>
-    <loc>/~bpleroy/pages/blog/public/tags/graphic-theory/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/~bpleroy/pages/blog/public/tags/graphics/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/~bpleroy/pages/blog/public/categories/graphics/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/~bpleroy/pages/blog/public/tags/plot/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -59,12 +41,29 @@
   
   <url>
     <loc>/~bpleroy/pages/blog/public/tags/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/~bpleroy/pages/blog/public/tags/tufte/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/~bpleroy/pages/blog/public/tags/graphic-theory/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/~bpleroy/pages/blog/public/tags/graphics/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/~bpleroy/pages/blog/public/tags/plot/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

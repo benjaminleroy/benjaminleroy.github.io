@@ -23,8 +23,4 @@ footnotereturnlinkcontents = "↩"
     name = "Tags"
     url = "/tags/index.html"
     weight = 3
-[[menu.main]]
-    name = "|   Benjamin LeRoy   |"
-    url = "../../../index.html"
-    weight = 4
 
