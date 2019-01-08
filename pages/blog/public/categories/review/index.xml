@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Review on Benjamin LeRoy&#39;s Blog</title>
+    <link>/~bpleroy/pages/blog/public/categories/review/</link>
+    <description>Recent content in Review on Benjamin LeRoy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 03 Jan 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/~bpleroy/pages/blog/public/categories/review/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Review of DSI Fellowship 2018</title>
+      <link>/~bpleroy/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/~bpleroy/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

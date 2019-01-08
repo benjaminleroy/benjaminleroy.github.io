@@ -6,9 +6,37 @@
     <description>Recent content in Categories on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Thu, 03 Jan 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/~bpleroy/pages/blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Advising</title>
+      <link>/~bpleroy/pages/blog/public/categories/advising/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/~bpleroy/pages/blog/public/categories/advising/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DSI</title>
+      <link>/~bpleroy/pages/blog/public/categories/dsi/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/~bpleroy/pages/blog/public/categories/dsi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data Science Initiative</title>
+      <link>/~bpleroy/pages/blog/public/categories/data-science-initiative/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/~bpleroy/pages/blog/public/categories/data-science-initiative/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Graphic Theory</title>

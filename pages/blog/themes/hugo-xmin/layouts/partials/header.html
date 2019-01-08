@@ -10,10 +10,9 @@
     <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
     
 
-  </head>
 
-  <body>
- 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
+  
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav" style = "max-width:1200px;">
 		<a class="navbar-brand" href="http://stat.cmu.edu/~bpleroy/index.html">Benjamin LeRoy</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
 		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +25,10 @@
       <li class=nav-item><a href="{{ .URL | relURL }}" class="nav-link">{{ .Name }}</a></li>
       {{ end }}
     </ul>
-				</li>
+				<!--</li>-->
 				<!--</ul>-->
 			</div>
 	</nav>
+	</head>
+	<body>
+	<div id = "container">
