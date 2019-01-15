@@ -16,6 +16,10 @@ This last semester I had the privilege of serving as a Data Science Initiative (
 
 When I was in undergrad I took a class called "Reproducible and Collaborative Data Science" were we learned good reproduciblity practices while working on a large group project. It was in `python` and we learned basically everything in it's most "rare" for - including `git` and version control. For data scientists, who will be using both `R` and `python`, `RStudio`'s GUI makes makes `git` (and `github` interaction in groups) much easier (and definitely appeared easier to pick up general ideas of version control much faster than when I first learned).
 
+## Graphics (word-clouds 😱)
+
+I tend to consider myself knowledgable in graphics, having taught a class on statistical graphics and having read a handful of texts on the subject, but it was nice to see I can still learn. During 1 of the projects, a faculty advisor suggested the clients like word-clouds (a graphic that I used to distain since it doesn't really present the true data (values) well), and I was very expressive in my distain. But, as the project continued (and continued to use word-clouds), I really got to appreciate the value of the graphic in communicating the information the team actually wanted to express.
+
 ## Presentations  
 
 Both groups presented quiet a bit to their external collaborators / clients as well as to myself and their faculty advisors. I really wished there were more high quality documents that focused on how undergrad statistic students should 
