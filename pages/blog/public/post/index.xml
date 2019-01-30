@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Benjamin LeRoy&#39;s Blog</title>
-    <link>/~bpleroy/pages/blog/public/post/</link>
+    <link>/pages/blog/public/post/</link>
     <description>Recent content in Posts on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 03 Jan 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/~bpleroy/pages/blog/public/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/pages/blog/public/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Review of DSI Fellowship 2018</title>
-      <link>/~bpleroy/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</link>
+      <link>/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</guid>
+      <guid>/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</guid>
       <description>This last semester I had the privilege of serving as a Data Science Initiative (DSI) Fellow for its inaugural semester of the program. Within this program groups of undergraduates work with outside companies on different questions of interests leveraging their course work to solve real world problems. I enjoyed advising with both groups, and they taught me things along the way. Below, I’ve just kinda sketched out some thoughts I had after the completion, and they don’t focus on the tools the students used or their projects, but rather some “higher”-level thoughts.</description>
     </item>
     
     <item>
       <title>Review of Tufte’s &#34;The Visual Display of Quantitative Information&#34;</title>
-      <link>/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</link>
+      <link>/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</guid>
+      <guid>/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</guid>
       <description>The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the Statistics and Data Science Department at Carnegie Mellon University. That means it may be less of book report / review as a summary highlight points I found most relevant.</description>
     </item>
     

@@ -2,57 +2,57 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Benjamin LeRoy&#39;s Blog</title>
-    <link>/~bpleroy/pages/blog/public/categories/</link>
+    <link>/pages/blog/public/categories/</link>
     <description>Recent content in Categories on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 03 Jan 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/~bpleroy/pages/blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/pages/blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Advising</title>
-      <link>/~bpleroy/pages/blog/public/categories/advising/</link>
+      <link>/pages/blog/public/categories/advising/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/categories/advising/</guid>
+      <guid>/pages/blog/public/categories/advising/</guid>
       <description></description>
     </item>
     
     <item>
       <title>DSI</title>
-      <link>/~bpleroy/pages/blog/public/categories/dsi/</link>
+      <link>/pages/blog/public/categories/dsi/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/categories/dsi/</guid>
+      <guid>/pages/blog/public/categories/dsi/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Data Science Initiative</title>
-      <link>/~bpleroy/pages/blog/public/categories/data-science-initiative/</link>
+      <link>/pages/blog/public/categories/data-science-initiative/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/categories/data-science-initiative/</guid>
+      <guid>/pages/blog/public/categories/data-science-initiative/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Graphic Theory</title>
-      <link>/~bpleroy/pages/blog/public/categories/graphic-theory/</link>
+      <link>/pages/blog/public/categories/graphic-theory/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/categories/graphic-theory/</guid>
+      <guid>/pages/blog/public/categories/graphic-theory/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Graphics</title>
-      <link>/~bpleroy/pages/blog/public/categories/graphics/</link>
+      <link>/pages/blog/public/categories/graphics/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/categories/graphics/</guid>
+      <guid>/pages/blog/public/categories/graphics/</guid>
       <description></description>
     </item>
     

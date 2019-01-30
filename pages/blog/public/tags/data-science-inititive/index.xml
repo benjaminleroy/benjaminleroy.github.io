@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data Science Inititive on Benjamin LeRoy&#39;s Blog</title>
+    <link>/pages/blog/public/tags/data-science-inititive/</link>
+    <description>Recent content in Data Science Inititive on Benjamin LeRoy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 03 Jan 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/pages/blog/public/tags/data-science-inititive/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Review of DSI Fellowship 2018</title>
+      <link>/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/blog/public/post/2019/01/03/review-of-dsi-fellowship-2018/</guid>
+      <description>This last semester I had the privilege of serving as a Data Science Initiative (DSI) Fellow for its inaugural semester of the program. Within this program groups of undergraduates work with outside companies on different questions of interests leveraging their course work to solve real world problems. I enjoyed advising with both groups, and they taught me things along the way. Below, I’ve just kinda sketched out some thoughts I had after the completion, and they don’t focus on the tools the students used or their projects, but rather some “higher”-level thoughts.</description>
+    </item>
+    
+  </channel>
+</rss>

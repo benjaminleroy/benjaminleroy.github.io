@@ -2,12 +2,16 @@
 title: Review of DSI Fellowship 2018
 date: '2019-01-03'
 slug: review-of-dsi-fellowship-2018
-draft: yes
+draft: no
 categories:
   - Advising
   - Data Science Initiative
   - DSI
-tags: []
+tags: 
+  - DSI
+  - Advising
+  - Data Science Inititive
+  - Word Clouds
 ---
 
 This last semester I had the privilege of serving as a Data Science Initiative (DSI) Fellow for its inaugural semester of the program. Within this program groups of undergraduates work with outside companies on different questions of interests leveraging their course work to solve real world problems. I enjoyed advising with both groups, and they taught me things along the way. Below, I've just kinda sketched out some thoughts I had after the completion, and they don't focus on the tools the students used or their projects, but rather some "higher"-level thoughts.

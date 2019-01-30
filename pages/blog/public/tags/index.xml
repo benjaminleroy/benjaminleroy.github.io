@@ -2,47 +2,84 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Benjamin LeRoy&#39;s Blog</title>
-    <link>/~bpleroy/pages/blog/public/tags/</link>
+    <link>/pages/blog/public/tags/</link>
     <description>Recent content in Tags on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Thu, 03 Jan 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/~bpleroy/pages/blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/pages/blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Advising</title>
+      <link>/pages/blog/public/tags/advising/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/blog/public/tags/advising/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DSI</title>
+      <link>/pages/blog/public/tags/dsi/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/blog/public/tags/dsi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data Science Inititive</title>
+      <link>/pages/blog/public/tags/data-science-inititive/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/blog/public/tags/data-science-inititive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Tufte</title>
-      <link>/~bpleroy/pages/blog/public/tags/tufte/</link>
+      <link>/pages/blog/public/tags/tufte/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/tags/tufte/</guid>
+      <guid>/pages/blog/public/tags/tufte/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Word Clouds</title>
+      <link>/pages/blog/public/tags/word-clouds/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/blog/public/tags/word-clouds/</guid>
       <description></description>
     </item>
     
     <item>
       <title>graphic theory</title>
-      <link>/~bpleroy/pages/blog/public/tags/graphic-theory/</link>
+      <link>/pages/blog/public/tags/graphic-theory/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/tags/graphic-theory/</guid>
+      <guid>/pages/blog/public/tags/graphic-theory/</guid>
       <description></description>
     </item>
     
     <item>
       <title>graphics</title>
-      <link>/~bpleroy/pages/blog/public/tags/graphics/</link>
+      <link>/pages/blog/public/tags/graphics/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/tags/graphics/</guid>
+      <guid>/pages/blog/public/tags/graphics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>plot</title>
-      <link>/~bpleroy/pages/blog/public/tags/plot/</link>
+      <link>/pages/blog/public/tags/plot/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/~bpleroy/pages/blog/public/tags/plot/</guid>
+      <guid>/pages/blog/public/tags/plot/</guid>
       <description></description>
     </item>
     
