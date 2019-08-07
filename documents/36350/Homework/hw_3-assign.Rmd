@@ -1,0 +1,170 @@
+---
+title: "Homework 3: Functions"
+author: "Statistical Computing, 36-350"
+date: "Week of Monday July 15, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+On this homework, you can collaborate with your classmates, but you must identify their names above, and you must submit **your own** homework as an knitted HTML file on Canvas, by Tuesday 10pm, next week (July 24th).
+
+
+Survey (5 points)
+===
+
+Fill out the midsemester [survey](https://forms.gle/sW54MENberZH3j7N8). Write the final word in this phrase that appears in the last question "Ben is ____".
+
+Huber loss function (10 pts)
+===
+
+Recall, as covered in lab, the Huber loss function (or just Huber function, for short), with cutoff $a$, which is defined as:
+$$
+\psi_a(x) = \begin{cases}
+x^2 & \text{if $|x| \leq a$} \\
+2a|x| - a^2 & \text{if $|x| > a$} 
+\end{cases}
+$$
+This function is quadratic on the interval $[-a,a]$, and linear outside of this interval. It transitions from quadratic to linear "smoothly", and looks like this (when $a=1$):  
+
+```{r echo=F, message=F, warning=F, fig.align="center"}
+# annoying code to create the figure (for pdf and html)
+# for just html could do:
+# ![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week3/huber.png)
+url <- "https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week3/huber.png"
+library(png)
+library(RCurl)
+url_cont <- getURLContent(url)
+img <- readPNG(url_cont)
+rimg <- as.raster(img) # raster multilayer object
+r <- nrow(rimg) / ncol(rimg) # image ratio
+plot(rimg)
+```
+
+Exploring function environments (10 pts)
+===
+
+- **1a. (2 pts)** A modified version of the Huber function is given below. You can see that we've defined the variable `x_squared` in the body of the function to be the square of the input argument `x`. In a separate line of code (outside of the function definition), define the variable `x_squared` to be equal to 999. Then call `huber(x = 3)`, and display the value of `x_squared`. What is its value? Is this affected by the function call `huber(x = 3)`? It shouldn't be! Reiterate this point with several more lines of code, in which you repeatedly define `x_squared` to be something different (even something nonnumeric, like a string), and then call `huber(x = 3)`, and demonstrate afterwards that the value of `x.squared` hasn't changed.
+
+```{r}
+huber <- function(x, a = 1) {
+  x_squared = x^2
+  ifelse(abs(x) <= a, x_squared, 2 * a * abs(x) - a^2)
+}
+```
+
+
+- **1b.  (2 pts)** Similar to the last question, define the variable `a` to be equal to -59.6, then call `huber(x = 3, a = 2)`, and show that the value of `a` after this function call is unchanged. And repeat a few times with different assignments for the variable `a`, to reiterate this point.
+
+
+- **1c.  (2 pts)** The previous two questions showed you that a function's body has its own environment in which locally defined variables, like those defined in the body itself, or those defined through inputs to the function, take priority over those defined outside of the function. However, when a variable referred to the body of a function is *not defined in the local environment*, the default is to look for it in the global environment (outside of the function).
+
+    Below is a "sloppy" implementation of the Huber function called `huber_sloppy()`, in which the cutoff `a` is not passed as an argument to the function. In a separate line of code (outside of the function definition), define `a` to be equal to 1.5 and then call `huber.sloppy(x=3)`. What is the output? Explain. Repeat this a few times, by defining `a` and then calling `huber_sloppy(x = 3)`, to show that the value of `a` does indeed affect the function's ouptut as expected. **Challenge**: try setting `a` equal to a string and calling `huber_sloppy(x = 3)`; can you explain what is happening?
+
+```{r}
+huber_sloppy <- function(x) {
+  ifelse(abs(x) <= a, x^2, 2 * a * abs(x) - a^2)
+}
+```
+
+
+
+- **1d.  (2 pts)** At last, a difference between `=` and `<-`, explained! The equal sign `=` and assignment operator `<-` are often used interchangeably in R, and some people will often say that a choice between the two is mostly a matter of stylistic taste. This is not the full story. Indeed, `=` and `<-` behave very differently when used to set input arguments in a function call. As we showed above, setting, say, `a = 5` as the input to `huber()` has no effect on the global assignment for `a`. However, replacing `a = 5` with `a <- 5` in the call to `huber()` is entirely different in terms of its effect on `a`. Demonstrate this, and explain what you are seeing in terms of global assignment.
+
+
+- **1e.  (2 pts) ** The story now gets even more subtle. It turns out that the assignment operator `<-` allows us to define new global variables even when we are specifying inputs to a function. Pick a variable name that has not been defined yet in your workspace, say `b` (or something else, if this has already been used in your R Markdown document). Call `huber(x = 3, b <- 20)`, then display the value of `b`---this variable should now exist in the global enviroment, and it should be equal to 20! Alo, can you explain the output of `huber(x = 3, b <- 20)`?
+
+
+Prostate cancer data, revisited (with `dplyr`) (17 points)
+===
+
+```{r message=F, warning=F}
+library(tidyverse)
+```
+
+
+Below we read in a data frame `pros_df` containing measurements on men with prostate cancer, as seen in previous labs. As before, in what follows, use `dplyr` and pipes to answer the following questions on `pros_df`.
+
+```{r}
+pros_df <- 
+  read.table(paste0("https://raw.githubusercontent.com/benjaminleroy/",
+                    "36-350-summer-data/master/Week1/pros.dat"))
+```
+
+- **2a.  (2 pts) ** Among the men whose lcp value is equal to the minimum value, report the lowest and highest lpsa score.
+
+
+- **2b.  (3 pts) ** Order the rows by decreasing age, then decreasing lpsa score, and display the rows from men who are older than 70, but only the age, lpsa, lcavol, and lweight columns.
+
+
+- **2c.  (2 pts)** Calculate the correlation between the lpsa on lcavol columns, but only using men whose lcp value is strictly larger than the minimum value. **Hint:** try subsetting the correlation matrix.
+
+
+- **2d.  (3 pts)** If you are only examining the relationship between 2 continous variables, the correlation coefficent is directly related to the $\beta$ value in a linear model. We'll talk more about linear models next week (though I assume you've seen them before). Using code similar to that in part **4c.** run a linear model modeling lpsa as a function of lcavol on the same set of men. **Hint:** look up the `lm` function.
+
+
+- **2e.** *Challenge:* Extend your code in the last part, still just using a single flow of pipe commands in total, to extract the p-values associated with each of the coefficients in the fitted model.
+
+
+Small Assignments with `tidyr` (17 points)
+===
+
+- **3a.  (2 pts)** Repeat Lab 3.2's 4b. using `tidyr`'s `separate()` (below I loaded in the data). Does the column ordering look the same? 
+
+```{r}
+shark_attacks <- read.csv("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/shark-attacks-clean.csv", stringsAsFactors = TRUE)
+```
+
+
+- **3b.  (2 pts)** Unless you did `separate(..., remove = FALSE)`, you'll notice that you've removed the `Date` column. Use `unite` to recreate the Date column (don't remove the `year`, `month` and `day` columns.)
+
+
+- **3c. (3 pts)** Tufte (a famous statistican in vistualization) stated twice in his text *The Visual Display of Information* that summaries and tables can be useful/ better than graphics for "datset of 20 numbers or less". How many data points does Lab 3.2's 4e's graphic contain (Hint: it's below 20). Generate the same data that the graphic represents (where we only are only examining the `Fatal` Attacks), but grouping (`group_by`) by month and summarizing the number of observations in each group. The `n()` inside the `summarize` function will count the total number in each group (call this value `total`). Update this first table to be ordered (highest to lowest) by the total column (make to to do this after you make the total column).
+
+
+- **3d. (3 pts)** As in Lab 3.2's 4f, group these count values by country as well. Do country then month. What happens when happens when you order them differently? Save this information as `attacks_monthly`.
+
+
+- **3e. (2 pts)** That table you got in **3d** seems to be very hard to read. Tufte would be sad. Use `spread` to make it have Country's on the rows and Months as columns. Save this as `attacks_monthly_table`.
+
+
+- **3f. (3 pts)** Transform `attacks_monthly_table` back to the same format as `attacks_monthly` using `gather`. Define as `attacks_monthly2` (remember to give it the same names). Are they the same? Use any subsetting approach you've learned before to make them have the same dimension (no need to make the remake order the exact same.)
+
+
+-  **3g. (2 pts)** In your own words describe the input parameters (used in the above problem) for both `gather` and `spread`.
+
+- **3h.** *Challenge*: Use `attacks_monthly` to recreate the faceted barplot in Lab 3.2's 4f. To do so use `aes(...,y = total)` for the `geom_barplot` and have the `stat = "identity"` inside `geom_barplot`. Think about how `ggplot` is thinking about the data structure you should be feeding in. *If data is too big (think facebook, etc) then it can make sense to first calculate these counts before you visualize the graphic.*
+
+
+
+
+Merging with `tidyverse` (13 points)
+===
+
+- **4a. (1 point)** The Social Security Administration, among other things, maintains a list of the most popular baby names. Load the file located at the URL `https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week3/PA.txt` into R as a data frame `pa_names` with variable names `State`, `Gender`, `Year`, `Name` and `Count`. This is a fun dataset to browse: for instance you can see the name "Elvis" suddenly jumped in popularity in the mid 1950s. For those interested, we obtained this data from `https://www.ssa.gov/oact/babynames/state/namesbystate.zip`.  Print the first three rows of the data frame.
+
+
+- **4b. (2 pts)** Load the file at the URL `https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week3/NC.txt`  as `nc_names` using the same variable names as `pa_names`. Similar to `pa_names`, make sure the variables in `nc_names` are called `State`, `Gender`, `Year`, `Name` and `Count`. Print the first three rows of `nc_names`. Use the `intersect` function (note that base `R` also has a `union` function for similar set analysis), to count how many names `nc_names` has in common with `pa_names`.
+
+
+- **4c. (3 pts)** Create data.frames `nc_babies` and `pa_babies` that contain the number of female and male babies the state had for a given year (have column names `State`, `Gender`, `Year`, `Total`).
+
+
+- **4d. (4 pts)** Join the `Total` babies information from the `.._babies` data.frames to the `.._names`. Please update the `.._names` data frames. *Think about what's happening here - write some general comments on what is happening (and decide which join seems the most natural here).* **Do this before you start coding!** *Note: this is good coding practice - aka thinking about the problem before starting to code.* Show the head of these 2 updated data.frames. If you have column names of the style `a.x` and `a.y` remove one of them if they're the exact same.
+
+
+- **4c. (3 pts)** Merge these two files (`{pa,na}_names`) to create a data.frame `merged` which contains columns for counts in each state. The resulting data frame should have columns `Name`, `Gender`, `Year`, `PA Counts`, `NC Counts`. If a name does not appear in one of the data frame,  make the count in the merged data frame under the appropriate column equal to NA (which `join` does this mean?). Print the first three and last three rows of the merged data frame. **Try using the `rename` `dplyr` function if possible.
+
+
+
+- **4d.** *Challenge:* Create another merged data.frame but remove/collapse year information and include a column that is the proportion of babies that year and gender than had the same name (name them `PA Prop` and `NC Prop`).
+
+
+Split-Apply-Combine
+===
+- **5.** *Challenge*: I didn't directly teach how to use `tidyverse` to do an approach in coding call "Split-Apply-Combine". Read / skim this document: [http://stat545.com/block024_group-nest-split-map.html]. What does `nest`, `unnest` and `map` do? Can you imagine how you could do "Split-Apply-Combine" with the `tidyr` tools and `split()` and `apply`? *This `tidyverse` approach seems still to actually be in development (as of summer 2019) - which is why I'm not teaching it in class.*

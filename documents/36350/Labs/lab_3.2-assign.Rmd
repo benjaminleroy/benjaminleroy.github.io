@@ -1,0 +1,202 @@
+---
+title: "Lab 3.2: Tidyverse: Pipes and Dplyr"
+author: "Statistical Computing, 36-350"
+date: "Thursday July 18, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+**This week's agenda**: learning to master pipes and `dplyr`.
+
+```{r message=F, warning=F}
+# Load the tidyverse!
+library(tidyverse)
+```
+
+Pipes to base R
+===
+
+For each of the following code blocks, which are written with pipes, write equivalent code in base R (to do the same thing).
+
+- **1a.** 
+
+```{r}
+letters %>%
+  toupper %>%
+  paste(collapse="+") 
+```
+
+
+- **1b.** 
+
+```{r}
+"     Ceci n'est pas une pipe     " %>% 
+  gsub("une", "un", .) %>%
+  trimws
+```
+
+
+- **1c.** (Still use `ggplot`)
+
+```{r warning =FALSE}
+rnorm(1000) %>% 
+  data.frame(x = .) %>%
+  ggplot(.) +  # I'm giving you a hint here
+    geom_histogram(aes(x = x, y = ..density..)) + 
+    labs(title = "N(0,1) draws")
+```
+
+
+- **1d.** 
+
+```{r}
+rnorm(1000) %>% 
+  hist(breaks=30, plot=FALSE) %>% # use the ?hist to figure out what this does when plot=FALSE
+  .[["density"]] %>%
+  max
+```
+
+
+Base R to pipes
+===
+
+For each of the following code blocks, which are written in base R, write equivalent code with pipes (to do the same thing).
+
+- **2a.** Hint: you'll have to use the dot `.`, as seen above in Q1b, or in the lecture notes.
+
+```{r}
+paste("Your grade is", sample(c("A","B","C","D","R"), size = 1))
+```
+
+
+- **2b.** Hint: you can use the dot `.` again, in order to index `state.name` directly in the last pipe command.
+
+```{r}
+state.name[which.max(state.x77[,"Illiteracy"])] 
+```
+
+
+- **2c.** Hint: if `x` is a list of length 1, then `x[[1]]` is the same as `unlist(x)`.
+
+```{r}
+str_url <- 
+  paste0("https://raw.githubusercontent.com/benjaminleroy/",
+         "36-350-summer-data/master/Week1/endgame.txt")
+
+# Base R:
+lines <- readLines(str_url)
+text <- paste(lines, collapse = " ")
+words <- strsplit(text, split = "[[:space:]]|[[:punct:]]")[[1]]
+wordtab <- table(words)
+wordtab <- sort(wordtab, decreasing = TRUE)
+head(wordtab, 10)
+```
+
+
+- **2d.** Hint: the only difference between this and the last part is the line `words = words[words != ""]`. This is a bit tricky line to do with pipes: use the dot `.`, once more, and manipulate it as if were a variable name.
+
+```{r}
+# Base R:
+lines <- readLines(str_url)
+text <- paste(lines, collapse = " ")
+words <- strsplit(text, split = "[[:space:]]|[[:punct:]]")[[1]]
+words <- words[words != ""]
+wordtab <- table(words)
+wordtab <- sort(wordtab, decreasing = TRUE)
+head(wordtab, 10)
+```
+
+
+Shark attack data, revisited
+===
+Below we read in the similar data.frame `shark_attacks` containing information about victims of shark attacks we've seen in previous labs. (Note the difference of location - I changed it a little bit.)
+
+```{r}
+shark_attacks <- read.csv("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/shark-attacks-clean.csv", stringsAsFactors = TRUE)
+```
+
+- **3a.** Write and document a function `time_factor_to_numeric` that transforms a time (storaged as a stringed factor) into a numerical value. Additionally, make sure that if the value is `NA`, the function returns `NA`. Use the below `my_fac` and `my_fac2` as an example of what format is expected to be inputed. Also uncomment the code below to check you function. **Reminder**: use the Roxygen2 shortcut to help document your function. 
+
+
+```{r}
+time_factor_to_numeric <- function(time_fac) {
+  # fill in and document
+  NULL
+}
+```
+
+```{r}
+my_fac <- factor(c("13h30"))
+my_fac2 <- factor(c(NA))
+
+# my_fac_numeric <- time_factor_to_numeric(my_fac)
+# my_fac_numeric == 13.5
+# my_fac2_numeric <- time_factor_to_numeric(my_fac2)
+# is.na(my_fac2_numeric)
+```
+
+
+
+
+
+
+- **3b.** Attempt your function on the factor vector `my_fac3` found below (Use the commented out code below to do so). If it doesn't work continue to **3c.** after defining `time_factor_to_numeric_no_vec <- time_factor_to_numeric` as seen below. If your function does vectorize (i.e. passes the `all.equal` statement), define `time_factor_to_numeric_no_vec` as another function with the same structure as `time_factor_to_numeric` but use `strsplit` and see that it doesn't vectorize.
+
+
+```{r}
+my_fac3 <- factor(c("05h15", NA, "23h59"))
+
+#my_fac3_numeric <- time_factor_to_numeric(my_fac3)
+#all.equal(my_fac3_numeric, c(5.25, NA, 23 + 59/60))
+```
+
+
+
+```{r}
+time_factor_to_numeric_no_vec <- time_factor_to_numeric
+```
+
+
+
+- **3c.** Write a new function `time_factor_to_numeric_vec` that takes in a vector and returns a vector (use the same test as in **3b**). For this implimentation use an `sapply` and your `time_factor_to_numeric_no_vec`. Document as well.
+
+
+- **3d.** In R, as you've seen with indexing and more, we approach of problems through a vectorized framework. Below you'll see that we define a new function `time_factor_to_numeric_vectorized` that wraps the function `Vectorize` around your non-vectorized function. Use the same test as seen in part **3b** and **3c** to see if this function works well
+
+```{r}
+time_factor_to_numeric_vectorized <- Vectorize(time_factor_to_numeric_no_vec)
+```
+
+
+dplyr attacks sharks
+===
+With your vectorized function we'll start exploring the `dplyr` tools we saw in lecture.
+
+- **4a.** Quick clean up. Convert the Time column in the `shark_attacks` to numeric using `time_factor_to_numeric_vectorized`. Hint: use `mutate_at()`, and reassign `shark_attacks` to be the output.
+
+
+- **4b.** Using `dplyr`'s `mutate` function create 3 new numeric columns `year`, `month`, and `day` for the shark_attacks `data.frame` Before you do, check the `class` of the `Date` class using the dplyr pipes and the `pull` function.
+
+
+
+- **4c.** Suppose you're writing a story about shark attacks in the United States that were fatal. You're interested in tracking down family of some of these individuals. Moreover, for journalistic purposes - it's probably best that you select families based on how recently the attack happened.
+First, create a new data.frame `fatal_shark_attacks_usa` that contain information of all attacks in the US that were fatal.
+
+
+
+- **4d.** Using `fatal_shark_attacks_usa` produce a table that contains individuals that meet the rest of the conditions above, and show the top 3 individuals's `Name`, `Age`, `Area` of attack, and `year` of attack. Hint: this will use `arrange`, `select`, and `slice`. *I expect this will take some thinking - maybe pull out a piece of paper and write down the goals and try to decide how they relate to `dplyr` functions.*
+
+
+- **4e.** Remembering that `ggplot` does some tabulation internally in certain `geom`s: Use `dplyr` piping and functions to explore the following question. Are there particular months of the year where its there are fewer fatal attacks than others (all countries)? 
+
+
+
+
+- **4f.** That seems weird. Facet the above graphic on country. Describe what you see. What is the month with the most fatal attacks in the US?
+
+
+
+- **4g.** *Challenge:* Use the built in data vector `month.abb` to create a new column in `shark_attacks` `month_abb` that is a factor variable will the correct month associated with the attack and is ordered. Update **3f** and **3e** figures with this information. Also add `scale_x_discrete(drop = FALSE)` to your plots. What does this do?
+

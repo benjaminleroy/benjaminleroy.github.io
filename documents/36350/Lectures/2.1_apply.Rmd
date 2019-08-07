@@ -1,0 +1,368 @@
+---
+title: "Data Frames and Apply"
+author: "Statistical Computing, 36-350"
+date: "Monday July 8, 2019"
+---
+
+Last week: Text manipulation
+===
+
+- Strings are, simply put, sequences of characters bound together
+- Text data occurs frequently "in the wild", so you should learn how to deal with it!
+- `nchar()`, `substr()`: functions for substring extractions and replacements
+- `strsplit()`, `paste()`: functions for splitting and combining strings
+- Reconstitution: take lines of text, combine into one long string, then split to get the words
+- `table()`: function to get word counts, useful way of summarizing text data
+- Zipf's law: word frequency tends to be inversely proportional to (a power of) rank
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*Data frames*</span>
+
+Data frames
+===
+
+The format for the "classic" data table in statistics: **data frame**. Lots of the "really-statistical" parts of the R programming language presume data frames
+
+- Think of each row as an observation/case
+- Think of each columns as a variable/feature 
+- Not just a matrix because variables can have different types 
+- Both rows and columns can be assigned names
+
+Difference between data frames and lists? Each column in a data frame must have the same length (each element in the list can be of different lengths)
+
+Creating a data frame
+===
+
+Use `data.frame()`, similar to how we create lists
+
+```{r}
+my_df <- data.frame(nums = seq(0.1,0.6, by = 0.1), chars = letters[1:6], 
+                   bools = sample(c(TRUE,FALSE), 6, replace = TRUE))
+my_df
+
+# Note, a list can have different lengths for different elements!
+my_list <- list(nums = seq(0.1,0.6,by=0.1), chars = letters[1:12], 
+               bools = sample(c(TRUE,FALSE), 6, replace = TRUE))
+my_list
+```
+
+Indexing a data frame (Base R)
+===
+
+- By rows/columns: similar to how we index matrices
+- By columns only: similar to how we index lists
+
+```{r}
+my_df[,1] # Also works for a matrix 
+my_df[,"nums"] # Also works for a matrix
+my_df$nums # Doesn't work for a matrix, but works for a list
+my_df$chars # Note: this one has been converted into a factor data type
+as.character(my_df$chars) # Converting it back to a character data type
+```
+
+(A pause from Data Frames) Factors
+===
+Factors are slightly different that the data types we've seen before -but are most similar to strings. 
+
++ Factors have levels, e.g. regions of states, Political Parties
+```{r}
+f_pol <- factor(sample(c("R", "D"), size = 10, replace = T))
+f_pol
+```
+
++ Factors can be ordered, e.g. salsa spice levels
+
+```{r}
+f_salsa <- factor(sample(c("mild", "medium","hot"), size = 4, replace = T),
+                  levels = c("mild", "medium","hot"), ordered = T)
+f_salsa
+as.numeric(f_salsa)
+```
+
+---
+
+Factors will be useful to visualization (tomorrow), and more. Factors are slightly different than other data types.
+
++ cannot include new levels
+
+```{r error=T}
+f_pol[2] <- "I"
+f_pol
+```
+
+
+(Data Frames continued) Creating a data frame from a matrix
+===
+
+Often times it's helpful to start with a matrix, and add columns (of different data types) to make it a data frame
+
+```{r}
+class(state.x77) # Built-in matrix of states data, 50 states x 8 variables
+head(state.x77) 
+class(state.region) # Factor of regions for the 50 states
+head(state.region)
+class(state.division) # Factor of divisions for the 50 states
+head(state.division) 
+```
+
+---
+
+```{r}
+# Combine these into a data frame with 50 rows and 10 columns
+state_df <- data.frame(state.x77, Region = state.region, 
+                       Division = state.division)
+class(state_df)
+head(state_df) # Note that the first 8 columns name carried over from state.x77
+```
+
+Adding columns to a data frame
+===
+
+To add columns: we can either use `data.frame()`, or directly define a new named column
+
+```{r}
+# First way: use data.frame() to concatenate on a new column
+state_df <- data.frame(state_df, Cool = sample(c(T,F), nrow(state_df), rep = TRUE))
+head(state_df, 4)
+
+# Second way: just directly define a new named column
+state_df$Score <- sample(1:100, nrow(state_df), replace = TRUE)
+head(state_df, 4)
+```
+
+Deleting columns from a data frame
+===
+
+To delete columns: we can either use negative integer indexing, or set a column to `NULL`
+
+```{r}
+# First way: use negative integer indexing
+state_df <- state_df[,-ncol(state_df)]
+head(state_df, 4)
+
+# Second way: just directly set a column to NULL
+state_df$Cool <- NULL
+head(state_df, 4)
+```
+
+Reminder: Boolean indexing
+===
+
+With matrices or data frames, we'll often want to access a subset of the rows corresponding to some condition. You already know how to do this, with Boolean indexing
+
+```{r}
+# Compare the averages of the Frost column between states in New England and
+# Pacific divisions
+mean(state_df[state_df$Division == "New England", "Frost"]) 
+mean(state_df[state_df$Division == "Pacific", "Frost"]) # Home sweet home!
+```
+
+`subset()`
+===
+
+The `subset()` function provides a convenient alternative way of accessing rows for data frames
+
+```{r}
+# Using subset(), we can just use the column names directly (i.e., no need for
+# using $)
+state_df_ne_1 <- subset(state_df, Division == "New England")
+# Get same thing by extracting the appropriate rows manually
+state_df_ne_2 <- state_df[state_df$Division == "New England", ]
+all(state_df_ne_1 == state_df_ne_2)
+
+# Same calculation as in the last slide, using subset()
+mean(subset(state_df, Division == "New England")$Frost)
+mean(subset(state_df, Division == "Pacific")$Frost) # Home sweet home!
+```
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*`apply()`*</span>
+
+The apply family
+===
+
+R offers a family of **apply functions**, which allow you to apply a function across different chunks of data. Offers an alternative to explicit iteration using `for()` loop; can be simpler and faster, though not always. Summary of functions:
+
+- `apply()`: apply a function to rows or columns of a matrix or data frame
+- `lapply()`: apply a function to elements of a list or vector
+- `sapply()`: same as the above, but simplify the output (if possible)
+- `tapply()`: apply a function to levels of a factor vector
+
+`apply()`, rows or columns of a matrix or data frame
+===
+
+The `apply()` function takes inputs of the following form:
+
+- `apply(x, MARGIN=1, FUN=my.fun)`, to apply `my.fun()` across rows of a matrix or data frame `x`
+- `apply(x, MARGIN=2, FUN=my.fun)`, to apply `my.fun()` across columns of a matrix or data frame `x`
+
+```{r}
+apply(state.x77, MARGIN = 2, FUN = min) # Minimum entry in each column
+apply(state.x77, MARGIN = 2, FUN = max) # Maximum entry in each column
+apply(state.x77, MARGIN = 2, FUN = which.max) # Index of the max in each column
+apply(state.x77, MARGIN = 2, FUN = summary) # Summary of each col, get back matrix!
+```
+
+Applying a custom function 
+===
+
+For a custom function, we can just define it before hand, and the use `apply()` as usual
+
+```{r}
+# Our custom function: trimmed mean
+trimmed_mean <- function(v) {  
+  q1 <- quantile(v, prob = 0.1)
+  q2 <- quantile(v, prob = 0.9)
+  return(mean(v[q1 <= v & v <= q2]))
+}
+
+apply(state.x77, MARGIN = 2, FUN = trimmed_mean) 
+```
+
+We'll learn more about functions later (don't worry too much at this point about the details of the function definition)
+
+Applying a custom function "on-the-fly"
+===
+
+Instead of defining a custom function before hand, we can just define it "on-the-fly". Sometimes this is more convenient
+
+```{r}
+# Compute trimmed means, defining this on-the-fly
+apply(state.x77, MARGIN = 2, FUN = function(v) { 
+  q1 <- quantile(v, prob = 0.1)
+  q2 <- quantile(v, prob = 0.9)
+  return(mean(v[q1 <= v & v <= q2]))
+})
+```
+
+Applying a function that takes extra arguments
+===
+
+Can tell `apply()` to pass **extra arguments** to the function in question. E.g., can use: `apply(x, MARGIN=1, FUN=my_fun, extra_arg_1, extra_arg_2)`, for two extra arguments `extra_arg_1`, `extra.arg.2` to be passed to `my_fun()`
+
+```{r}
+# Our custom function: trimmed mean, with user-specified percentiles
+trimmed_mean <- function(v, p1, p2) {
+  q1 <- quantile(v, prob = p1)
+  q2 <- quantile(v, prob = p2)
+  return(mean(v[q1 <= v & v <= q2]))
+}
+
+apply(state.x77, MARGIN = 2, FUN = trimmed_mean, p1 = 0.01, p2 = 0.99)
+```
+
+What's the return argument?
+===
+
+What kind of data type will `apply()` give us? Depends on what function we pass. Summary, say, with `FUN=my_fun()`:
+
+- If `my_fun()` returns a single value, then `apply()` will return a vector
+- If `my_fun()` returns k values, then `apply()` will return a matrix with k rows (note: this is true *regardless* of whether `MARGIN = 1` or `MARGIN = 2`)
+- If `my_fun()` returns different length outputs for different inputs, then `apply()` will return a list
+- If `my_fun()` returns a list, then `apply()` will return a list
+
+We'll grapple with this on the lab/hw. 
+
+Optimized functions for special tasks
+===
+
+**Don't overuse** the apply paradigm! There's lots of special functions that **optimized** are will be both simpler and faster than using `apply()`. E.g.,
+
+- `rowSums()`, `colSums()`: for computing row, column sums of a matrix
+- `rowMeans()`, `colMeans()`: for computing row, column means of a matrix
+- `max.col()`: for finding the maximum position in each row of a matrix
+
+Combining these functions with logical indexing and vectorized operations will enable you to do quite a lot. E.g., how to count the number of positives in each row of a matrix?
+
+```{r}
+x <- matrix(rnorm(9), 3, 3)
+# Don't do this (much slower for big matrices)
+apply(x, MARGIN = 1, function(v) { return(sum(v > 0)) })
+# Do this instead (much faster, simpler)
+rowSums(x > 0)
+```
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*`lapply()`, `sapply()`, `tapply()`*</span>
+
+
+`lapply()`, elements of a list or vector
+===
+
+The `lapply()` function takes inputs as in: `lapply(x, FUN = my_fun)`, to apply `my_fun()` across elements of a list or vector `x`. The output is always a list
+
+```{r}
+my_list
+lapply(my_list, FUN = mean) # Get a warning: mean() can't be applied to chars
+lapply(my_list, FUN = summary)
+```
+
+`sapply()`, elements of a list or vector
+===
+
+The `sapply()` function works just like `lapply()`, but tries to **simplify** the return value whenever possible. E.g., most common is the conversion from a list to a vector
+
+```{r}
+sapply(my_list, FUN = mean) # Simplifies the result, now a vector
+sapply(my_list, FUN = summary) # Can't simplify, so still a list
+```
+
+`tapply()`, levels of a factor vector
+===
+
+The function `tapply()` takes inputs as in: `tapply(x, INDEX = my_index, FUN = my_fun)`, to apply `my.fun()` to subsets of entries in `x` that share a common level in `my.index`
+
+```{r}
+# Compute the mean and sd of the Frost variable, within each region
+tapply(state.x77[,"Frost"], INDEX = state.region, FUN = mean)
+tapply(state.x77[,"Frost"], INDEX = state.region, FUN = sd)
+```
+
+`split()`, split by levels of a factor
+===
+
+The function `split()` split up the rows of a data frame by levels of a factor, as in: `split(x, f=my.index)` to split a data frame `x` according to levels of `my.index`
+
+```{r}
+# Split up the state.x77 matrix according to region
+state_by_reg <- split(data.frame(state.x77), f = state.region)
+class(state_by_reg) # The result is a list
+names(state_by_reg) # This has 4 elements for the 4 regions
+class(state_by_reg[[1]]) # Each element is a data frame
+```
+
+---
+
+```{r}
+# For each region, display the first 3 rows of the data frame
+lapply(state_by_reg, FUN = head, 3) 
+```
+
+---
+
+```{r}
+# For each region, average each of the 8 numeric variables
+lapply(state_by_reg, FUN = function(df) { 
+  return(apply(df, MARGIN = 2, mean)) 
+})
+```
+
+
+
+Summary
+===
+
+- Data frames are a representation of the "classic" data table in R: rows are observations/cases, columns are variables/features
+- Each column can be a different data type (but must be the same length)
+- `subset()`: function for extracting rows of a data frame meeting a condition 
+- `split()`: function for splitting up rows of a data frame, according to a factor variable
+- `apply()`: function for applying a given routine to rows or columns of a matrix or data frame
+- `lapply()`: similar, but used for applying a routine to elements of a vector or list
+- `sapply()`: similar, but will try to simplify the return type, in comparison to `lapply()`
+- `tapply()`: function for applying a given routine to groups of elements in a vector or list, according to a factor variable

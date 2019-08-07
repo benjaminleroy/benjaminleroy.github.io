@@ -1,0 +1,195 @@
+---
+title: "Homework 1.1: Indexing and Iteration and Text Manipulation"
+author: "Statistical Computing, 36-350"
+date: "Week of Monday July 1, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+On this homework, you can collaborate with your classmates, but you must identify their names above, and you must submit **your own** homework as an knitted HTML file on Canvas, by Monday 10pm, next week (July 9).
+
+```{r}
+## For reproducibility --- don't change this!
+set.seed(07012019)
+```
+
+Some R basics
+===
+
+- **1a.** Let's start easy by working through some R basics, just to brush up on them. Define a variable `x_vec` to contain the integers 1 through 100. Check that it has length 100. Report the data type being stored in `x_vec`. Add up the numbers in `x_vec`, by calling a built-in R function.
+
+
+- **1b.** Convert `x_vec` into a matrix with 20 rows and 5 columns, and store this as `x_mat`. Here `x_mat` should be filled out in the default order (column major order). Check the dimensions of `x_mat`, and the data type as well. Compute the sums of each of the 5 columns of `x_mat`, by calling a built-in R function. Check (using a comparison operator) that the sum of column sums of `x_mat` equals the sum of `x_vec`.
+
+
+- **1c.** Extract and display rows 1, 5, and 17 of `x_mat`, with a single line of code. Answer the following questions, each with a single line of code: how many elements in row 2 of `x_mat` are larger than 40? How many elements in column 3 are in between 45 and 50? How many elements in column 5 are odd? Hint: take advantage of the `sum()` function applied to Boolean vectors.
+
+
+- **1d.** Using Boolean indexing, modify `x_vec` so that every even number in this vector is incremented by 10, and every odd number is left alone. This should require just a single line of code. Print out the result to the console. **Challenge**: show that `ifelse()` can be used to do the same thing, again using just a single line of code.
+
+
+
+- **1e.** Consider the list `x_list` created below. Complete the following tasks, each with a single line of code: extract all but the second element of `x_list`---seeking here a list as the final answer. Extract the first and third elements of `x_list`, then extract the second element of the resulting list---seeking here a vector as the final answer. Extract the second element of `x_list` as a vector, and then extract the first 10 elements of this vector---seeking here a vector as the final answer. *Note: pay close attention to what is asked and use either single brackets `[ ]` or double brackets ``[[ ]]`` as appropriate.*
+
+x_list <- list(rnorm(6), letters, sample(c(TRUE,FALSE), size=4, replace=TRUE))
+Prostate cancer data set
+===
+
+OK, moving along to more interesting things! We're going to look again, as in lab, at the prostate cancer data set: 9 variables measured on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~hastie/ElemStatLearn/)):
+
+1. `lpsa`: log PSA score
+2. `lcavol`: log cancer volume
+3. `lweight`: log prostate weight
+4. `age`: age of patient
+5. `lbph`: log of the amount of benign prostatic hyperplasia
+6. `svi`: seminal vesicle invasion
+7. `lcp`: log of capsular penetration
+8. `gleason`: Gleason score 
+9. ` pgg45`: percent of Gleason scores 4 or 5 
+
+To load this prostate cancer data set into your R session, and store it as a matrix `pros_data`:
+
+```{r}
+pros_data <-
+  as.matrix(read.table("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/pros.dat"))
+```
+
+Computing standard deviations using iteration
+===
+
+- **2a.** Using on-the-fly Boolean indexing, extract the rows of `pros_data` that correspond to patients with SVI, and the rows that correspond to patients without it. Call the resulting matrices `pros_data_svi` and `pros_data_no_svi`, respectively. Display the dimensions of these matrices. Compute the column means of `pros_data_svi` and `pros_data_no_svi`, stored into vectors called `pros_data_svi_avg` and `pros_data_no_svi_avg`, respectively. For each matrix, this should require just a single call to a built-in R function. Display these column means.
+
+
+
+- **2b.** Take a look at the starter code below. The first line defines an empty vector `pros_data_svi_sd` of length `ncol(pros_data)` (of length 9). The second line defines an index variable `i` and sets it equal to 1. Write a third line of code to compute the standard deviation of the `i`th column of `pros_data_svi`, using a built-in R function, and store this value in the `i`th element of `pros_data_svi_sd`. 
+
+```{r}
+pros_data_svi_sd <- vector(length = ncol(pros_data))
+i <- 1
+```
+
+
+- **2c.** Repeat the calculation as in the previous question, but for patients without SVI. That is, produce three lines of code: the first should define an empty vector `pros_data_no_svi_sd` of length `ncol(pros_data)` (of length 9), the second should define an index variable `i` and set it equal to 1, and the third should fill the `i`th element of `pros_data_no_svi_sd` with the standard deviation of the `i`th column of `pros_data_no_svi`.
+
+
+
+
+- **2d.** Write a `for()` loop to compute the standard deviations of the columns of `pros_data_svi` and `pros_data_no_svi`, and store the results in the vectors `pros_data_svi_sd` and `pros_data_no_svi_sd`, respectively, that were created above. Note: you should have a single `for()` loop here, not two for loops. And if it helps, consider breaking this task down into two steps: as the first step, write a `for()` loop that iterates an index variable `i` over the integers between 1 and the number of columns of `pros_data` (don't just manually write 9 here, pull out the number of columns programmatically), with an empty body. As the second step, paste relevant pieces of your solution code from Q2b and Q2c into the body of the `for()` loop. Print out the resulting vectors `pros_data_svi_sd` and `pros_data_no_svi_sd` to the console. Comment, just briefly (informally), by visually inspecting these standard deviations and the means you computed in Q2a: which variables exhibit large differences in means between the SVI and non-SVI patients, relative to their standard deviations?
+
+
+
+Computing t-tests using vectorization
+===
+
+- **3a.** Recall that the **two-sample (unpaired) t-statistic** between data sets $X=(X_1,\ldots,X_n)$ and $Y=(Y_1,\ldots,Y_m)$ is:
+$$
+T = \frac{\bar{X} - \bar{Y}}{\sqrt{\frac{s_X^2}{n} + \frac{s_Y^2}{m}}},
+$$
+where $\bar{X}=\sum_{i=1}^n X_i/n$ is the sample mean of $X$, $s_X^2 = \sum_{i=1}^n (X_i-\bar{X})^2/(n-1)$ is the sample variance of $X$, and similarly for $\bar{Y}$ and $s_Y^2$. We will compute these t-statistics for all 9 variables in our data set, where $X$ will play the role of one of the variables for SVI patients, and $Y$ will play the role of this variable for non-SVI patients. Start by computing a vector of the denominators of the t-statistics, called `pros_data_denom`, according to the formula above. Take advantage of vectorization; this calculation should require just a single line of code. Make sure not to include any hard constants (e.g., don't just manually write 21 here for $n$); as always, programmatically define all the relevant quantities. Check using `all.equal()` that your computed denominators match the "magic denominators" given below in `magic_denom`. Then compute a vector of t-statistics for the 9 variables in our data set, called `pros_data_t_stat`, according to the formula above, and using `pros_data_denom`. Again, take advantage of vectorization; this calculation should require just a single line of code. Print out the t-statistics to the console. 
+
+```{r}
+magic_denom <- c(0.19092077, 0.08803179, 1.91148819, 0.34076326, 0.00000000,
+                0.25730390, 0.15441770, 6.30903678, 0.23021447)
+```
+
+
+- **3b.** Given data $X$ and $Y$ and the t-statistic $T$ as defined the last question, the **degrees of freedom** associated with $T$ is:
+$$
+\nu = \frac{(\frac{s_X^2}{n}+\frac{s_Y^2}{m})^2}{\frac{(\frac{s_X^2}{n})^2}{n-1} + 
+  \frac{(\frac{s_Y^2}{m})^2}{m-1}}.
+$$
+Compute the degrees of freedom associated with each of our 9 t-statistics (from our 9 variables), storing the result in a vector called `pros_data_df`. This might look like a complicated calculation, but really, it's not too bad: it only involves arithmetic operators, and taking advantage of vectorization, the calculation should only require a single line of code. Hint: to simplify this line of code, it will help to first set short variable names for variables/quantities you will be using, as in `sx <- pros_data_svi_sd`, `n <- nrow(pros_data_svi)`, and so on. Print out these degrees of freedom values to the console.
+
+
+- **3c.** The function `pt()` evaluates the distribution function of the t-distribution. E.g.,
+    ```{r, eval=FALSE}
+    pt(x, df=v, lower.tail=FALSE)
+    ```
+    returns the probability that a t-distributed random variable, with `v` degrees of freedom, exceeds the value `x`. Importantly, `pt()` is vectorized: if `x` is a vector, and so is `v`, then the above returns, in vector format: the probability that a t-distributed variate with `v[1]` degrees of freedom exceeds `x[1]`, the probability that a t-distributed variate with `v[2]` degrees of freedom exceeds `x[2]`, and so on. 
+
+    Call `pt()` as in the above line, but replace `x` by the absolute values of the t-statistics you computed for the 9 variables in our data set, and `v` by the degrees of freedom values associated with these t-statistics. Multiply the output by 2, and store it as a vector `pros_data_p_val`. These are called **p-values** for the t-tests of mean difference between SVI and non-SVI patients, over the 9 variables in our data set. Print out the p-values to the console. Identify the variables for which the p-value is smaller than $0.05/9$ (hence deemed to have a significant difference between SVI and non-SVI patients)[^1]. Identify the variable with the smallest p-value (the most significant difference between SVI and non-SVI patients).
+
+
+[^1]: Due to the fact that we are testing [multiple hypotheses](https://en.wikipedia.org/wiki/Multiple_comparisons_problem) we are using a Bonferoni correction on the false positive rate of .05 (This will be cover in other classes - but feel free to ask me about it).
+
+Computing t-tests using iteration
+===
+
+- **4.** The function `t.test()` computes a two-sample (unpaired) t-test between two data sets. E.g., 
+    ```{r}
+    t_test_obj <- t.test(x = rnorm(10), y = rnorm(10))
+    names(t_test_obj)
+    ```
+    computes a t-test between data sets `x=rnorm(10)` and `y=rnorm(10)` (here, just for the sake of example, these are just two sets of 10 randomly generated standard normals), and stores the output in a list called `t_test_obj`. The names of the list are then displayed. Note: the element named `p.value` contains the p-value. 
+
+    Define an empty vector of length `ncol(pros_data)` (of length 9) called `pros_data_p_val_master`. Then write a `for()` loop to populate its entries with the p-values from calling `t.test()` to test the mean difference between SVI and non-SVI patients, over each of the 9 variables in our data set. Important: the `t.test()` function will throw an error when it tries to consider the mean difference in the *SVI variable itself*, across the two groups of SVI patients and non-SVI patients; this will occur at some value of `i` (i.e., the value for which  `pros_data[,i]` is the SVI column). To avoid this error, use an `if()` statement to check if the current variable being considered is SVI, and in this case, just set the p-value equal to `NaN` (rather than calling `t.test()`). Check using `all.equal()` that the p-values stored in `pros_data_p_val_master` match the ones you computed in Q3c. Note: use `check.names = FALSE` as a third argument to `all.equal()`, which instructs it to ignore the names of its first two arguments.
+
+
+Shakespeare's complete works
+===
+
+On to the more fun stuff! As in lab, we're going to look at [William Shakespeare's](https://en.wikipedia.org/wiki/William_Shakespeare) complete works, taken from [Project Gutenberg](http://www.gutenberg.org). The Shakespeare data file is up on our course website, and to load it into your R session, as a string vector called `shakespeare_lines`: 
+
+```{r}
+shakespeare_lines <-
+  readLines("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/shakespeare.txt")
+```
+
+Where are Shakespeare's plays, in this massive text?
+===
+
+- **5a.** Some lines in `shakespeare_lines` are empty, i.e., they are just equal to "". How many such lines are there? Remove all empty lines from `shakespeare_lines`. Also, trim all "extra" white space characters in the lines of `shakespear_lines` using the `trimws()` function. Note: if you are unsure about what `trimws()` does, try it out on some simple strings/some simple vectors of strings.
+
+
+- **5b.** Visit [https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/shakespeare.txt](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/shakespeare.txt) in your web browser and just skim through this text file. Near the top you'll see a table of contents. Note that "THE SONNETS" is the first play, and "VENUS AND ADONIS" is the last. Using `which()`, find the indices of the lines in `shakespeare_lines` that equal "THE SONNETS", report the index of the *first* such occurence, and store it as `toc_start`. Similarly, find the indices of the lines in `shakespeare_lines` that equal "VENUS AND ADONIS", report the index of the *first* such occurence, and store it as `toc_end`.
+
+
+- **5c.** Define `n = toc_end - toc_start + 1`, and create an empty string vector of length `n` called `titles`. Using a `for()` loop, populate `titles` with the titles of Shakespeare's plays as ordered in the table of contents list, with the first being "THE SONNETS", and the last being "VENUS AND ADONIS". Print out the resulting `titles` vector to the console. Hint: if you define the counter variable `i` in your `for()` loop to run between 1 and `n`, then you will have to index `shakespeare_lines` carefully to extract the correct titles. Think about the following. When `i = 1`, you want to extract the title of the first play in `shakespeare.lines`, which is located at index `toc.start`. When `i = 2`, you want to extract the title of the second play, which is located at index `toc_start + 1`. And so on.
+
+
+
+- **5d.** Use a `for()` loop to find out, for each play, the index of the line in `shakespeare.lines` at which this play begins. It turns out that the *second* occurence of "THE SONNETS" in `shakespeare_lines` is where this play actually begins (this first ocurrence is in the table of contents), and so on, for each play title. Use your `for()` loop to fill out an integer vector called `titles_start`, containing the indices at which each of Shakespeare's plays begins in `shakespeare_lines`. Print the resulting vector `titles_start` to the console.
+
+
+
+- **5e.** Define `titles_end` to be an integer vector of the same length as `titles_start`, whose first element is the second element in `titles_start` minus 1, whose second element is the third element in `titles_start` minus 1, and so on. What this means: we are considering the line before the second play begins to be the last line of the first play, and so on. Define the last element in `titles_end` to be the length of `shakespeare_lines`. You can solve this question either with a `for()` loop, or with proper indexing and vectorization. **Challenge**: it's not really correct to set the last element in `titles_end` to be length of `shakespeare_lines`, because there is a footer at the end of the Shakespeare data file. By looking at the data file visually in your web browser, come up with a way to programmatically determine the index of the last line of the last play, and implement it.
+
+
+- **5f.** In Q5d, you should have seen that the starting index of Shakespeare's 38th play "THE TWO NOBLE KINSMEN" was computed to be `NA`, in the vector `titles_start`. Why? If you run `which(shakespeare_lines == "THE TWO NOBLE KINSMEN")` in your console, you will see that there is only one occurence of "THE TWO NOBLE KINSMEN" in `shakespeare_lines`, and this occurs in the table of contents. So there was no second occurence, hence the resulting `NA` value.
+
+    But now take a look at line 118,463 in `shakespeare_lines`: you will see that it is "THE TWO NOBLE KINSMEN:", so this is really where the second play starts, but because of colon ":" at the end of the string, this doesn't exactly match the title "THE TWO NOBLE KINSMEN", as we were looking for. The advantage of using the `grep()` function, versus checking for exact equality of strings, is that `grep()` allows us to match substrings. Specifically, `grep()` returns the indices of the strings in a vector for which a substring match occurs, e.g.,
+    ```{r}
+    grep(pattern="cat",
+         x=c("cat", "canned goods", "batman", "catastrophe", "tomcat"))
+    ```
+    so we can see that in this example, `grep()` was able to find substring matches to "cat" in the first, fourth, and fifth strings in the argument `x`. Redefine `titles_start` by repeating the logic in your solution to Q5d, but replacing the `which()` command in the body of your `for()` loop with an appropriate call to `grep()`. Also, redefine `titles_end` by repeating the logic in your solution to Q5e. Print out the new vectors `titles_start` and `titles_end` to the console---they should be free of `NA` values.
+   
+   
+   
+Extracting and analysing a couple of plays
+===
+
+- **6a.** Let's look at two of Shakespeare's most famous tragedies. Programmatically find the index at which "THE TRAGEDY OF HAMLET, PRINCE OF DENMARK" occurs in the `titles` vector. Use this to find the indices at which this play starts and ends, in the `titles_start` and `titles_end` vectors, respectively. Call the lines of text corresponding to this play `shakespeare_lines_hamlet`. How many such lines are there? Do the same, but now for the play "THE TRAGEDY OF ROMEO AND JULIET", and call the lines of text corresponding to this play `shakespeare_lines_romeo`. How many such lines are there?
+
+
+
+- **6b.** Repeat the analysis, outlined in Q10a of Lab 1, on `shakespeare_lines_hamlet`. That is:
+      * collapse `shakespeare_lines_hamlet` into one big string, separated by spaces;
+      * convert this string into all lower case characters;
+      * divide this string into words, by splitting on spaces or on punctuation marks, using `split = "[[:space:]]|[[:punct:]]"` in the call to `strsplit()`;
+      * remove all empty words (equal to the empty string ""), and report how many words remain;
+      * compute the unique words, report the number of unique words, and plot a histogram of their numbers of characters;
+      * report the 5 longest words;
+      * compute a word table, and report the 25 most common words and their counts;
+      * finally, produce a plot of the word counts verus rank.
+  
+  
+  
+- **6c.** Repeat the same task as in Q6b, but on `shakespeare.lines.romeo`. Comment on any similarities/differences you see in the answers.
+

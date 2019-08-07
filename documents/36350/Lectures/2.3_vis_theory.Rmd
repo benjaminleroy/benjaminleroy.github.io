@@ -1,0 +1,642 @@
+---
+title: "Visual Theory, Human Perception and Coding Style"
+author: "Statistical Computing, 36-350"
+date: "Friday - July 12, 2019"
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+#opts_chunk$set(cache=TRUE)
+opts_chunk$set(fig.height = 5, fig.width = 10, dev.args = list(pointsize = 20))
+```
+
+
+Last time: `ggplot`
+====
+Summary:
+
+- `ggplot` is plotting package for the future of `R` computing
+- `ggplot` acts like a grammar - we are able to extend the layers iterative
+- `ggplot()` defines global information for all following elements (relative to data and `aes` mappings)
+- `aes` allows you to define how to map columns of a data.frame to aesthetics of the graphic
+- `geom_...` define geometric attributes of the graphic
+- `facets` allow one to divide the graphic up conditional on a factor variable
+
+<span style="color: blue">Part I</span>
+===
+<span style="color: blue">*Visualization Theory*</span>
+
+
+
+This part lecture is a combination of a [blog](https://benjaminleroy.github.io/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/) a wrote a long time ago - *that has lots of spelling errors* and a compression of common theory that is sometime taught in 315.
+
+Graphics
+===
+
+**Why Graphics**
+
+- non-trivial patterns
+- complex data
+
+```{r eval = F, echo=FALSE, out.width = "80%", fig.align="center", message = F, warning = F}
+library(gridExtra)
+theme_set(theme_minimal())
+my_vis <- list()
+
+for (idx in 1:4){
+  my_vis[[idx]] <- ggplot(anscombe,
+                          aes(x = .data[[paste0("x",idx)]],
+                              y = .data[[paste0("y",idx)]])) +
+    geom_point() + 
+    labs(x = "x",
+         y = "y",
+         title = paste("Anscombe", idx))
+}
+
+grid.arrange(grobs = my_vis, nrow =2 )
+#[F.J. Anscombe, The American Statistician, 1973](http://www.sjsu.edu/faculty/gerstman/StatPrimer/anscombe1973.pdf)
+
+```
+
+**When graphics** (Maybe better to ask "when not graphics")
+
+- summaries and tables can be useful for "datset of 20 numbers or less"
+
+~Tufte, *The Visual Display of Information*, pg 20 and pg 178 (see extra reading for Hw 2)
+
+Overview
+===
+**Rules to make Good Graphics:**
+
+1. Avoid misleading visuals
+2. Avoid clutter graphics (make sure your message comes through)
+3. Leverage graphics for complex understanding
+
+**Human Preception**
+
+**General dos & don't for graphics**
+
+1. Represent the data as truthfully as possible
+===
+
+```{r echo=FALSE, out.width = "70%", fig.align="center", message = F, warning = F}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/fuel.jpg")
+```
+
+
+1. Truthful Representation
+===
+- preserve the size of effect / differences in the data
+
+    Tufte suggests optimizing the Lie Factor:
+    $$\mathrm{Lie\ Factor} = \frac{\mathrm{size\ of\ the\ effect\ in\ the\ graph}}{\mathrm{size\ of\ the\ effect\ in\ the\ data}}$$
+- don't manipulate axes to trick the reader (scaling / truncation is ok if it's pointed out)
+- have standard units
+    - $ in fixed units across time
+    - rates instead of totals (e.g. GDP vs GDP per cap)
+  
+1. Don't abuse commonly held assumptions
+===
+
+
+```{r echo=FALSE, out.width = "40%", fig.align="center"}
+knitr::include_graphics("https://benjaminleroy.github.io/pages/blog/static/images/shrinking_docs_distortion.png")
+```
+Above example: double scaling
+
+Other examples: Rose Diagrams, etc
+
+"The number of information-carrying (variable) dimensions depicted should not exceed the number of dimensions in the data." ~ Tufte, pg 77
+
+1. DO avoid being misleading with labels
+===
+e.g.
+
+- tell them your range of values for axes
+- emphasis important (assumption related) values
+- make legends and labels clear to indicate information that might *condition*
+a conclusion
+
+
+2. Avoid clutter graphics 
+===
+make sure your message comes through
+
+2. Decultering (Data ink)
+===
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/decorating1.png")
+```
+
+```{r echo=FALSE, out.width = "50%", fig.align="center"}
+#knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/decorating0.png")
+```
+
+
+
+2. "Decorating" and Data-Ink
+===
+
+Graphics should not draw the viewer's attention away from the data.  Extras get in the way.
+
+**Note:  Decoration does not refer to appropriate graph labeling.** Labels should always be clear, detailed, and thorough.  Label key parts of the data.  Add text explanations if necessary.
+	
+**Data Ink should primarily present information about the data**: the non-erasable, non-redundant core of a graphic
+	
+Tufte suggests (within reason) maximizing the **data-ink ratio:**
+$$\mathrm{Data\ ink \ ratio} = \frac{\mathrm{ink\ used\ to\ describe\ data}}{\mathrm{total\ ink\ in\ the\ graph}}$$
+
+2. Impact / Truth in today's world
+===
+"… at least a few computer graphics only evoke the response 'Isn’t it remarkable that the computer can be programmed to draw like that?' instead of 'My, what interesting data.' (Tufte, pg 120)
+
+Today's graphics (including `ggplot`) can auto generate:
+
+- excessive number of axis marking (even where no data lies)
+- interest in create pretty graphics when tables are better
+
+3. Showcasing Complex ideas
+===
+
+"More information is better than less information, especially when the marginal costs of handling and interpreting additional information are low, as they are for most graphics." (Tufte, pg 168)
+
+3. Data Density
+===
+Maximize (within reason):
+$$\text{data density of a graphic } = \frac{\text{number of entries in data matrix}}{\text{area of data graphic}}$$
+
+- When people have low “data density”, the reader is often left with questions about “what has been left out?” or “what if this trend was caused by other variables?”. 
+
+- Visuals with a high “data density” must be designed with care, as elements like color and shapes have the potential to overwelm readers if not used correctly.
+
+3. Faceting / Conditional Plots
+===
+Are a great example of increasing complexity of visualizations
+
+```{r echo=F, out.width = "100%", fig.align="center", warning = F, message = F}
+library(tidyverse)
+#  Load the data into R
+titanic <- read_csv("https://raw.githubusercontent.com/benjaminleroy/stat315summer_data/master/assignments/assignment03/titanic.csv") %>%
+  mutate(Pclass = factor(Pclass))
+p <- ggplot(titanic, aes(x = Pclass, fill = factor(Survived))) + 
+  geom_bar()
+p + coord_cartesian() +
+  facet_wrap(~ factor(Sex, levels = c("female", "male"), 
+                      labels = c("Female", "Male"))) +
+  labs(x = "Passenger Class",
+       y = "Number of Passengers",
+       fill = "Survived (Binary)",
+       title = "Distribution of Survival of Titanic Passengers",
+       caption = "Titantic dataset"
+       )
+```
+
+
+Graphic Integrity (Summary)
+===
+
+- represent the data values as close to the truth as possible (be aware of viewer assumptions)
+    - show data variation, not design variation
+    - make sure data is in standard units (e.g. real $) 
+    - Avoid having more dimensions of the graphic than dimensions of data you have
+- leverage labeling to avoid distortion and confusion
+- use graphics to showcase complex ideas (in stat graphics & and this day-in-age in general assume your reader can handle it)
+
+<span style="color: blue">Part II</span>
+===
+<span style="color: blue">*Human Visual Perception*</span>
+
+Cleveland: Human visual perception
+===
+
+```{r, echo = F, out.width = "50%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/Cleveland_Tasks.png")
+```
+
+[**Cleveland and McGill (1984)**](http://www.jstor.org/stable/2288400)
+
+
+Cleveland: quantitative comparisons experiment
+===
+
+To really understand Cleveland's work - let's go through an in class experiment. I'm going to show you 4 sets of 4 images, and I want you to write down the relative quantities from the first object to the later objects.
+
+```{r echo=FALSE}
+library(knitr)
+myLabels = c('A', 'B', 'C', 'D')
+tableSetup = matrix(c(1, '?', '?', '?',
+                     1, '?', '?', '?',
+                     1, '?', '?', '?',
+                     1, '?', '?', '?'), 4, 4, byrow = TRUE)
+row.names(tableSetup) = c("Positions", "Lengths", "Angles", "Areas")
+colnames(tableSetup) = myLabels
+kable(tableSetup)
+```
+
+Quantitative perceptual tasks: position, aligned
+===
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+truePositions = c(4, 3, 1, 2)
+plot(1:4, truePositions, ylim = c(-1, 5),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '', yaxs = 'i')
+lines(x = c(1,4), y = c(0,0))
+axis(side = 1, at = 1:4, labels = myLabels)
+```
+
+Quantitative perceptual tasks: length
+===
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+trueLengths = c(8, 4, 6, 2)
+plot(1:4, rep(0, 4), ylim = c(-7, 7),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '', type = 'n')
+lineOrigins = c(-4, -1, -6, 2)
+for(i in 1:4) {
+  lines(rep(i, 2), c(lineOrigins[i], lineOrigins[i] + trueLengths[i]),
+        lwd = 3, lend = 2)
+}
+axis(side = 1, at = 1:4, labels = myLabels)
+```
+
+Quantitative perceptual tasks: angle
+===
+
+```{r echo=FALSE, out.width = "100%", fig.align="center", message=F, warning=F}
+trueAngles = c(90, 60, 30, 120)
+library(MASS)
+eqscplot(3 * (1:4), rep(0, 4), xlim = c(1, 14), ylim = c(-1, 1),
+         xaxt = 'n', yaxt = 'n', xlab = '', ylab = '', type = 'n')
+angleOrigins = c(-45, 120, 30, 225)
+theta1 = angleOrigins * 2 * pi / 360
+theta2 = (angleOrigins + trueAngles) * 2 * pi / 360
+for(i in 1:4) {
+  lines(c(3 * i + cos(theta1[i]), 3 * i, 3 * i + cos(theta2[i])),
+      c(sin(theta1[i]), 0, sin(theta2[i])))
+}
+axis(side = 1, at = 3 * (1:4), labels = myLabels)
+```
+
+Quantitative perceptual tasks: area
+===
+
+```{r echo=FALSE,  out.width = "100%", fig.align="center"}
+trueAreas = c(4, 2, 1, 3)
+plot(1:4, rep(1, 4), xlim = c(0.5, 4.5), ylim = c(0, 2),
+     cex = 5 * sqrt(trueAreas),
+     xaxt = 'n', yaxt = 'n', xlab = '', ylab = '')
+axis(side = 1, at = 1:4, labels = myLabels)
+```
+
+Quantitative perceptual tasks: answers
+===
+
+```{r echo=FALSE}
+tableData = matrix(c(1, '3/4', '1/4', '2/4',
+                     1, '2/4', '3/4', '1/4',
+                     1, '2/3', '1/3', '4/3',
+                     1, '2/4', '1/4', '3/4'), 4, 4, byrow = TRUE)
+row.names(tableData) = c("Positions", "Lengths", "Angles", "Areas")
+colnames(tableData) = myLabels
+kable(tableData)
+```
+
+[Cleveland and McGill (1984)](http://www.jstor.org/stable/2288400)
+
+[Cleveland, *The Elements of Graphing Data*](http://amzn.to/1PXih9b)
+
+Ordering of perceptual tasks
+===
+
+[Cleveland and McGill's ordering](http://www.creativebloq.com/design/science-behind-data-visualisation-8135496)
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/ClevelandMcGill1.png")
+```
+
+
+Ordering of perceptual tasks
+===
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/ClevelandMcGill2.png")
+```
+
+"generic comparisons" = less accuracy
+
+Quantitative perceptual tasks & ranking
+===
+
+Lessons:
+
+* Best to show quantitative variables with position or length
+* Bars encode length, so start bars at 0; to zoom in, use dotplots (position) instead
+* If possible, avoid stacked bars (not aligned); use dots or lines (aligned baselines) instead
+* Avoid pies, area, and volume entirely
+
+Graphics Dos and Don'ts: More on Human Perception
+===
+
+
+Ranking: alphabetical
+===
+
+```{r, echo = FALSE, out.width = "90%", fig.align="center"}
+inWest = which(state.region == "West")
+dotchart(rev(state.area[inWest])/1000, rev(state.name[inWest]),
+         xlab = "Western state areas (1000s of sq miles)",
+         cex = .75)
+```
+
+Ranking: informative
+===
+
+```{r, echo = FALSE, out.width = "90%", fig.align="center"}
+areaOrder = order(state.area[inWest])
+dotchart(state.area[inWest][areaOrder]/1000, state.name[inWest][areaOrder],
+         xlab = "Western state areas (1000s of sq miles)",
+         cex = .75)
+```
+
+
+Consistency
+===
+
+Comparing weights of newborns: Which age group weighs the least?
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+theme_set(theme_minimal())
+nhanes = read.csv('https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/nhanes.csv')
+levels(nhanes$RACETH) = c("Hisp", "Black", "White")
+theme_set(theme_grey() + theme(text=element_text(size=16)))
+
+ggplot(subset(nhanes, MONTHS <= 2), aes(x = "", y = WEIGHT_KG)) +
+  geom_point() + facet_wrap( ~ MONTHS, scales = "free_y") +
+  xlab("Age (months)") + ylab("Weight (kg)")
+```
+
+Consistency
+===
+
+Give all small multiples the same structure, usually **including axis limits,** to make comparisons easier and reduce cognitive load
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+ggplot(subset(nhanes, MONTHS <= 2), aes(x = "", y = WEIGHT_KG)) +
+  geom_point() + facet_wrap( ~ MONTHS) +
+  xlab("Age (months)") + ylab("Weight (kg)")
+```
+
+Consistency
+===
+
+Ensure [design changes](http://www.perceptualedge.com/blog/?p=2121) are meaningful (tied to data changes)
+
+```{r echo=FALSE, out.width = "40%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/Inconsistent.png")
+```
+
+Consistency
+===
+
+More consistent redesign, [Stephen Few](http://www.perceptualedge.com/blog/?p=2121)
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/vis_data_and_images/Consistent.png")
+```
+
+Semantic associations
+===
+
+Orange vs blue crab species: real graphic from a talk  
+([`crabs` dataset](https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/crabs.html) in `MASS` package)
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+library(MASS)
+with(crabs, plot(RW, FL, col = c("red", "blue")[sp], las = 1,
+                 xlab = "Rear width (mm)", ylab = "Frontal lobe (mm)"))
+legend('topleft', legend = c("Blue crab", "Orange crab"),
+       col = c("red", "blue"), pch = 1)
+```
+
+
+
+Ordering, consistency and semantic associations
+===
+
+Lessons:
+
+* Order your dots/bars meaningfully: ranked by a variable, not alphabetical
+* Use consistent mappings (colors and shapes, axis limits)  
+across graphs
+* Avoid meaningless variety in design
+* Use meaningful mappings:  
+orange vs blue crab species = orange and blue symbols
+* Use conventional mappings: blue = cold, red = hot
+* "More = more":  
+deeper saturation or larger size = higher value of variable
+* Choose and order hues sensibly; use [Color Brewer](http://colorbrewer2.org/)
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*Coding Style*</span>
+
+What and Why is Good Coding
+===
+- "**Good coding style is like correct punctuation: you can manage without it, butitsuremakesthingseasiertoread.** ...The most important thing about a style guide is that it provides consistency, making code easier to write because you need to make fewer decisions"
+
+[Hadley Wickham](https://style.tidyverse.org/)
+
+- "The goal of the R Programming Style Guide is to **make our R code easier to read, share, and verify**. The rules below were designed in collaboration with the entire R user community at Google." 
+
+[Google Style Guide](https://google.github.io/styleguide/Rguide.xml)
+
+- "Because there is no comprehensive official R style manual, students and package writers seem to think that there is no style whatsoever to be followed. **While it may be true that “ugly code runs,” it is also 1) difficult to read and 2) frustrating to extend, and 3) tiring to debug.** Code is a language, a medium of communication, and one should not feel free no ignore its customs."
+
+[Paul E. Johnson, KU](https://cran.r-project.org/web/packages/rockchalk/vignettes/Rstyle.pdf)
+
+When to have clean code 
+===
+
+- "**When writing a program using iterative-enhancement, it is an excellent idea to beautify your code at the end of each enhancement**, before proceding to the next one; each enhancement should be the best that it can be, before continuing. Ultimately, this strategy will save you time compared to the strategy often used by students: ignore style until the program is completely written. This is a penny-wise, pound-foolish strategy. It is much harder to "finish" a poorly-styled program, because it is harder to read and understand it; (software) engineers must learn to practice techniques that overcome human nature; this is one example."
+[Richard E. Pattis, CMU](https://www.cs.cmu.edu/~pattis/15-1XX/15-200/lectures/style/lecture.html)
+    - aka **continuously**
+
+R Style Guides
+===
+
+[Hadley Wichham](http://adv-r.had.co.nz/Style.html)
+
+[Google](https://google.github.io/styleguide/Rguide.xml)
+
+Lesser known:
+
+[Tidyverse](https://style.tidyverse.org/)
+
+
+Quick Walk through of Hadley Wickham Style Guide
+===
+
+
+Notation and naming
+===
+
+“There are only two hard things in Computer Science: cache invalidation and naming things.”
+
+— [Phil Karlton](https://quotesondesign.com/phil-karlton/)
+
+Variable and function names should be lowercase. Use an underscore (_) to separate words within a name. Generally, variable names should be nouns and function names should be verbs. Strive for names that are concise and meaningful (this is not easy!).
+
+Naming Examples:
+===
+**Good**
+```{r eval=F}
+day_one
+day_1
+```
+
+**Bad**
+```{r eval=F}
+first_day_of_the_month
+DayOne
+dayone
+djm1
+```
+
+
+---
+
+Where possible, avoid using names of existing functions and variables. Doing so will cause confusion for the readers of your code.
+
+**Bad**
+```{r eval=F}
+T <- FALSE
+c <- 10
+mean <- function(x) sum(x)
+```
+
+Assignment
+===
+Use <-, not =, for assignment.
+
+**Good**
+```{r eval=F}
+x <- 5
+```
+**Bad**
+```{r eval=F}
+x = 5
+```
+
+Syntax: Spacing
+===
+Place spaces around all infix operators (=, +, -, <-, etc.). The same rule applies when using = in function calls. Always put a space after a comma, and never before (just like in regular English).
+
+**Good**
+```{r eval=F}
+average <- mean(feet / 12 + inches, na.rm = TRUE)
+x <- 1:10 # no spaces with ":"
+
+if (debug) do(x)
+plot(x, y)
+```
+# Bad
+```{r eval=F}
+average<-mean(feet/12+inches,na.rm=TRUE)
+x <- 1 : 10
+if(debug)do(x)
+plot (x, y)
+```
+
+Extra spacing (i.e., more than one space in a row) is ok if it improves alignment of equal signs or assignments (<-).
+```{r eval=F}
+list(
+  total = a + b + c, 
+  mean  = (a + b + c) / n
+)
+```
+Do not place spaces around code in parentheses or square brackets (unless there’s a comma, in which case see above).
+
+**Good**
+```{r eval=F}
+if (debug) do(x)
+diamonds[5, ]
+```
+
+**Bad**
+```{r eval=F}
+if ( debug ) do(x)  # No spaces around debug
+x[1,]   # Needs a space after the comma
+x[1 ,]  # Space goes after comma not before
+```
+
+Curly braces
+===
+An opening curly brace should never go on its own line and should always be followed by a new line. A closing curly brace should always go on its own line, unless it’s followed by else.
+
+Always indent the code inside curly braces.
+
+**Good**
+```{r eval=F}
+if (y < 0 && debug) {
+  message("Y is negative")
+}
+
+if (y == 0) {
+  log(x)
+} else {
+  y ^ x
+}
+```
+# Bad
+```{r eval=F}
+if (y < 0 && debug)
+message("Y is negative")
+
+if (y == 0) {
+  log(x)
+} 
+else {
+  y ^ x
+}
+```
+It’s ok to leave very short statements on the same line:
+```{r eval=F}
+if (y < 0 && debug) message("Y is negative")
+```
+
+
+Line length
+===
+Strive to limit your code to 80 characters per line. This fits comfortably on a printed page with a reasonably sized font. If you find yourself running out of room, this is a good indication that you should encapsulate some of the work in a separate function.
+
+Indentation
+===
+When indenting your code, use two spaces. Never use tabs or mix tabs and spaces.
+
+The only exception is if a function definition runs over multiple lines. In that case, indent the second line to where the definition starts:
+
+```{r eval=F}
+long_function_name <- function(a = "a long argument", 
+                               b = "another argument",
+                               c = "another long argument") {
+  # As usual code is indented by two spaces.
+}
+```
+
+
+Organisation
+===
+Commenting guidelines
+- Comment your code. Each line of a comment should begin with the comment symbol and a single space: #. Comments should explain the why, not the what.
+
+- Use commented lines of `-` and `=` to break up your file into easily readable chunks.
+```{r eval=F}
+# Load data ---------------------------
+
+# Plot data ---------------------------
+```
+
+

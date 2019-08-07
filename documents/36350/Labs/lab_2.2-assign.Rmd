@@ -1,0 +1,142 @@
+---
+title: "Lab 2.2: Plotting Tools"
+author: "Statistical Computing, 36-350"
+date: "Week of Monday July 8, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Thursday 10pm, this week.
+
+**Important note**: *this assignment is to be completed using `ggplot` graphics. please do not use base R graphic commands.*
+
+**This week's agenda**: getting familiar with basic plotting tools; understanding the way geoms work; how to map data frame columns to plot aesthetics; recalling basic text manipulations.
+
+Plot basics
+===
+
+- **1a.** Below you'll find code that creates a `my_data` data.frame. Describe in words how my_y is created (i.e. explain what the `ifelse` function is doing, etc). Add to the graphic `a`: `+ geom_line` and add to graphic `b`: `+ geom_path` and revisualize them. Describe any differences you see - and explain why (hint try typing `?geom_line` and `?geom_path` in the console - and print out `my_x`)
+
+```{r message=F, warning=F}
+library(ggplot2)
+library(gridExtra)
+
+n = 200
+set.seed(0)
+my_x <- runif(n, min = -2, max = 2)
+my_c <- sample(c(0, 1),size = n,replace = TRUE)
+my_y <- ifelse(my_c == 0, my_x^3, my_x^2) + rnorm(n)
+my_data <- data.frame(x = my_x, y = my_y, c = my_c)
+
+a <- ggplot(data = my_data, aes(x = x, y = y)) + geom_point() 
+b <- ggplot(data = my_data, aes(x = x, y = y)) + geom_point() 
+
+grid.arrange(a,b)
+```
+
+
+- **1b.** Examining data *conditional* to certain properties / attributes is very common in statistics. In scatter plots, a common way to show different classes is by using different colors. The `color` argument can used to do such things. Plot `x` and `y` from `my_data` in a scatter plot as above, but map the `c` column to the color aesthetic of the plot. Does the legend make sense to you (comment on what it looks like)? Try using `color = factor(c)` instead. Does the legend make more sense? Look up `?factor` - in your own words describe what a `factor` is in R (data type, etc.).
+
+
+- **1c.** The `xlim` and `ylim` add ons can be used to change the limits on the x-axis and y-axis, respectively. Each argument takes a vector of length 2, as in `+ xlim(c(-1, 0))`, to set the x limit to be from -1 to 0. Plot `y` versus `x` (with class coloring), with the x limit set to be from -1 to 1, and the y limit set to be from -5 to 5. Assign x and y labels "Trimmed x" and "Trimmed y", respectively. **After plotting the figure for yourself update "```{r}" to "```{r warning = FALSE}"
+
+
+- **1d.** Again plot `y` versus `x`, only showing points whose x values are between -1 and 1. But this time, make a new data.frame (name it `my_data_trimmed`) that contains only `x` values between -1 and 1.  Now recreate the figure in **1c.** without using `+ xlim()` and `+ ylim()`: now you should see that the y limit is (automatically) set as "tight" as possible. Hint: use logical indexing to define your new data.frame.
+
+
+- **1e.** The `shape` argument controls the point type in the display (and `size` controls the size of the point displayed. In the lecture examples, in lecture we varied size and shape - do so below (with the trimmed plot - mapping the class to `size` and `shape`). 
+
+
+- **1f.** Those sizes are very different (assuming you correctly used the `factor(c)` notation). We can use the `+ scale_*_` functions to change the values for each aesthetic. Specifical examine the documentation for `scale_size_manual()` and `scale_shape_manual()`. Please use sizes 1, 1.25 and open circle and an open diamond for the shape (see [https://www.datanovia.com/en/blog/ggplot-point-shapes-best-tips/](https://www.datanovia.com/en/blog/ggplot-point-shapes-best-tips/) for shape help (or type `?pch` into your console.)
+
+
+
+
+Reading about `ggplot2`:
+===
+  *Ben thinks this question is very important for your future use of `ggplot`. Also if you're already taken 315 you've probably read all of these - just say "I took 315" instead of answering this question. (but they're a good refresher if you want to do them still)*
+  
+**2a.**  Read [this article](https://codewords.recurse.com/issues/six/telling-stories-with-data-using-the-grammar-of-graphics) on `ggplot()` from Liz Sander.  
+
++  What are the components of a graph in `ggplot()` discussed in this article?
+  +  Give an example of how you can adjust the x- or y-axis scaling in `ggplot()`.
++  Which plotting system is better for creating facetted graphs -- graphs that partition the data and recreate the same graph for each subset -- base R graphs (with `plot()`) or `ggplot()` graphs?  Why?
+  
+**2b.** Read [this tutorial](https://ramnathv.github.io/pycon2014-r/visualize/ggplot2.html) on `ggplot()`.  
+
++  You are not required to do any of the exercises; just read through the tutorial.
++  What kind of geometry is used to create a scatterplot (a plot of two continuous variables, one on the x-axis and one on the y-axis)?
+  +  Note:  If you're having trouble with `R`, feel free to go through the other lessons on this page.
+
+**2c.** Read [this article](https://www.r-bloggers.com/a-simple-introduction-to-the-graphing-philosophy-of-ggplot2/) on `ggplot()`.
+
++  What does the author describe as being "advanced parts" of the `ggplot2` grammar?
++  What is a theme?
+
+**2d.** Read [this article](https://www.r-bloggers.com/the-best-r-package-for-learning-to-think-about-visualization/) on data visualization in `R`.
+
++  What reasons does the author give for recommending `ggplot()` for data visualization in `R`?
++  What are the three critical principles of visualization, according to the author?  Describe each in 1-2 sentences.
+
+
+Adding to plots
+===
+
+- **3a.** First, we need to make some new data frames. Please make 2 data frames (the first with 100 rows, the later with 50 rows) defined as
+
+1. `my_data_cube`: `x` column defined by `sort(runif(100, -2, 2))`, a `y_clean` column that is `x^3`, and `y` column as `y_clean + rnorm(100)`
+
+2. `my_data_square`: `x` column defined by `sort(runif(50, -2, 2))` (make if different values than the `x` column in `my_data_cube`), a `y_clean` column that is `x^2`, and `y` column as `y_clean + rnorm(50)`
+
+
+
+- **3b.** Produce a ggplot that displays the cubic `x` and `y` points and a line defined by `x` and `y_clean`. Note that there are multiple ways to order the aesethic mapping - demonstrate 2 options include the most "efficient one" (the one that uses the least code).
+
+
+- **3c.** Update the previous graphic with similar visualizations relative to the `my_data_square`. That is, use the same code you have in **3b.** but also add in `geom_point` and `geom_line` relative to `my_data_square`. This time, make the elements related to `my_data_square` be blue. Note that you can define `data` inside `geom`s. Relative to just the points, this figure and the figure in **1a.** look pretty similar - comment on the differences.
+
+
+
+- **3d.** Because we know how `y` relates to `x` (and that the noise component has a standard deviation of 1), add to the `my_data_cube` columns `y_upper` and `y_lower` that contain `y_clean` $\pm$ 2. Plot `x` and `y` on a scatter plot. Then examine the documentation for `geom_ribbon` and add a band around the `y_clean` between `y_upper` and `y_lower` (you'll still have `x = x`). (Ask Ben if this is vague...). Please make the ribbon transparent - say .5 (hint `alpha`). Statistically, give the generative process for `y`, how many of the 100 points would you expect to lie outside this ribbon?
+
+
+- **3e.** `geom_ribbon` isn't the last `geom` you'll have to use in your life. From your experience above, describe how you would go about learning how to use a new `geom`. *Fill* us in on how you'd go about checking your options for different parameters (like you did with `shape` and `size` a above).
+
+
+Sharks! 
+===
+Below, we read in a data set related to shark attacks. The data is taken from Kaggle and was originally compiled by the global shark attack file.  [More information is available here.](https://www.kaggle.com/teajay/global-shark-attacks)
+
+```{r}
+shark_attacks <- read.csv("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week2/shark-attacks.csv", as.is = TRUE)
+```
+
+Text manipulations, and layered plots
+===
+
+- **4a.** Define `attack_time` to be the `Date` column of `shark_data`. Define a character vector `attack_year` to contain the first 4 characters of an entry of `attack_time`. Hint: hopefully you haven't forgotten ... use `substr()` here. Finally, convert `attack_year` into a numeric vector. Do a similar thing for `attack_month`. Then append these onto the shark_data matrix (as `year` and `month`). We will use these added columns later.
+
+
+- **4b.** Characterize the distribution of the `Age` of shark attack victims with a histogram. Do you notice anything weird - do you have a guess of what is happening? Use a different `xlim` to make the histogram look more natural. Make a second graphic with `geom_histogram(aes(..., y = ..density..))` - what does `..density..` do?
+
+
+
+- **4c.** Add onto your scaled histogram an kernel density estimate (using `geom_density`). Make a second figure that changes the order of `geom_density` and `geom_histogram`. What do you see? Discuss how this relates to layering.
+
+
+
+- **4d.** Examine if year has an effect on the Age of the shark attack victims with a scatter plot. (Continue to correct for age oddities.). Add a `geom_smooth(method=lm)` to this plot. What does this addition do?
+
+
+
+- **4e.** What if I believe that we might not see this trend if we condition on gender. Add color globally to the plot above. What do you see?
+
+
+- **4f.** Now change the `aes` making of `color` to be within `geom_point`. Describe what happened relative to the `ggplot` paradigm.
+

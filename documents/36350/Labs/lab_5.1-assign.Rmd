@@ -1,0 +1,169 @@
+---
+title: "Lab 5.1: Debugging and Testing"
+author: "Statistical Computing, 36-350"
+date: "Monday July 29, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Tuesday 10pm, this week.
+
+**This week's agenda**: practicing debugging with `cat()`, `print()`, and `browser()`.
+
+Bug hunt practice
+===
+
+In this section of the lab, you will fix a bunch of buggy function definitions. Probably the easiest workflow is to define the function in your console, and then run the sample commands---they will either give errors or produce the wrong outputs. Using any combination of: reading the error messages, `traceback()`, and `cat()` or `print()`, you must find and fix the bugs. Sometimes it can also help to try multiple different inputs, i.e., try new function calls, rather than just looking at the sample calls given to you, in order to determine the bugs. You shouldn't show any of your debugging work in your final knitted answers---so, don't show calls to `traceback()`, and don't leave any `cat()` or `print()` calls in the final, fixed function. (You don't have to do anything yet, this was just to setup this section of the lab.)
+
+- **1a.** Below is a function called `get_cols_with_ab_zeros()`, but it has a few bugs. A few sample matrices are given below in `mat`, `identity_mat`, along with some sample calls that give errors. After fixing the bugs, the calls to `get_cols_with_ab_zeros()` should produce the outputs as described in comments.
+
+```{r errors = TRUE}
+#' to retrieve columns of matrix that have between a and b zeros
+#'
+#' @param my_mat the original matrix 
+#' @param a lower bound for number of zeros allowed; default is 0
+#' @param b upper bound for number of zeros allowed; default is Inf
+#'
+#' @return the new matrix
+cols_with_ab_zeros <- function(my_mat, a=0, b=Inf) {
+  zeros_per_column <- colSums(mat != 0)
+  i_to_keep <- a <= zeros_per_column && zeros_per_column <= b
+  return(my_mat[i_to_keep,])
+}
+
+mat <- matrix(c(0,0,1,
+                0,1,1,
+                1,1,1), 3, 3)
+identity_mat <- diag(1, 3)
+cols_with_ab_zeros(mat) # Should get back original matrix (no error at start)
+cols_with_ab_zeros(mat, a=1, b=2) # Should get back first 2 columns of mat
+cols_with_ab_zeros(mat, a=2, b=2) # Should get just 1st column of mat; note
+  # this should still be a matrix though, and not a numeric vector!
+cols_with_ab_zeros(identity_mat, a=2, b=2) # Should get back original matrix
+
+```
+
+
+- **1b.** Below is a function called `list_extractor()`, but it has a few bugs. A sample list is given below in `cool_list`, along with some sample calls that give errors. After fixing the bugs, the calls to `list_extractor()` should produce the outputs as described in comments.
+
+```{r eval = F,errors = TRUE}
+
+#' to extract elements of a list
+#'
+#' @param my_list the original list 
+#' @param i_to_keep  vector of indices, corresponding to elements of the list we
+#' want to keep. Default is NULL, in which case this argument is ignored
+#' @param i_to_remove vector of indices, corresponding to elements of the list 
+#' we want to remove Default is NULL, in which case this argument is ignored
+#'
+#' @details if both i_to_keep and i_to_remove are non-NULL, then the first 
+#' one should take precedence (i.e., we don't remove anything - just select some
+#' that should be kept if both non-null)
+#' @return the new list
+list_extractor <- function(my_list, i_to_keep = NULL, i_to_remove = NULL) {
+  if (i_to_keep != NULL) {
+    return(my_list[[i_to_keep]])
+  }
+  if (i_to_remove != NULL) {
+    return(my_list[[-i_to_remove]])
+  }
+}
+
+cool_list <- list(ints = 1:10, lets = letters[1:8], fracs = 1:7/7,
+                 bools = sample(c(TRUE,FALSE), 5, replace = TRUE))
+list_extractor(cool_list, i_to_keep=c(1,3)) # Should get list with ints, fracs
+list_extractor(cool_list, i_to_remove=4) # Should get list without bools
+list_extractor(cool_list, i_to_keep=2:4, i_to_remove=4) # Should get list with
+  # lets, fracs, and bools (the i.to.remove argument should be ignored)
+
+```
+
+
+- **1c.** Below is a function called `random_walk()`, but introduced a few bugs along the way. Some sample calls are given below that produce errors. After fixing the bugs, the calls to `random_walk()` should produce the outputs as described in comments. 
+
+```{r error = TRUE}
+library(ggplot2)
+
+#' run a simple random walk over the reals, which terminates when it reaches 0
+#'
+#' @param x_start starting position. Default is 5
+#' @param plot_walk should the result be plotted? Default is TRUE
+#' @param seed integer seed to pass to set.seed(). Default is NULL, which means
+#' effectively no seed is set
+#'
+#' @return a list with elements x_vals, the values visited by the random walk,
+#   and num_steps, the number of steps taken before termination
+random_walk <- function(x_start = 5, plot_walk = TRUE, seed = NULL) {
+  if (!is_null(seed)) set.seed(seed) # Set the seed, if we need to
+  x_vals <- x_start
+  while (TRUE) {
+    r <- runif(1, -2, 1)
+    if (tail(x_vals + r,1) <= 0) break
+    else x_vals <- c(x_vals, x_vals+r)
+  }
+  if (plot_walk <- TRUE) {
+    plot(ggplot(data.frame(y = x_vals, x = 1:length(x_vals))) +
+             geom_point() +
+             geom_line() + 
+             labs(x = "Iteration", y = "Random walk values"))
+  }
+  return(x_vals = x_vals, num_steps = length(x_vals))
+}
+random_walk(x_start = 5, seed = 3)$num_steps # Should print 8 (this is how many
+  # steps it took the random walk), and produce a plot
+random_walk(x_start = 10, seed = 7)$num_steps # Should print 14 (this is how many
+  # steps it took the random walk), and produce a plot
+random_walk(x_start = 10, plot_walk = FALSE, seed = 7)$num_steps # Should print 14 
+  # (this is how many steps it took the random walk), and not produce a plot
+```
+
+
+Browsing for bugs
+===
+
+- **2a.** Now that you've had good practice with it, use `browser()` to find and fix bugs in the function `fibonacci()` below. This function is supposed to generate the $n$th number in the Fibonacci sequence 1, 1, 2, 3, 5, 8, 13, 21, 34, ..., which begins with 1, 1, and where every number after this is the sum of the previous two. Describe what bugs you found, how you found them, and what you did to fix them. Once this is done, your function should be producing outputs on the test cases below that match those described in the comments.
+
+```{r eval = F}
+fibonacci <- function(n) {
+  my_fib <- c(1,1)
+  for (i in 2:(n-1)) my_fib[i+1] <- my_fib[i] + my_fib[i-1]  
+  return(my_fib[i])
+}
+
+fibonacci(1) # Should be 1
+fibonacci(2) # Should be 1
+fibonacci(3) # Should be 2
+fibonacci(5) # Should be 5
+fibonacci(9) # Should be 34
+```
+
+
+- **2b.** Use `browser()` to find and fix bugs in the functions `sentence_flipper()` and `word_flipper()` below. The first function is supposed to take a sentence, i.e., a single string composed of words separated by spaces, and flip each of the words (meaning reverse the order of their characters); the second function is used by the first, to take a single word and flip it (reverse the order of the characters). Describe what bugs you found, how you found them, and what you did to fix them. Once this is done, your function should be producing outputs on the test cases below that match those described in the comments.
+
+```{r}
+sentence_flipper <- function(str) {
+  str_words <- strsplit(str, split = " ")  
+  rev_words <- lapply(str, word_flipper)  
+  str_flipped <- paste(rev_words, collapse = " ")
+  return(str_flipped)
+}
+
+word_flipper <- function(str) {
+  chars <- strsplit(str, split = "")
+  chars_flipped <- rev(chars)
+  str_flipped <- paste(chars_flipped, collapse = "")
+  return(str_flipped)
+}
+
+# Should be "eht kciuq nworb xof depmuj revo eht yzal god"
+sentence_flipper("the quick brown fox jumped over the lazy dog") 
+# Should be "ot eb ro on ot eb taht si eht noitseuq"
+sentence_flipper("to be or no to be that is the question") 
+```
+

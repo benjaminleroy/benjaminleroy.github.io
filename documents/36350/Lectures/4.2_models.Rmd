@@ -1,0 +1,580 @@
+---
+title: "Fitting Models to Data"
+author: "Statistical Computing, 36-350"
+date: "Wednesday July 24, 2019"
+---
+
+Logistics
+===
+- Additional Office Hour: Friday 4:30 - 5:30 pm (Wean 3715)
+- Extra Lecture, Thursday (1:45 - 2:30): dplyr and ggplot (will be mostly focused on review and building up better intuition - definitely not required / will not you impact on homework if you don't go)
+- Reminders:
+    - Review notes from Tudor on Assignments
+    - Look at solutions for examples of what I expect the solution to look like
+- Next week: Tudor will be covering Monday and Wednesday Lectures
+
+Last week: Simulation
+===
+
+- Running simulations is an integral part of being a statistician in the 21st century
+- R provides us with a utility functions for simulations from a wide variety of distributions
+- To make your simulation results reproducible, you must set the seed, using `set.seed()`
+- There is a natural connection between iteration, functions, and simulations
+- Saving and loading results can be done in two formats: rds and rdata formats
+- Read in data from a previous R session with `readRDS()`, `load()`
+- Read in data from the outside with `read.table()`, `read.csv()`
+- Can sometimes be tricky to get arguments right in `read.table()`, `read.csv()`; helps sometimes take a look at the original data files to see their structure
+
+Why fit statistical (regression) models?
+===
+
+You have some data $X_1,\ldots,X_p,Y$: the variables $X_1,\ldots,X_p$ are called predictors, and $Y$ is called a response. You're interested in the relationship that governs them
+
+So you posit that $Y|X_1,\ldots,X_p \sim P_\theta$, where $\theta$ represents some unknown parameters. This is called **regression model** for $Y$ given $X_1,\ldots,X_p$. Goal is to estimate parameters. Why?
+
+- To assess model validity, predictor importance (**inference**)
+- To predict future $Y$'s from future $X_1,\ldots,X_p$'s (**prediction**)
+
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*Exploratory data analysis*</span>
+
+
+Crime by State Data
+===
+
+For our data analysis we will use the an extended version of crime dataset that appears in Statistical Methods for Social Sciences, Third Edition by Alan Agresti and Barbara Finlay (Prentice Hall, 1997). 
+
+- `sid`: state id 
+- `state`: state abbreviation 
+- `crime`: violent crimes per 100,000 people 
+- `murder`: murders per 1,000,000 
+- `pctmetro`: the percent of the population living in metropolitan areas 
+- `pctwhite`: the percent of the population that is white 
+- `pcths`: percent of population with a high school education or above  
+- `poverty`: percent of population living under poverty line 
+- `single`: and percent of population that are single parents 
+- `region`: region the state is in
+- `income`: median income of the state
+
+It has 51 observations (all states + DC). 
+
+```{r warning =F, message =F }
+library(tidyverse)
+crime <- read.csv("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week4/crime.csv") %>% select(-X)
+dim(crime)
+```
+
+---
+
+```{r}
+head(crime)
+```
+
+Some example questions we might be interested in:
+
+- What is the relationship between `single` and `crime`?
+- What is the relationship between `region` and `murder`, `poverty`?
+- Can we predict `crime` from the other variables?
+- Can we predict whether `crime` is high or low, from other variables?
+
+Exploratory data analysis
+===
+
+Before pursuing a specific model, it's generally a good idea to look at your data. When done in a structured way, this is called **exploratory data analysis**. E.g., you might investigate:
+
+- What are the distributions of the variables?
+- Are there distinct subgroups of samples?
+- Are there any noticeable outliers?
+- Are there interesting relationship/trends to model?
+
+Distributions of state crime variables
+===
+
+```{r message = F, warning = F}
+library(gridExtra)
+colnames(crime) # These are the variables
+gghist <- list()
+for (col_var in colnames(crime)[-1]) { # excluding state abb
+  gghist[[col_var]] <- ggplot(crime) +
+    geom_histogram(aes_string(x = col_var),
+       fill = "lightblue", color= "black", bins = 20) +
+    labs(x = paste("Histogram of",col_var))
+}
+grid.arrange(grobs = gghist)
+
+```
+
+---
+
+What did we learn? A bunch of things! E.g.,
+
+- `region`, is a variable with 4 levels
+- We see a single outlier in rates of `crime`, `murder` and proportion `single`
+- We see two outliers in `pctwhite`
+- We see that the distributution of `poverty` is skewed left
+- and that the `pctmetro` is pretty uniformly distributed.
+
+After asking our resident demographer some questions, we learn:
+
+- `region`: has levels 1: Northeast, 2: South, 3: North Central 4: West
+- DC is the extreme outlier in most of our graphics (which makes ense)
+
+```{r}
+crime %>% arrange(desc(single)) %>% head
+```
+
+  
+Correlations between state and crime related variables
+===
+
+```{r}
+state_cor <- crime %>% select(-state, -region) %>% cor()
+round(state_cor,3) 
+```
+
+Some strong correlations! Let's find the biggest (in absolute value):
+
+```{r}
+state_cor[lower.tri(state_cor, diag = TRUE)] <- 0 # Why only upper tri part?
+state_cor_sorted <- sort(abs(state_cor), decreasing = T)
+state_cor_sorted[1]
+vars_big_cor <- arrayInd(which(abs(state_cor)==state_cor_sorted[1]), 
+                        dim(state_cor)) # Note: arrayInd() is useful
+colnames(state_cor)[vars_big_cor] 
+```
+
+This is not surprising, given one is just a subset of the other.
+---
+
+Let's find the second biggest correlation (in absolute value):
+
+```{r}
+state_cor_sorted[2]
+vars_big_cor <- arrayInd(which(abs(state_cor) == state_cor_sorted[2]), 
+                        dim(state_cor))
+colnames(state_cor)[vars_big_cor] 
+```
+
+This is more interesting! If we wanted to predict `murder` from the other variables, then it seems like we should at least include `single` as a predictor
+
+Visualizing relationships among variables, with `ggpairs()`
+===
+
+Can easily look at multiple scatter plots at once, using the `ggpairs()` function. 
+
+```{r message =F, warning =F}
+library(GGally)
+crime %>% select(crime, single, murder, pcths) %>%
+  ggpairs()
+```
+
+Inspecting relationships over a subset of the observations
+===
+
+DC seems to really be messing up our visuals. Let's get rid of it and see what the relationships look like
+
+```{r}
+crime_subset <- crime %>% filter(state != "dc")
+nrow(crime_subset) # only the states now
+crime_subset %>% select(crime, single, murder, pcths) %>%
+  ggpairs()
+```
+
+Testing means between two different groups
+===
+
+Recall that `region` contains which region an state comes from
+
+```{r}
+crime %>% pull(region) %>% table
+# table(crime$region)
+```
+
+Does the region that state is in relate to rates of single individual? rates of metropoltian area?
+
+---
+
+Let's do some plotting first:
+
+```{r}
+
+crime$region_fac <- factor(crime$region,
+                           levels = 1:4,
+                           labels = c("Northeast",
+                                      "South",
+                                      "North Central",
+                                      "West"))
+
+ggvis_compare <- list()
+for (col_var in c("single", "pctmetro")) {
+  ggvis_compare[[col_var]] <- ggplot(crime) +
+    geom_boxplot(aes_string(y = col_var,
+                            x = "region_fac")) +
+      # notes quotes for x making as well
+    labs(x = "Region",
+         y = c("single" = "Proportion of Single Individuals",
+               "pctmetro" = "Proportion of Population Living in Metro Area")[col_var],
+         title = paste(col_var, "verse region"))
+}
+
+grid.arrange(grobs = ggvis_compare, ncol = 2)
+```
+
+Visually, `single` looks like it has a big difference, but `pctmetro` perhaps does not. Specifically, let's look at we compared the North Central to the West's distributions.
+
+---
+
+Now let's try simple two-sample t-tests:
+
+```{r}
+t.test(crime$single[crime$region_fac == "West"],
+       crime$single[crime$region_fac == "North Central"])
+t.test(crime$pctmetro[crime$region_fac == "West"],
+       crime$pctmetro[crime$region_fac == "North Central"])
+```
+
+Confirms what we saw visually
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*Linear models*</span>
+
+Linear regression modeling
+===
+
+The linear model is arguably the **most widely used** statistical model, has a place in nearly every application domain of statistics
+
+Given response $Y$ and predictors $X_1,\ldots,X_p$, in a **linear regression model**, we posit:
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p + \epsilon, 
+\quad \text{where $\epsilon \sim N(0,\sigma^2)$}
+$$
+
+Goal is to estimate parameters, also called coefficients $\beta_0,\beta_1,\ldots,\beta_p$ 
+
+Fitting a linear regression model with `lm()`
+===
+
+We can use `lm()` to fit a linear regression model. The first argument is a **formula**, of the form `Y ~ X1 + X2 + ... + Xp`, where `Y` is the response and `X1`, ..., `Xp` are the predictors. These refer to column names of variables in a data frame, that we pass in through the `data` argument
+
+E.g., for the crime data, to regress the response variable `murder` (murder rate) onto the predictors variables `single` and `poverty`:
+
+```{r}
+crime <- crime %>% filter(state != "dc")
+
+crime_lm <- lm(murder ~ single + poverty, data = crime)
+class(crime_lm) # Really, a specialized list
+names(crime_lm) # Here are its components
+crime_lm # It has a special way of printing
+```
+
+Utility functions
+===
+
+Linear models in R come with a bunch of **utility** functions, such as `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`, `predict()`, for retrieving coefficients, fitted values, residuals, producing summaries, producing diagnostic plots, making predictions, respectively
+
+These tasks can also be done manually, by extracting at the components of the returned object from `lm()`, and manipulating them appropriately. But this is **discouraged**, because:
+
+- The manual strategy is more tedious and error prone
+- Once you master the utility functions, you'll be able to retrieve coefficients, fitted values, make predictions, etc., in the same way for model objects returned by `glm()`, `gam()`, and many others
+
+Retrieving estimated coefficients with `coef()`
+===
+
+So, what were the regression coefficients that we estimated? Use the `coef()` function, to retrieve them:
+
+```{r}
+crime_coef <- coef(crime_lm) # Vector of 3 coefficients
+crime_coef
+```
+
+What does a linear regression coefficient mean, i.e., how do you interpret it? Note, from our linear model:
+
+$$
+\mathbb{E}(Y|X_1,\ldots,X_p) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p
+$$
+
+So, increasing predictor $X_j$ by one unit, while holding all other predictors fixed, increases the expected response by $\beta_j$
+
+E.g., increasing `single` by one unit, while holding `poverty` fixed, increases the expected value of `murder` by $\approx 3.9838$
+
+Retrieving fitted values with `fitted()`
+===
+
+What does our model predict for the `murder` rates of the 50 states in question? And how do these compare to the actual `murder` rates? Use the `fitted()` function, then plot the actual values versus the fitted ones:
+
+```{r}
+crime_fit <- fitted(crime_lm) # Vector of 50 fitted values
+ggplot(data.frame(fit = crime_fit,
+                  actual = crime$murder)) +
+  geom_point(aes(x = fit, y = actual)) +
+  geom_abline(slope = 1, intercept = 0) +
+  labs(title = "Actual versus fitted values",
+       x = "Fitted values", 
+       ylab = "Log PSA values")
+
+```
+
+Displaying an overview with `summary()`
+==
+
+The function `summary()` gives us a nice summary of the linear model we fit:
+
+```{r}
+summary(crime_lm) # Special way of summarizing
+```
+
+This tells us:
+
+- The quantiles of the residuals: ideally, this is a perfect normal distribution
+- The coefficient estimates
+- Their standard errors
+- P-values for their individual significances
+- (Adjusted) R-squared value: how much variability is explained by the model?
+- F-statistic for the significance of the overall model
+
+Running diagnostics with `plot()`
+===
+
+We can use the `plot()` function to run a series of diagnostic
+tests for our regression:
+
+```{r}
+par(mfrow=c(2,2))
+plot(crime_lm) # Special way of plotting
+```
+
+
+---
+
+For the `ggplot` universe we live in, *currently* we use the library `ggfortify` to create similar visuals with `autoplot`. (But in this case it's good to know that `plot` also does the job.)
+```{r message = F, warning = F}
+library(ggfortify)
+autoplot(crime_lm)
+```
+
+The results are pretty good:
+
+- "Residuals vs Fitted" plot: points appear randomly scattered, no particular pattern
+- "Normal Q-Q" plot: points are mostly along the 45 degree line, so residuals look close to a normal distribution
+- "Scale-Location" and "Residuals vs Leverage" plots: no obvious groups, no points are too far from the center
+  
+There is a science (and an art?) to interpreting these; you'll learn a lot more in the Modern Regression 36-401 course
+
+
+Making predictions with `predict()`
+===
+
+Suppose we had a new observation (say a "state" in Canada or a US territory) whose proportion of `single` people is 10.5, and proportion of citizens in `poverty` is 24. What would our linear model estimate that regions `murder` rate would be? Use `predict()`:
+
+```{r message = F, warning = F}
+crime_new <- data.frame(single = 10.5, poverty = 24) # Must set up a new data frame
+crime_pred <- predict(crime_lm, newdata = crime_new) # Now call predict with new df
+crime_pred
+
+ggplot(crime) + geom_histogram(aes(x = murder)) + 
+  geom_vline(xintercept = crime_pred)
+```
+
+We'll learn much more about making/evaluating statistical predictions later in the course
+
+Some handy shortcuts
+===
+
+Here are some handy shortcuts, for fitting linear models with `lm()` (there are also many others):
+
+- No intercept (no $\beta_0$ in the mathematical model): use `0 +` on the right-hand side of the formula, as in:
+    ```{r}
+    summary(lm(murder ~ 0 + poverty + single, data = crime))
+    ```
+- Include all predictors: use `.` on the right-hand side of the formula, as in:
+    ```{r}
+    summary(lm(murder ~ . - state, data = crime))
+    ```
+- Include interaction terms: use `:` between two predictors of interest, to include the interaction between them as a predictor, as in:
+    ```{r}
+    summary(lm(murder ~ poverty + single + poverty:single, data = crime))
+    ```
+- you can use "-" to remove things as well, e.g. "- 1", "- single", etc
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*Beyond linear models*</span>
+
+What other kinds of models are there?
+===
+
+Linear regression models, as we've said, are useful and ubiquitous. But there's a lot else out there. What else?
+
+- Logistic regression 
+- Poisson regression
+- Generalized linear models
+- Generalized additive models
+- Many, many others (generative models, Bayesian models, hidden Markov models, nonparametric models, machine learning "models", etc.)
+
+Today we'll quickly visit logistic regression and generalized additive models. In some ways, they are similar to linear regression; in others, they're quite different, and you'll learn a lot more about them in the Advanced Methods for Data Analysis 36-402 course (or the Data Mining 36-462 course)
+
+Logistic regression modeling
+===
+
+Given response $Y$ and predictors $X_1,\ldots,X_p$, where $Y \in \{0,1\}$ is a **binary outcome**. In a **logistic regression model**, we posit the relationship:
+
+$$
+\log\frac{\mathbb{P}(Y=1|X)}{\mathbb{P}(Y=0|X)} = 
+\beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p
+$$
+
+(where $Y|X$ is shorthand for $Y|X_1,\ldots,X_p$). Goal is to estimate parameters, also called coefficients $\beta_0,\beta_1,\ldots,\beta_p$ 
+
+Fitting a logistic regression model with `glm()`
+===
+
+We can use `glm()` to fit a logistic regression model. The arguments are very similar to `lm()`
+
+The first argument is a formula, of the form `Y ~ X1 + X2 + ... + Xp`, where `Y` is the response and `X1`, ..., `Xp` are the predictors. These refer to column names of variables in a data frame, that we pass in through the `data` argument. We must also specify `family = "binomial"` to get logistic regression
+
+E.g., for the prostate data, suppose we add a column `murder_high` to our data frame `crime`, as the indicator of whether the `murder` variable is larger than 9. To regress the binary response variable `murder_high` onto the predictor variables `single` and  `poverty`:
+
+```{r}
+crime$murder_high <- as.numeric(crime$murder > 9) # New binary outcome
+table(crime$murder_high) # There are 34 states with murder rates below this
+
+crime_glm <- glm(murder_high ~ single + poverty, data = crime, family = "binomial")
+class(crime_glm) # Really, a specialized list
+crime_glm # It has a special way of printing
+```
+
+Utility functions work as before
+===
+
+For retrieving coefficients, fitted values, residuals, summarizing, plotting, making predictions, the utility functions `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`, `predict()` work pretty much just as with `lm()`. E.g.,
+
+```{r}
+coef(crime_glm) # Logisitic regression coefficients 
+summary(crime_glm) # Special way of summarizing
+
+p_hat <- fitted(crime_glm) # These are probabilities! Not binary outcomes
+y_hat <- round(p_hat) # This is one way we'd compute fitted outcomes
+table(y_hat, y_true = crime$murder_high) # This is a 2 x 2 "confusion matrix"
+```
+
+What does a logistic regression coefficient mean?
+===
+
+How do you interpret a logistic regression coefficient? Note, from our logistic model:
+
+$$
+\frac{\mathbb{P}(Y=1|X)}{\mathbb{P}(Y=0|X)} = 
+\exp(\beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p)
+$$
+
+So, increasing predictor $X_j$ by one unit, while holding all other predictor fixed, multiplies the odds by $e^{\beta_j}$. E.g., 
+
+```{r}
+coef(crime_glm)  
+```
+
+So, increasing `single` (proportion of single individuals in a state) by one unit, while holding `poverty` (rate of) fixed, multiplies the odds of `murder_high` (murder rate over 9) by $\approx e^{1.05} \approx 2.86$
+
+Creating a binary variable "on-the-fly"
+===
+
+We can easily create a binary variable "on-the-fly" by using the `I()` function inside a call to `glm()`: 
+
+```{r}
+crime_glm <- glm(I(murder > 9) ~ single + poverty, data = crime, 
+               family = "binomial")
+summary(crime) # Same as before
+```
+
+Generalized additive modeling
+===
+
+**Generalized additive models** allow us to do something that is like linear regression or logistic regression, but with a more flexible way of modeling the effects of predictors (rather than limiting their effects to be linear). For a continuous response $Y$, our model is:
+
+$$
+\mathbb{E}(Y|X) = \beta_0 + f_1(X_1) + \ldots + f_p(X_p)
+$$
+
+and the goal is to estimate $\beta_0,f_1,\ldots,f_p$. For a binary response $Y$, our model is:
+
+$$
+\log\frac{\mathbb{P}(Y=1|X)}{\mathbb{P}(Y=0|X)} 
+= \beta_0 + f_1(X_1) + \ldots + f_p(X_p)
+$$
+
+and the goal is again to estimate $\beta_0,f_1,\ldots,f_p$
+
+Fitting a generalized additive model with `gam()`
+===
+
+We can use the `gam()` function, from the `gam` package, to fit a generalized additive model. The arguments are similar to `glm()` (and to `lm()`), with a key distinction 
+
+The formula is now of the form `Y ~ s(X1) + X2 + ... + s(Xp)`, where `Y` is the response and `X1`, ..., `Xp` are the predictors. The notation `s()` is used around a predictor name to denote that we want to model this as a smooth effect (nonlinear); without this notation, we simply model it as a linear effect
+
+So, e.g., to fit the model
+
+$$
+\mathbb{E}(\mathrm{murder}\,|\,\mathrm{poverty},\mathrm{single}) 
+= \beta_0 + f_1(\mathrm{poverty}) + \beta_2 \mathrm{single}
+$$
+
+we use:
+
+```{r message =F, warning =F}
+library(gam)
+crime_gam <- gam(murder ~ s(poverty) + single, data = crime)
+class(crime_gam) # Again, a specialized list
+crime_gam # It has a special way of printing
+```
+
+Most utility functions work as before
+===
+
+Most of our utility functions work just as before. E.g.,
+
+```{r}
+summary(crime_gam)
+```
+
+---
+
+But now, `plot()`, instead of producing a bunch of diagnostic plots, shows us the effects that were fit to each predictor (nonlinear or linear, depending on whether or not we used `s()`): 
+
+```{r}
+par(mfrow=c(2,2))
+plot(crime_gam)
+```
+
+(note this isn't currently implimented in `ggfortify`)
+
+---
+
+(note this isn't currently implimented in `ggfortify`)
+
+```{r}
+# devtools::install_github("benjaminleroy/ggDiagnose")
+library(ggDiagnose)
+crime_gam <- gam(murder ~ s(poverty) + I(single), data = crime)
+# ^note the Ben wrote ggDiagnose himself and it's not really good enough - so we need to do I(variable)
+ggDiagnose(crime_gam)
+```
+
+
+Summary
+===
+
+- Fitting models is critical to both statistical inference and prediction
+- Exploratory data analysis is a very good first step and gives you a sense of what you're dealing with before you start modeling
+- Linear regression is the most basic modeling tool of all, and one of the most ubiquitous
+- `lm()` allows you to fit a linear model by specifying a formula, in terms of column names of a given data frame
+- Utility functions `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`/`autoplot`, `predict()` are very handy and should be used over manual access tricks
+- Logistic regression is the natural extension of linear regression to binary data; use `glm()` with `family = "binomial"` and all the same utility functions
+- Generalized additive models add a level of flexibility in that they allow the predictors to have nonlinear effects; use `gam()` and utility functions 
+

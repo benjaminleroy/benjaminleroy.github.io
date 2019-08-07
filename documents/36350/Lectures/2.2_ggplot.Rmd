@@ -1,0 +1,421 @@
+---
+title: "Plotting Tools"
+author: "Statistical Computing, 36-350"
+date: "Wednesday July 10, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(out.width = "60%", fig.align="center")
+```
+
+
+Last time: Data frames and `apply`
+===
+
+- Data frames are a representation of the "classic" data table in R: rows are observations/cases, columns are variables/features
+- Each column can be a different data type (but must be the same length)
+- `subset()`: function for extracting rows of a data frame meeting a condition 
+- `split()`: function for splitting up rows of a data frame, according to a factor variable
+- `apply()`: function for applying a given routine to rows or columns of a matrix or data frame
+- `lapply()`: similar, but used for applying a routine to elements of a vector or list
+- `sapply()`: similar, but will try to simplify the return type, in comparison to `lapply()`
+- `tapply()`: function for applying a given routine to groups of elements in a vector or list, according to a factor variable
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*Plot basics: ggplot*</span>
+
+Plotting in R
+===
+
+There's 2 major styles of plotting in `R`. You've already seen examples of base `R` plots include 
+
+- `plot()`: generic plotting function
+- `hist()`: histogram
+- and there are many more
+
+**But...** the `R` community has come to embrace a new approach to visualization from the `ggplot2` package. 
+
+Extremely popular graphics library 
+
++ 165,050 downloads two weeks ago
+
+Base graphics
+===
+- Ugly, laborious, and verbose
+- There are better ways to describe statistical visualizations.
+
+Why ggplot2?
+===
+- Follows a common grammar, just like any language.
+- It defines basic components that make up a sentence. In this
+case, the grammar defines components in a plot.
+- moreover, treats graphics like objects, mapping properties of your dataset to attributes of the graphic.
+
+---
+
+- Supports a continuum of expertise.
+- encourages iterative creation of graphics
+- Get started right away but with practice you can effortless build complex, publication quality figures.
+
+Basics: some terminology
+===
+
+- `ggplot`: The main function where you specify the dataset and
+variables to plot
+- `geoms`: geometric objects
+    + `geom_point()`, `geom_bar()`, `geom_density()`, `geom_line()`,
+`geom_area()`
+- `aes`: aesthetics
+    + `shape`, transparency (`alpha`), `color`, `fill`, `linetype`.
+- `scales`: Define how your data will be plotted
+    + *continuous, discrete, log*
+    
+
+
+Introduction to dataset 
+===
+```{r}
+library(gapminder)
+data(gapminder)
+```
+
+```{r echo = F}
+DT::datatable(gapminder, options = list(scrollX = TRUE, 
+                     autoWidth = "TRUE"))
+```
+
+ggplot intro: scatter plot
+===
+
+```{r warning=F, message=F}
+library(ggplot2)
+ggplot(gapminder, aes(y = lifeExp, x = gdpPercap)) + 
+  geom_point()
+```
+
+ggplot intro: basic structure
+===
+```{r eval = F}
+ggplot(data = gapminder, aes(y = lifeExp, x = gdpPercap)) + 
+  geom_point()
+p <- ggplot(data = gapminder, aes(y = lifeExp, x = gdpPercap))
+p + geom_point()
+```
+
+- specific all "global" structure in the `ggplot` function (in this case `data` and variable mappings)
+- add layers of geometric objects, statistical models, and panels.
+
+ggplot intro: change size
+===
+
+```{r}
+ggplot(gapminder, aes(y = lifeExp, x = gdpPercap)) + 
+  geom_point(size = .1)
+```
+
+ggplot intro: add color
+===
+```{r}
+ggplot(gapminder, aes(y = lifeExp, x = gdpPercap, color = continent)) + 
+  geom_point(size = .1)
+```
+
+ggplot intro: change scales
+===
+
+```{r}
+ggplot(gapminder, aes(y = lifeExp, x = gdpPercap, color = continent)) + 
+  geom_point(size = .1) + 
+  scale_x_log10() + scale_y_log10()
+```
+
+`ggplot` components review:
+===
+
+`ggplot2` specifications in `R` (so far):
+
+* `data`
+* `aes`: aesthetic attributes (position, length, color, symbol...)
+* `geom`: geometric element (point, line, bar...)
+* `scale`: scale transformation (axis limits, log scale,  
+color mapping...)
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*Examples*</span>
+
+
+`ggplot`: boxplot
+===
+
+```{r}
+ggplot(gapminder, aes(y = lifeExp, x = continent)) + 
+  geom_boxplot() 
+```
+
+`ggplot`: histogram (`color` vs `fill`)
+===
+```{r}
+ggplot(gapminder, aes(x = lifeExp)) + 
+  geom_histogram(color = "black", fill = "blue") 
+```
+
+`ggplot`: histogram (`fill` wrong way)
+===
+```{r message = F, warning = F}
+ggplot(gapminder, aes(x = lifeExp)) + 
+  geom_histogram(aes(fill = "blue"), color = "black")
+```
+
+`ggplot`: histogram (`fill` mapping)
+===
+```{r message = F, warning = F}
+ggplot(gapminder, aes(x = lifeExp)) + 
+  geom_histogram(aes(fill = continent), color = "black")
+```
+
+`ggplot`: line plots 
+===
+
+```{r message = F, warning = F}
+ggplot(gapminder[gapminder$country %in% c("United States", "Canada", 
+                                          "Mexico", "United Kingdom", 
+                                          "Ireland",
+                                          "Saudi Arabia"),], 
+       aes(x = year, y = gdpPercap)) + 
+  geom_line(aes(color = country)) 
+```
+
+Discrete/Categorical Data visualizations
+===
+
+```{r message = F, warning = F}
+library(tidyverse)
+#  Load the data into R
+titanic <- read_csv("https://raw.githubusercontent.com/benjaminleroy/stat315summer_data/master/assignments/assignment03/titanic.csv") %>%
+  mutate(Pclass = factor(Pclass))
+```
+
+```{r message = F, warning = F, echo = F, out.width = "80%"}
+library(DT)
+theme_set(theme_bw())
+DT::datatable(titanic, options = list(scrollX = TRUE, 
+                     autoWidth = "TRUE", pageLength = 3))
+```
+
+ggplot intro: barchart
+===
+
+
+```{r}
+ggplot(data = titanic, aes(fill = Pclass)) + 
+  geom_bar(aes(x = Pclass)) 
+  
+
+```
+
+- fThis plot is using `+ coord_cartesian()` - i.e. it's in the standard cartersian coordinate system.
+
+ggplot intro: spine chart
+===
+
+"Spine chart" (or stacked bar):  
+same as bar, but with constant x-values
+
+```{r}
+ggplot(data = titanic, aes(fill = Pclass)) + 
+  geom_bar(aes(x = factor(1))) + coord_cartesian()
+```
+
+ggplot intro: pie chart
+===
+
+"Pie chart": spine chart, but using polar coordinates  
+(angle vs. radius), with counts mapped to angle instead of height
+
+```{r}
+ggplot(data = titanic, aes(fill = Pclass)) + 
+  geom_bar(aes(x = factor(1)), width = 1) + coord_polar(theta = "y")
+```
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*Commentary ++*</span>
+
+
+Grammar of Graphics: why bother
+===
+
+Some of these are bad ideas!---but we've seen the flexibility of expressing a graph from the ground up using a grammar, instead of a "chart zoo" approach (like Excel's chart wizard)
+
+```{r, echo = F, out.width = "80%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/stat315summer_data/master/data_sure/ExcelChartWizard.png")
+```
+
+---
+
+"[The grammar] makes it easier for you to iteratively update a plot, changing a single feature at a time. The grammar is also useful because it suggests the high-level aspects of a plot that *can* be changed, giving you a framework to think about graphics, and hopefully shortening the distance from mind to paper. It also encourages the use of graphics customised to a particular problem, rather than relying on generic named graphics."  
+--Hadley Wickham, [`ggplot2`](http://amzn.to/1O1rBeM)
+
+Speed of Use: Facets
+===
+
+Facets are helpful: divide into sub-plots by values of a variable,  
+with automatically consistent scales and a common legend
+```{r, eval=FALSE}
+p <- ggplot(titanic, aes(x = Pclass, fill = factor(Survived))) + 
+  geom_bar()
+p + coord_cartesian() +
+  facet_wrap(~ Sex)
+```
+```{r, echo=FALSE}
+ggplot(titanic, aes(x = Pclass, fill = factor(Survived))) + geom_bar() + 
+  coord_cartesian() +
+  facet_wrap(~ Sex) +
+  theme(axis.text.x = element_blank()) +
+  labs(x = "Passenger Class", y = "Count",
+       title = "Survival Distribution across Class and Gender",
+       fill = "Survived (1 = yes)")
+```
+
+`ggplot` components
+===
+
+`ggplot2` specifications in `R`:
+
+* `data`
+* `aes`: aesthetic attributes (position, length, color, symbol...)
+* `stat`: statistical variable transformation (identity, count, smooth, quantile...)
+* `geom`: geometric element (point, line, bar...)
+* `scale`: scale transformation (axis limits, log scale,  
+color mapping...)
+* `coord`: Cartesian, polar, map projection...
+* `facet`: divide into subplots / small multiples using a  
+categorical variable
+
+Of course we can also control guides (axes, legends, titles...)
+
+Grammar of Graphics: practice
+===
+
+What `data` map to which `aes` here? What `geom`, `scale`, `coord` are used? Any `facet`?
+
+```{r, echo = F, out.width = "70%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/stat315summer_data/master/data_sure/BaseR_mfrow.png")
+```
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*More Complicated Structure*</span>
+
+
+`ggplot`: stacking and multiple images
+===
+Stacking
+```{r warning = F, message = F}
+a <- ggplot(gapminder,aes(x = lifeExp, y = ..density..)) + 
+  geom_histogram() 
+a + geom_density()
+```
+
+---
+
+Multiple images
+```{r warning = F, message = F}
+library(gridExtra)
+a <- ggplot(gapminder,aes(x = lifeExp)) + 
+  geom_histogram()
+b <- ggplot(gapminder,aes(x = lifeExp)) + 
+  geom_density()
+grid.arrange(a,b) 
+```
+
+Titles
+===
+```{r}
+ggplot(gapminder, aes(y = lifeExp, x = gdpPercap, color = continent,
+                      shape = continent)) + 
+  geom_point() + 
+  scale_x_log10() + scale_y_log10() +
+  labs(x = "GDP per Capita (log)",
+       y = "Average Life Expectancy (log)",
+       title = "National GDP per Capita vs Life Expectancy",
+       color = "Continent")
+```
+
+<span style="color: blue">Part IV</span>
+===
+
+<span style="color: blue">*Addendum*</span>
+
+Global verse local
+===
+
++ **Global**: data and `aes` mappings in the `ggplot()` initial call are passed to all later elements (e.g. `geom`s)
++ **Local**: data and `aes` mapping in later elements (e.g. `geom`s) are only defined for that specific element 
+
+```{r}
+g_vis <- ggplot(gapminder, aes(y = lifeExp, x = gdpPercap)) + # global
+  geom_point(color = "blue")  
+l_vis <- ggplot() + 
+  geom_point(data = gapminder, aes(y = lifeExp, x = gdpPercap)) # local
+# ^ notice the need to write data = gapminder
+g_vis2 <- g_vis + geom_line() 
+l_vis2 <- l_vis + geom_line()  # geom_line doesn't do anything here
+
+grid.arrange(g_vis, l_vis, 
+             g_vis2, l_vis2, nrow = 2)
+```
+
+
+Multiple data sources
+===
+We can also override global mapping and data sources.
+
+```{r}
+gapminder2 <- gapminder
+gapminder2$lifeExp <- 2 * gapminder2$lifeExp
+
+g_vis <- ggplot(gapminder, aes(y = lifeExp, x = gdpPercap)) + # global
+  geom_point(color = "blue") 
+g_vis_plus_another <- g_vis + 
+  geom_point(data = gapminder2, aes(y = lifeExp, x = gdpPercap), color = "red")
+
+grid.arrange(g_vis, g_vis_plus_another, nrow = 1)
+```
+
+
+
+Summary
+===
+- `ggplot` is plotting package for the future of `R` computing
+- `ggplot` acts like a grammar - we are able to extend the layers iterative
+- `ggplot()` defines global information for all following elements (relative to data and `aes` mappings)
+- `aes` allows you to define how to make columns a data.frame to aesthetics of the graphic
+- `geom_...` define geometric attributes of the graphic
+- `facets` allow one to divide the graphic up conditional on a factor variable
+
+Summary (Code Related)
+====
+
+`ggplot2` specifications in `R`:
+
+* `data`
+* `aes`: aesthetic attributes (position, length, color, symbol...)
+* `stat`: statistical variable transformation (identity, count, smooth, quantile...)
+* `geom`: geometric element (point, line, bar...)
+* `scale`: scale transformation (axis limits, log scale,  
+color mapping...)
+* `coord`: Cartesian, polar, map projection...
+* `facet`: divide into subplots / small multiples using a  
+categorical variable
+
+Of course we can also control guides (axes, legends, titles...)
+
+
+

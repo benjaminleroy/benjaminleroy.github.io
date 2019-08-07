@@ -1,0 +1,168 @@
+---
+title: 'Lab 3.1: Functions'
+author: "Statistical Computing, 36-350"
+date: "Week of Monday, July 15, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Tuesday 10pm, this week.
+
+**This week's agenda**: creating and updating functions; understanding argument and return structures; revisiting Shakespeare's plays; code refactoring.
+
+Huber loss function
+===
+
+The Huber loss function (or just Huber function, for short) is defined as:
+$$
+\psi(x) = \begin{cases}
+x^2 & \text{if $|x| \leq 1$} \\
+2|x| - 1 & \text{if $|x| > 1$} 
+\end{cases}
+$$
+This function is quadratic on the interval [-1,1], and linear outside of this interval. It transitions from quadratic to linear "smoothly", and looks like this:  
+
+```{r echo=F, message=F, warning=F, fig.align="center"}
+# annoying code to create the figure (for pdf and html)
+# for just html could do:
+# ![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week3/huber.png)
+url <- "https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week3/huber.png"
+library(png)
+library(RCurl)
+url_cont <- getURLContent(url)
+img <- readPNG(url_cont)
+rimg <- as.raster(img) # raster multilayer object
+r <- nrow(rimg) / ncol(rimg) # image ratio
+plot(rimg)
+```
+
+
+It is often used in place of the usual squared error loss for robust estimation. The sample average, $\bar{X}$---which given a sample $X_1,\ldots,X_n$ minimizes the squared error loss $\sum_{i=1}^n (X_i-m)^2$ over all choices of $m$---can be inaccurate as an estimate of $\mathbb{E}(X)$ if the distribution of $X$ is heavy-tailed. In such cases, minimizing Huber loss can give a better estimate. (Interested in hearing more? Come ask Tudor or I!)
+
+Some simple function tasks
+===
+
+- **1a.** Write a function `huber()` that takes as an input a number $x$, and returns the Huber value $\psi(x)$, as defined above. Hint: the body of a function is just a block of R code, i.e., in this code you can use `if()` and `else()` statements. Check that `huber(1)` returns 1, and `huber(4)` returns 7.
+
+
+- **1b.** The Huber function can be modified so that the transition from quadratic to linear happens at an arbitrary cutoff value $a$, as in:
+$$
+\psi_a(x) = \begin{cases}
+x^2 & \text{if $|x| \leq a$} \\
+2a|x| - a^2 & \text{if $|x| > a$} 
+\end{cases}
+$$
+Starting with your solution code to the last question, update your `huber()` function so that it takes two arguments: $x$, a number at which to evaluate the loss, and $a$ a number representing the cutoff value. It should now return $\psi_a(x)$, as defined above. Check that `huber(3, 2)` returns 8, and `huber(3, 4)` returns 9.
+
+- **1c.** Update your `huber()` function so that the default value of the cutoff $a$ is 1. Check that `huber(3)` returns 5. 
+
+- **1d.** Check that `huber(a = 1, x = 3)` returns 5. Check that `huber(1, 3)` returns 1. Explain why these are different.
+
+- **1e.** Vectorize your `huber()` function, so that the first input can actually be a vector of numbers, and what is returned is a vector whose elements give the Huber evaluated at each of these numbers. Hint: you might try using `ifelse()`, if you haven't already, to vectorize nicely. Check that `huber(x = 1:6, a = 3)` returns the vector of numbers (1, 4, 9, 15, 21, 27).
+
+
+- **Challenge.** Your instructor computed the Huber function values $\psi_a(x)$ over a bunch of different $x$ values, stored in `huber_vals` and `x_vals`, respectively. However, the cutoff $a$ was, let's say, lost. Using `huber_vals`, `x_vals` columns of `oops_df`, and the definition of the Huber function, you should be able to figure out the cutoff value $a$, at least roughly. Estimate $a$ and explain how you got there. Hint: one way to estimate $a$ is to do so visually, using plotting tools (if you do - please use `ggplot`); there are other ways too.
+
+```{r}
+oops_df <- data.frame(
+  x_vals = seq(0, 5, length=21),
+  huber_vals = c(0.0000, 0.0625, 0.2500, 0.5625, 1.0000, 1.5625, 2.2500,
+                 3.0625, 4.0000, 5.0625, 6.2500, 7.5625, 9.0000, 10.5000,
+                 12.0000, 13.5000, 15.0000, 16.5000, 18.0000, 19.5000, 
+                 21.0000))
+```
+
+
+Shakespeare's complete works
+===
+
+Recall, as in lab/hw from Week 1, that the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare) are available freely from 
+[Project Gutenberg](http://www.gutenberg.org). We've put this text file up at https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/shakespeare.txt.
+
+Getting lines of text play-by-play
+===
+
+- **2a.** Below is the `get_wordtab_from_url()` from lecture. Modify this function so that the string vectors `lines` and `words` are both included as named components in the returned list. For good practice, update the documentation in comments to reflect your changes. Then call this function on the URL for the Shakespeare's complete works (with the rest of the arguments at their default values) and save the result as `shakespeare_wordobj`. Using `head()`, display the first several elements of (definitely not all of!) the `lines`, `words`, and `wordtab` components of `shakespeare_wordobj`, just to check that the output makes sense to you.
+
+```{r}
+#' Get a word table from text on the web
+#'
+#' @param str_url string, specifying URL of a web page 
+#' @param split string, specifying what to split on. Default is the regex 
+#' pattern "[[:space:]]|[[:punct:]]"
+#' @param tolower Boolean, TRUE if words should be converted to lower case 
+#' before the word table is computed. Default is TRUE
+#' @param keep_nums Boolean, TRUE if words containing numbers should be kept in 
+#' the word table. Default is FALSE
+#'
+#' @return list, containing word table, and then some basic numeric summaries
+#'
+#' @examples
+#' endgame_speech_list <- get_wordtab_from_url(
+#'  paste0("https://raw.githubusercontent.com/benjaminleroy/",
+#'  "36-350-summer-data/master/Week1/endgame.txt"))
+get_wordtab_from_url <- function(str_url, split = "[[:space:]]|[[:punct:]]", 
+                                 tolower = TRUE,
+                                 keep_nums = FALSE) {
+  lines <- readLines(str_url)
+  text <- paste(lines, collapse = " ")
+  words <- strsplit(text, split = split)[[1]]
+  words <- words[words != ""]
+  
+  # Convert to lower case, if we're asked to
+  if (tolower) {
+    words <- tolower(words)
+  }
+  
+  # Get rid of words with numbers, if we're asked to
+  if (!keep_nums) {
+    words <- grep("[0-9]", words, inv = TRUE, val = TRUE)
+  }
+
+  # Compute the word table
+  wordtab <- table(words)
+  
+  return(list(wordtab = wordtab,
+              number_unique_words = length(wordtab),
+              number_total_words = sum(wordtab),
+              longest_word = words[which.max(nchar(words))]))
+}
+```
+
+
+- **2b.** Go back and look Q5 of Homework 1, where you located Shakespeare's plays in the lines of text for Shakespeare's complete works. Set `shakespeare_lines <- shakespeare_wordobj$lines`, and then rerun your solution code (or the rerun the official solution code, if you'd like) for questions Q5a--Q5f of Homework 1, on the lines of text stored in `shakespeare_wordobj$lines`. You should end up with two vectors `titles_start` and `titles_end`, containing the start and end positions of each of Shakespeare's plays in `shakespeare_lines`. Print out `titles_start` and `titles_end` to the console.
+
+
+- **2c.** Create a list `shakespeare_lines_by_play` of length equal to the number of Shakespeare's plays (a number you should have already computed in the solution to the last question). Using a `for()` loop, and relying on `titles_start` and `titles_end`, extract the subvector of `shakespeare_lines` for each of Shakespeare's plays, and store it as a component of `shakespeare_lines_by_play`. That is, `shakespeare_lines_by_play[[1]]` should contain the lines for Shakespeare's first play, `shakespeare_lines_by_play[[2]]` should contain the lines for Shakespeare's second play, and so on. Name the components of `shakespeare_lines_by_play` according to the titles of the plays.
+
+
+Getting word tables play-by-play
+===
+
+- **3a.** Define a function `get_wordtabfrom_lines()` to have the same argument structure as `get_wordtab_from_url()`, which recall you last updated in Q2a, except that the first argument of `get_wordtab_from_lines()` should be `lines`, a string vector passed by the user that contains lines of text to be processed. The body of `get_wordtab_from_lines()` should be the same as `get_wordtab_from_url()`, except that `lines` is passed and does not need to be computed using `readlines()`. The output of `get_wordtab_from_lines()` should be the same as `get_wordtab_from_url()`, except that `lines` does not need to be returned as a component. For good practice, incude documentation for your `get_wordtab_from_lines()` function in comments (no need to include an example).
+
+
+- **3b.** Using a `for()` loop or one of the apply functions (your choice here), run the `get_wordtab_from_lines()` function on each of the components of `shakespeare_lines_by_play`, (with the rest of the arguments at their default values). Store the result in a list called `shakespeare_wordobj_by_play`. That is, `shakespeare_wordobj_by_play[[1]]` should contain the result of calling this function on the lines for the first play, `shakespeare_wordobj_by_play[[2]]` should contain the result of calling this function on the lines for the second play, and so on. 
+
+
+- **3c.** Using one of the apply functions, compute numeric vectors `shakespeare_total_words_by_play` and `shakespeare_unique_words_by_play`, that contain the number of total words and number of unique words, respectively, for each of Shakespeare's plays. Each vector should only require one line of code to compute. Hint: `"[["()` is actually a function that allows you to do extract a named component of a list; e.g., try `"[["(shakespeare_wordobj, "number_total_words")`, and you'll see this is the same as `shakespeare_wordobj[["number_total_words"]]`; you should take advantage of this functionality in your apply call. What are the 5 longest plays, in terms of total word count? The 5 shortest plays?
+
+
+Refactoring the word table functions
+===
+
+- **4.** Look back at `get_wordtab_from_lines()` and `get_wordtab_from_url()`. Note that they overlap heavily, i.e., their bodies contain a lot of the same code. Redefine `get_wordtab_from_url()` so that it just calls `get_wordtab_from_lines()` in its body. Your new `get_wordtab_from_url()` function should have the same inputs as before, and produce the same output as before. So externally, nothing will have changed; we are just changing the internal structure of `get_wordtab_from_url()` to clean up our code base (specifically, to avoid code duplication in our case). This is an example of **code refactoring**. 
+
+    Call your new `get_wordtab_from_url()` function on the URL for Shakespeare's complete works, saving the result as `shakespeare_wordobj2`. Compare some of the components of `shakespeare_wordobj2` to those of `shakespeare_wordobj` (which was computed using the old function definition) to check that your new implementation works as it should.
+
+
+- **Challenge.** Check using `all.equal()` whether `shakespeare_wordobj` and `shakespeare_wordobj2` are the same. Likely, this will not return `TRUE`. (If it does, then you've already solved this challenge question!) Modify your `get_wordtab_from_url()` function from the last question, so that it still calls `get_wordtab_from_lines()` to do the hard work, but produces an output exactly the same as the original `shakespeare_wordobj` object. Demonstrate your success by calling `all.equal()` once again.
+
+

@@ -1,0 +1,264 @@
+---
+title: "Lab 1.1: R Basics, Indexing and Iteration, and Text Manipulation"
+author: "Statistical Computing, 36-350"
+date: "Week of Monday July 2, 2018"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Wednesday 10pm, this week.
+
+```{r}
+## For reproducibility --- don't change this!
+set.seed(07012019)
+```
+
+The binomial distribution
+===
+
+The binomial distribution $\mathrm{Bin}(m,p)$ is defined by the number of successes in $m$ independent trials, each have probability $p$ of success. Think of flipping a coin $m$ times, where the coin is weighted to have probability $p$ of landing on heads.
+
+The R function `rbinom()` generates random variables with a binomial distribution. E.g., 
+
+```{r, eval=FALSE}
+rbinom(n=20, size=10, prob=0.5)
+```
+
+produces 20 observations from $\mathrm{Bin}(10,0.5)$.
+
+Some simple manipulations
+===
+
+- **1a.** Generate 200 random values from the $\mathrm{Bin}(10,0.5)$ distribution, and store them in a vector called `bin_draws_0.5`. Extract and display the first 10 elements. Extract and display all but the first 175 elements. 
+
+
+- **1b.** Add the first element of `bin_draws_0.5` to the seventh. Compare the second element to the fifth, which is larger? A bit more tricky: print the indices of the elements of `bin_draws_0.5` that are equal to 5. How many such elements are there? **Challenge**: theoretically, how many such elements would you expect there to be?
+
+
+- **1c.** Find the mean and standard deviation of `bin_draws_0.5`. Is the mean close what you'd expect? The standard deviation?
+
+
+- **1d.** Call `summary()` on `bin_draws_0.5` and describe the result.
+
+
+- **1e**. Find the data type of the elements in `bin_draws_0.5` using `typeof()`. Then convert `bin_draws_0.5` to a vector of characters, storing the result as `bin_draws_0.5_char`, and use `typeof()` again to verify that you've done the conversion correctly. Call `summary()` on `bin_draws_0.5_char`. Is the result formatted differently from what you saw above? Why?
+
+
+
+
+Some simple plots
+===
+
+- **2a.** The function `plot()` is a generic function in R for the visual display of data. The function `hist()` specifically produces a histogram display. Use `hist()` to produce a histogram of your random draws from the binomial distribution, stored in `bin_draws_0.5`. 
+
+
+- **2b.** Call `tabulate()` on `bin_draws_0.5`. What is being shown? Does it roughly match the histogram you produced in the last question?
+
+
+- **2c.** Call `plot()` on `bin_draws_0.5` to display your random values from the binomial distribution. Can you guess what the `plot()` function is doing here?
+
+
+- **2d.** Call `plot()` with two arguments, the first being `1:200`, and the second being `bin_draws_0.5`. This creates a scatterplot of `bin_draws_0.5` (on the y-axis) versus the indices 1 through 200 (on the x-axis). Does this match your plot from the last question?
+
+
+Working with matrices and lists
+===
+
+- **3a.** Create a matrix of dimension 5 x 10, called `mat` which contains the
+numbers 1 through 50, column-wise. That is, reading from top-to-bottom, the
+first (left-most) column of `mat` should read `1:5`. 
+Then, create a matrix of the same dimension, called `tmat`, except 
+the numbers 1 through 50 are now stored row-wise. That is, the first row from left-to-right
+should read `1:10`. Print out both matrices.
+
+
+- **3b.** Change the element in the second row, fourth column of `mat` into the
+string `asdf`. Print out `mat` afterwards. What happened to all the remaining
+entries of `mat`? (Hint: Use `typeof()`.) What can you conclude about
+how R treats matrices of numerics when a string is included?
+
+
+- **3c.** Create a list called `example_list` where the first element is the
+string "36-350" (named "Course"), 
+the second element is a vector of three `TRUE` values and five 
+`FALSE` values (named "Boolean"), and the third element is `tmat` (from the previous question, named "Matrix").
+Print out `example_list`.
+
+
+- **3d.** Using the `class()` function, determine the class of each of the three
+elements in `example_list`. (Hint: Your answer should **not** be lists. 
+If it is, you are accessing the list incorrectly.)
+
+
+Prostate cancer data set
+===
+
+We're going to look at a data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~hastie/ElemStatLearn/)). There are 9 variables measured on these 97 men:
+
+1. `lpsa`: log PSA score
+2. `lcavol`: log cancer volume
+3. `lweight`: log prostate weight
+4. `age`: age of patient
+5. `lbph`: log of the amount of benign prostatic hyperplasia
+6. `svi`: seminal vesicle invasion
+7. `lcp`: log of capsular penetration
+8. `gleason`: Gleason score 
+9. ` pgg45`: percent of Gleason scores 4 or 5 
+
+To load this prostate cancer data set into your R session, and store it as a matrix `pros_data`:
+
+```{r}
+pros_data <-
+  as.matrix(read.table("https://raw.githubusercontent.com/linnylin92/36-350_public/master/dat/pros.dat"))
+```
+
+Basic indexing and calculations
+===
+
+- **4a.** What are the dimensions of `pros_data` (i.e., how many rows and how many columns)? Using integer indexing, print the first 6 rows and all columns; again using integer indexing, print the last 6 rows and all columns. 
+
+
+- **4b.** Using the built-in R functions `head()` and `tail()` (i.e., do *not* use integer indexing), print the first 6 rows and all columns, and also the last 6 rows and all columns.
+
+
+- **4c.** Does the matrix `pros_data` have names assigned to its rows and columns, and if so, what are they? Use `rownames()` and `colnames()` to find out. Note: these would have been automatically created by the `read.table()` function that we used above to read the data file into our R session. To see where `read.table()` would have gotten these names from, open up the data file: https://raw.githubusercontent.com/linnylin92/36-350_public/master/dat/pros.dat in your web browser. Only the column names here are actually informative.
+
+
+- **4d.** Using named indexing, pull out the two columns of `pros_data` that measure the log cancer volume and the log cancer weight, and store the result as a matrix `pros_data_sub`. (Recall the explanation of variables at the top of this lab.) Check that its dimensions make sense to you, and that its first 6 rows are what you'd expect. Did R automatically assign column names to `pros_data_sub`?
+
+
+- **4e.** Using the log cancer weights and log cancer volumes, calculate the log cancer density for the 97 men in the data set (note: by density here we mean weight divided by volume). There are in fact two different ways to do this; the first uses three function calls and one arithmetic operation; the second just uses one arithmetic operation. Note: in either case, you should be able to perform this computation for all 97 men *with a single line of code*, taking advantage of R's ability to vectorize. Write code to do it both ways, and show that both ways lead to the same answer, using `all.equal()`.
+
+
+- **4f.** Append the log cancer density to the columns of `pros_data`, using `cbind()`. The new `pros_data` matrix should now have 10 columns. Set the last column name to be `ldens`. Print its first 6 rows, to check that you've done all this right.
+
+
+Exploratory data analysis with plots
+===
+
+- **5a.** Using `hist()`, produce a histogram of the log cancer volume measurements of the 97 men in the data set; also produce a histogram of the log cancer weight. In each case, use `breaks=20` as an arugment to `hist()`. Comment just briefly on the distributions you see. Then, using `plot()`, produce a scatterplot of the log cancer volume (y-axis) versus the log cancer weight (x-axis). Do you see any kind of relationship? Would you expect to? **Challenge**: how would you measure the strength of this relationship formally? Note that there is certainly more than one way to do so.
+
+
+- **5b.** Produce scatterplots of log cancer weight versus age, and log cancer volume versus age. Do you see relationships here between the age of a patient and the volume/weight of his cancer?
+
+
+- **5c.** Produce a histogram of the log cancer density, and a scatterplot of the log cancer density versus age. Comment on any similarities/differences you see between these plots, and the corresponding ones you produced above for log cancer volume/weight.
+
+
+
+- **5d.** Delete the last column, corresponding to the log cancer density, from the `pros_data` matrix, using negative integer indexing.
+
+
+
+A bit of Boolean indexing never hurt anyone
+===
+
+- **6a.** The `svi` variable in the `pros_data` matrix is binary: 1 if the patient had a condition called "seminal vesicle invasion" or SVI, and 0 otherwise. SVI (which means, roughly speaking, that the cancer invaded into the muscular wall of the seminal vesicle) is bad: if it occurs, then it is believed the prognosis for the patient is poorer, and even once/if recovered, the patient is more likely to have prostate cancer return in the future. Compute a Boolean vector called `has_svi`, of length 97, that has a `TRUE` element if a row (patient) in `pros_data` has SVI, and `FALSE` otherwise. Then using `sum()`, figure out how many patients have SVI.
+
+
+- **6b.** Extract the rows of `pros_data` that correspond to patients with SVI, and the rows that correspond to patients without it. Call the resulting matrices `pros_data_svi` and `pros_data_no_svi`, respectively, and print both matrices. You can do this in two ways: using the `has_svi` Boolean vector created above, or using on-the-fly Boolean indexing, it's up to you. Check that the dimensions of `pros_data_svi` and `pros_data_no_svi` make sense to you.
+
+
+- **6c.** Using the two matrices `pros_data_svi` and `pros_data_no_svi` that you created above, compute and print the means of each variable in our data set for patients with SVI, and for patients without it. Store the resulting means into vectors called `pros_data_svi_avg` and `pros_data_no_svi_avg`, respectively. Hint: for each matrix, you can compute the means with a single call to a built-in R function. What variables appear to have different means between the two groups? 
+
+
+Some string basics
+===
+
+- **7a.** Define two strings variables, equal to "Statistical Computing" and 'Statistical Computing', and check whether they are equal. What do you conclude about the use of double versus single quotation marks for creating strings in R? Give an example that shows why might we prefer to use double quotation marks as the standard (think of apostrophes).
+
+
+- **7b.** The functions `tolower()` and `toupper()` do as you'd expect: they convert strings to all lower case characters, and all upper case characters, respectively. Apply them to the strings below, as directed by the comments, to observe their behavior.
+
+c("I'M NOT ANGRY I SWEAR")         # Convert to lower case
+c("Mom, I don't want my veggies")  # Convert to upper case
+c("Hulk, sMasH")                   # Convert to upper case
+c("R2-D2 is in prime condition, a real bargain!") # Convert to lower case
+
+- **7c.** Consider the string vector `presidents` of length 5 below, containing the last names of past US presidents. Define a string vector `first_letters` to contain the first letters of each of these 5 last names. Hint: use `substr()`, and take advantage of vectorization; this should only require one line of code. Define `first_letters_scrambled` to be the output of `sample(first_letters)` (the `sample()` function can be used to perform random permutations, we'll learn more about it later in the course). Lastly, reset the first letter of each last name stored in `presidents` according to the scrambled letters in `first_letters_scrambled`. Hint: use `substr()` again, and take advantage of vectorization; this should only take one line of code. Display these new last names.
+
+```{r}
+presidents <- c("Clinton", "Bush", "Reagan", "Carter", "Ford")
+```
+
+- **7d.** Now consider the string `phrase` defined below. Using `substr()`, replace the first four characters in `phrase` by "Provide". Print `phrase` to the console, and describe the behavior you are observing. Using `substr()` again, replace the last five characters in `phrase` by "kit" (don't use the length of `phrase` as magic constant in the call to `substr()`, instead, compute the length using `nchar()`). Print `phrase` to the console, and describe the behavior you are observing.
+
+```{r}
+phrase <- "Give me a break"
+```
+
+- **7e.** Consider the string `ingredients` defined below. Using `strsplit()`, split this string up into a string vector of length 5, with elements "chickpeas", "tahini", "olive oil", "garlic", and "salt." Using `paste()`, combine this string vector into a single string "chickpeas + tahini + olive oil + garlic + salt". Then produce a final string of the same format, but where the ingredients are sorted in alphabetical (increasing) order.
+
+```{r}
+ingredients <- "chickpeas, tahini, olive oil, garlic, salt"
+```
+
+Shakespeare's complete works
+===
+
+[Project Gutenberg](http://www.gutenberg.org) offers over 50,000 free online books, especially old books (classic literature), for which copyright has expired. We're going to look at the complete works of [William Shakespeare](https://en.wikipedia.org/wiki/William_Shakespeare), taken from the Project Gutenberg website. 
+
+To avoid hitting the Project Gutenberg server over and over again, we've grabbed a text file from them that contains the complete works of William Shakespeare and put it on our course website. Visit https://raw.githubusercontent.com/linnylin92/36-350_public/master/dat/shakespeare.txt in your web browser and just skim through this text file a little bit to get a sense of what it contains (a whole lot!). 
+
+Reading in text, basic exploratory tasks
+===
+
+- **8a.** Read in the Shakespeare data linked above into your R session with `readLines()`. Make sure you are reading the data file directly from the web (rather than locally, from a downloaded file on your computer). Call the result `shakespeare_lines`. This should be a vector of strings, each element representing a "line" of text. Print the first 5 lines. How many lines are there? How many characters in the longest line? What is the average number of characters per line? How many lines are there with zero characters (empty lines)? Hint: each of these queries should only require one line of code; for the last one, use an on-the-fly Boolean comparison and `sum()`.
+
+
+- **8b.** Remove the lines in `shakespeare_lines` that have zero characters. Hint: use Boolean indexing. Check that the new length of `shakespeare_lines` makes sense to you.
+
+
+- **8c.** Collapse the lines in `shakespeare_lines` into one big string, separating each line by a space in doing so, using `paste()`. Call the resulting string `shakespeare_all`. How many characters does this string have? How does this compare to the sum of characters in `shakespeare_lines`, and does this make sense to you?
+
+- **8d.** Split up `shakespeare_all` into words, using `strsplit()` with `split=" "`. Call the resulting string vector (note: here we are asking you for a vector, not a list) `shakespeare_words`. How long is this vector, i.e., how many words are there? Using the `unique()` function, compute and store the unique words as `shakespeare_words_unique`. How many unique words are there?  
+
+- **8e.** Plot a histogram of the number of characters of the words in `shakespeare_words_unique`. You will have to set a large value of the `breaks` argument (say, `breaks=50`) in order to see in more detail what is going on. What does the bulk of this distribution look like to you? Why is the x-axis on the histogram extended so far to the right (what does this tell you about the right tail of the distribution)?
+
+
+- **8f.** Reminder: the `sort()` function sorts a given vector into increasing order; its close friend, the `order()` function, returns the indices that put the vector into increasing order. Both functions can take `decreasing=TRUE` as an argument, to sort/find indices according to decreasing order. See the code below for an example.
+    ```{r}
+    set.seed(0)
+    x <- round(runif(5, -1, 1), 2)
+    sort(x, decreasing = TRUE)
+    order(x, decreasing = TRUE)
+    ```
+    Using the `order()` function, find the indices that correspond to the top 5 longest words in `shakespeare_words_unique`. Then, print the top 5 longest words themselves. Do you recognize any of these as actual words? **Challenge**: try to pronounce the fourth longest word! What does it mean?
+   
+   
+Computing word counts
+===
+
+- **9a.** Using `table()`, compute counts for the words in `shakespeare_words`, and save the result as `shakespeare_wordtab`. How long is `shakespeare_wordtab`, and is this equal to the number of unique words (as computed above)? Using named indexing, answer: how many times does the word "thou" appear? The word "rumour"? The word "gloomy"? The word "assassination"?
+
+
+- **9b.** How many words did Shakespeare use just once? Twice? At least 10 times? More than 100 times? 
+
+- **9c.** Sort `shakespeare_wordtab` so that its entries (counts) are in decreasing order, and save the result as `shakespeare_wordtab_sorted`. Print the 25 most commonly used words, along with their counts. What is the most common word? Second and third most common words?
+
+
+- **9d.** What you should have seen in the last question is that the most common word is the empty string "". This is just an artifact of splitting `shakespeare_all` by spaces, using `strsplit()`. Redefine `shakespeare_words` so that all empty strings are deleted from this vector. Then recompute `shakespeare_wordtab` and `shakespeare_wordtab_sorted`. Check that you have done this right by printing out the new 25 most commonly used words, and verifying (just visually) that is overlaps with your solution to the last question.
+
+
+A tiny bit of regular expressions
+===
+
+- **10a.** There are a couple of issues with the way we've built our words in `shakespeare_words`. The first is that capitalization matters; from Q9c, you should have seen that "and" and "And" are counted as separate words. The second is that many words contain punctuation marks (and so, aren't really words in the first place); to see this, retrieve the count corresponding to "and," in your word table `shakespeare_wordtab`.
+
+    The fix for the first issue is to convert `shakespeare_all` to all lower case characters. Hint: recall `tolower()`. The fix for the second issue is to use the argument `split="[[:space:]]|[[:punct:]]"` in the call to `strsplit()`, when defining the words. In words, this means: *split on spaces or on punctuation marks* (more precisely, it uses what we call a **regular expression** for the `split` argument). Carry out both of these fixes to define new words `shakespeare_words_new`. Then, delete all empty strings from this vector, and compute word table from it, called `shakespeare_wordtab_new`. 
+
+
+- **10b.** Compare the length of `shakespeare_words_new` to that of `shakespeare_words`; also compare the length of `shakespeare_wordtab_new` to that of `shakespeare_wordtab`. Explain what you are observing.
+
+
+- **10c.** Compute the unique words in `shakespeare_words_new`, calling the result `shakespeare_words_new_unique`. Then repeat the queries in Q8e and Q8f on `shakespeare_words_new_unique`. Comment on the histogram---is it different in any way than before? How about the top 5 longest words? 
+
+
+- **10d.** Sort `shakespeare_wordtab_new` so that its entries (counts) are in decreasing order, and save the result as `shakespeare_wordtab_sorted_new`. Print out the 25 most common words and their counts, and compare them (informally) to what you saw in Q9d. 
+

@@ -1,0 +1,227 @@
+---
+title: "Lab 4.1: Simulation"
+author: "Statistical Computing, 36-350"
+date: "Monday, July 22, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+set.seed(10)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Friday 10pm, this week.
+
+**This week's agenda**: practice writing functions, creating simulations, using ``replicate()''
+
+Setting up your simulation
+===
+
+We are going to continue the drug effect model that was discussed in the
+"Simulation" lecture. That is, we will simulate the effects of using a drug
+and not using a drug to see hypothetically. This will allow us to investigate
+how different parameters of our model affect the number of subjects needed to 
+observe a significant difference without calculating complicated math.
+
+Suppose that there is a new drug that can be optionally given before chemotherapy. 
+We follow the setup given in the "Simulation" lecture.
+We believe those who aren’t given the drug experience a reduction in tumor size of percentage
+$$
+X_{\mathrm{no\,drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=R), 
+\;\;\; R \sim \mathrm{Unif}(0,1),
+$$
+whereas those who were given the drug experience a reduction in tumor size of percentage
+$$
+X_{\mathrm{drug}} \sim 100 \cdot \mathrm{Exp}(\mathrm{mean}=2).
+$$
+Here $\mathrm{Exp}$ denotes the exponential distribution, and $\mathrm{Unif}$ the uniform distribution. Now consider the following scenario. In the following questions, we will set up a way to simulate this model.
+Throughout this question, we call all subjects who are given the drug experience
+as "cases" and those who are not given the drug experience as "controls".
+  
+- **1a.** The first function we write will generate the simulation data. 
+Write a function called `simulate_data()` that produces measurements in the drug and no drug groups. Your function should take two inputs: `n`, the sample size (i.e., number of cases and controls), with a default value of 200; and `mu_drug`, the mean for the exponential distribution that defines the drug tumor reduction measurements, with a default value of 2. Your function should return a list with
+two vectors called `no_drug` and `drug`. Each of these two vectors should 
+have length `n`, containing the percentage reduction in tumor size under the
+appropriate condition (not taking the drug or taking the drug). (Hint: This function
+should use `rexp` appropriately. You can
+use code snippets from the slides to help you out. You'll need to recall
+some properties of the Exponential distribution to make sense of the code snippets
+in the slides.)
+
+
+- **1b.** We will now use `simulate_data()` for different parameter settings
+to see if we are properly generating data. Run `simulate_data()` without any
+arguments (hence, relying on the default values of `n` and `mu_drug`), and store the
+results in `data_1`. Create a visualization of the distribution of the percent change in cancer size between the 2 groups (those given and those not given the drug). **(Hint: since ggplot needs to take in a data frame, try doing as.data.frame to the output of `simulate_data` and then using a `tidyr` function to convert the data frame into something useable for ggplot.)** Try to make a good visualization given that later we'll be interesting in comparing the means of the change in size between groups. Additional for
+both the `data_1$no_drug` and `data_1$drug` compute the mean 
+and standard deviation of both vectors.
+Now, run `simulate_data()` again, and store its value in `data_2`. Again,
+visualize the difference in 
+both the `data_2$no_drug` and `data_2$drug` vectors, and the mean and
+standard deviation once again.
+We have effectively simulated two hypothetical datasets.
+Hence, the values in each of these 4 vectors should all be different.
+
+
+- **1c.** In the next section to come, we will be generating many hypothetical
+datasets to see how many subjects we need to observe a difference between
+taking the drug and not taking the drug. To do this, we will write a function called
+`simulate_difference()`, which takes in the same two arguments as `simulate_data()`,
+which are `n` and `mu_drug`, both of which use the 
+same default parameters as `simulate_data()`. This function will generate a new dataset
+using `simulate_data()` using the appropriate inputs.
+If the mean value of `drug` is larger than the mean value of `no_drug` by 100,
+return "Positive" (the string, to denote the drug is useful).
+If the mean value of `drug` is less than the mean value of `no_drug` by 100,
+return "Negative".
+Otherwise, if neither of the above cases hold, return "Inconclusive".
+
+Run this function four times.
+The first two times, run
+this function twice with no arguments (hence, using the default parameters)
+to see that your function is returning different numbers.
+The third time, run your function with with `n = 10` and `mu_drug = 0.5`. 
+Print out all 3 return values. 
+
+
+Investigating your simulation
+===
+
+With your simulation set up, we can now investigate how the parameters
+of our simulation (namely, `n` and `mu_drug`) affect the outcomes. While 
+the relationship between `n`, `mu_drug` and the outcome of `simulate_difference()`
+are not too hard to mathematically derive in this particular lab, you can imagine
+much more complicated models where it's easier to simulate the model instead of
+mathematically deriving the answer.
+
+The next few questions will work with this hypothetical: suppose we work for a drug company that wants to put this new drug out on the market.
+In order to get FDA approval, your company must demonstrate that the
+drug is positive.
+Suppose this is defined as the patients who had the drug had **on average** a reduction in tumor size **at least 100 percent greater than** those who didn't receive the drug, or in math:
+
+$$
+\overline{X}_{\mathrm{drug}} - \overline{X}_{\mathrm{no\,drug}} \geq 100.
+$$
+
+This is what we coded in Question 1f above. Your drug company wants to spend as little money as possible. They want the smallest number `n` such that, if they were to run a clinical trial with `n` cases and `n` controls, they would likely succeed in demonstrating that the effect size (as above) is at least 100. Of course, the result of a clinical trial is random; your drug company is willing to take "likely" to mean **successful with probability 0.95**, i.e., successful in 190 of 200 hypothetical clinical trials (though only 1 will be run in reality).
+
+- **2a.** Following the code sketch provided in the "Simulation" lecture (Slide 24),
+write a function called `rep_sim`. This function takes in 4 arguments,
+`nreps` (the number of repetitions, with
+default value of 200), `n` and `mu_drug` (the values needed for `simulate_difference()`, with the same default values) and `seed` (with default value `NULL`). This function should run `simulate_difference()` `nreps` number of replications, and then return the number of times your drug was considered
+effective, i.e., the number of replications that the output
+of `simulate_difference()` exceeds 100. 
+
+Demonstrate your function works by using it
+on `mu_drug = 1.5`. (Note: While you could use a for-loop (shown in the slides) or one of the *apply functions, for this question, 
+you can also use the `replicate()` function. Be sure to check the documentation for
+`replicate()` if you are unfamiliar with it. Essentially, `replicate()` takes in
+two arguments, the number of replications you want to perform and the function you
+are replicating.)
+
+
+- **2b.** We will now investiagate the effect of `n` (the number of
+cases or controls), where `mu_drug = 2`. For each value of the input `n` in between 5 and 200 (inclusive), run your function `rep_sim`. You can do this using a for-loop or one of the *apply functions,
+and store the number of success in a vector. 
+So to be clear, for each value of `n` in between 5 and 200, you should have a corresponding number of positives. 
+Plot the number of positives versus the sample size, and label the axes appropriately. Based on your simulation, 
+what is the smallest number of `n` for which the number of positives is 190 or more?
+
+
+
+Changing your simulation setup
+===
+
+In these questions, we will be modifying the simulation
+setup and see how it changes the results we observe. Recall, in practice,
+we (the drug company)
+wants to collect as few subjects as needed to save money. We will investigate
+a "stopping rule". That is, we include more
+subjects into our study slowly. If our stopping rule decides that we've included
+enough subjects that we can decide a "Positive" or "Negative", we stop collecting subjects. If we are "Inconclusive",
+we collect more subjects. And then we stop when we reach a maximum number of subjects.
+In these last few questions, we will not provide you with the step-by-step
+details of how to explicitly change the setup. 
+
+
+- **3a.**  Suppose we start with `n = 5` subjects
+(as before, this means 5 cases and 5 controls).
+We compute the difference in means between using the drug and not using
+the drug (just like before). If this difference is equal to or larger than 100, we declare that the the drug is "Positive" and we stop collecting data. 
+If this difference is equal to or less than -100, we declare the drug
+is "Negative". Here is the change: If the result was not "Positive" or "Negative",
+we collect 5 new cases and 5 new controls and try again.
+We keep incrementing by 5 new cases and 5 new controls
+until we have a total of `n` cases and `n` controls.
+If we *still* do not conclude "Positive" or "Negative", then we
+declare "Inconclusive". 
+
+Change the function `simulate_difference()` to accommodate this new scheme, keeping the default values.
+Then, similar to Question 2a, run this simulation using `rep_sim()` with `nreps = 200` and `mu_drug = 1.5`, and print out how many positives there were (this is possible since we've redefined `simulate_difference()`). How does this number compare
+with the result in Question 2a? (Hint: Implementing this can be
+tricky. We suggest you to simulate the entire dataset with `n` cases and `n` controls 
+first, using `simulate_data()`. And then using a for-loop, sequentially see
+if the first 5 (or first 10, or first 15, etc.) cases and controls yield
+a "Positive" or "Negative".)
+
+
+- **3b.** In these last two questions, we will allow `simulate_difference()` to take
+an arbitrary stopping rule. These questions are very similar to Question 2d.
+We can design a function `stopping_rule_threshold()` that takes as input
+two vectors as input, `drug_vector` and `no_drug_vector` and
+a numeric `threshold`, and outputs either
+`TRUE` or `FALSE`. If the output is `TRUE`, we stop collecting subjects. If `FALSE`,
+we continue collecting subjects. For example, in Questions 2b to 2d, we have 
+effectively been using a stopping rule like the following.
+
+```{r, eval = F}
+stopping_rule_threshold <- function(drug_vector, no_drug_vector, 
+                                    threshold = 100){
+  mean(results$drug) - mean(results$no_drug) > threshold
+}
+```
+
+You will design a different stopping rule. Write a function called
+`stopping_rule_ttest()` that takes as input `drug_vector` and `no_drug_vector`
+(same as before) and a numeric `alpha` with default value of `0.05`. This function will
+use use a one-sided t-test to test if the p-value when testing
+the mean between `drug_vector` and `no_drug_vector` is less than `alpha`. If it
+is, `stopping_rule_ttest()` returns `TRUE`. If not, `stopping_rule_ttest()` returns `FALSE`. (Hint: The function to perform a t-test is `t.test()`. Be sure
+to set the `alternative` argument appropriately, where our alternative
+is that the mean of `drug_vector` is greater than that of `no_drug_vector`. This function returns a list,
+in which the element called `p.value` contains the p-value.)
+
+
+- **3c.** Lastly, change `simulate_difference()` one last time. 
+Now, it takes in as input `n`, `mu_drug` (same as before) as well as `stopping_rule`, which will be an function that determines whether or not to collect more subjects. 
+By default, set `stopping_rule = stopping_rule_ttest`. 
+You will need to make sure you understand how to pass a function into another
+function for this question. 
+When you use `stopping_rule()` and the result is `TRUE`: your function
+should return "Positive" if the mean of the currently used cases is larger
+than the mean of the currently used controls. Otherwise, return "Negative".
+However, if `stopping_rule()` returns `FALSE`, include more subjects in your
+study until you have `n` cases and controls.
+
+Similar to Question 2a, run this simulation using `rep_sim()` with `nreps = 200` and `mu_drug = 1.5`, and print out how many positives there were.
+How does these numbers of positives compare
+with the result in Question 2a and 3a?
+
+
+- **3d:** *Let's pause for a moment.* The set-up of the output of our `simulate_data` returning a list was very useful for the function `stopping_rule_ttest`. At the same time, it probably was a little annoying to visualize the output using ggplot. Using the new definition of `simulate_data` (`simulate_data_tidy`) below (remove the `eval = F`) write a function `simulate_difference` as `simulate_difference_tidy` that operates the exact same as the function defined in *3a* but uses `simulate_data_tidy` (if possibly try using `slice` after a `group_by`). Which function was easier / cleaner to write? If you knew you were to be using the `stopping_rule_ttest` would you use the `tidyverse` version or the `list` / base `R` version? What am I trying to teach you here (give me your best guess)?
+
+```{r eval = F}
+simulate_data_tidy <- function(n = 200, mu_drug = 2){
+  output <- simulate_data(n, mu_drug)
+  tidy_output <- output %>% data.frame() %>%
+    rename(`no drug` = no_drug) %>%
+    gather(key = "class", value = "value") %>%
+    mutate(class = factor(class))
+  return(tidy_output)
+}
+```
+
+

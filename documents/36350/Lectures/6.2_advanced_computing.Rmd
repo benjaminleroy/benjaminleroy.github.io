@@ -1,0 +1,541 @@
+---
+title: "Advanced Computing"
+author: "Statistical Computing, 36-350"
+date: "Wednesday, August 7, 2019"
+---
+
+Last time: Prediction
+===
+
+- prediction focuses on models with the smallest  **test / prediction error**
+- used when you do not know the underlying structure or are just generally interested in prediction - not inference
+- Can estimate the **test error** with cross validation or sample splitting
+- **training error** should not be optimized as it underestimates the **test error**
+- Statistical methods for prediction that are non-parameter include:
+    - KNN (K - nearest neighbor)
+    - trees, boosting and random forest
+    - SVM, kernel machines
+    - deep learning
+    - etc...
+    
+Overview for the day:
+===
+
+1. Advanced$^2$ Tidyverse (Split-Apply-Combine)
+2. Parallization
+3. Deep Learning
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*Advanced$^2$ Tidyverse: Split-Apply-Combine*</span>
+
+Review of tidyverse: `dplyr` and `tidyr`
+===
+- The tidyverse is a collection of packages for common data science tasks
+- Tidyverse functionality is greatly enhanced using pipes (`%>%` operator)
+- `dplyr` has advanced functionality that mirrors SQL
+    - `slice()` and `filter()`: subset rows based on numbers or conditions
+    - `select()` and `mutate()`: select columns or create/ override columns
+    - `group_by()`: create groups of rows according to a condition
+    - `summarize()`: apply computations across groups of rows
+- `tidyr` is a package for manipulating the structure of data frames
+    - `gather()`: make wide data longer
+    - `spread()`: make long data wider
+
+
+Split-apply-combine
+===
+
+Today we will learn a general strategy that can be summmarized in three conceptual steps:
+
+- **Split** whatever data object we have into meaningful chunks
+- **Apply** the function of interest to each element in this division
+- **Combine** the results into a new object of the desired structure
+
+These are conceptual steps; often the apply and combine steps can be performed in multiple steps (in the `tidyverse` reable fashion), and ther `combine` can also see reformating (leveraging `gather` and `spread`)
+
+Simple but powerful
+===
+
+Does split-apply-combine sound simple? It is, but it's very powerful when combined with the right data structures
+
+- As usual, compared to explicit `for()` loops, often requires far less code
+- Fits nicely with our previous ideas of **top-down function design**, simply at a broader scope
+- Sets you in the right direction towards learning how to use MapReduce/Hadoop for really, really big data sets 
+- goes much beyond the single number `summarize` that we've seen before
+
+Strikes data set 
+===
+
+Data set on 18 countries over 35 years (compiled by Bruce Western, in the Sociology Department at Harvard University). The measured variables:
+
+- `country`, `year`: country and year of data collection
+- `strike.volume`: days on strike per 1000 workers
+- `unemployment`: unemployment rate
+- `inflation`: inflation rate
+- `left.parliament`: leftwing share of the goverment
+- `centralization`: centralization of unions
+- `density`: density of unions
+
+```{r warning = F, message = F}
+library(tidyverse)
+strikes_df <- read.csv("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/strikes.csv")
+dim(strikes_df) # Since 18 × 35 = 630, some years missing from some countries
+head(strikes_df)
+```
+
+An interesting question
+===
+
+Is there a relationship between a country's ruling party alignment (left versus right) and the volume of strikes?
+
+![mlk](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/mlk68.jpg) 
+![madison](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/madison11.jpg)
+
+How could we approach this?
+
+- Worst way: by hand, write 18 separate code blocks
+- Bad way: explicit `for()` loop, where we loop over countries 
+- Best way: split appropriately, then use `sapply()`
+
+Work with just one chunk of data
+===
+
+Step 0: design a function that will work on one chunk of data
+
+So let's write code to do regression on the data from (say) just Italy
+
+```{r}
+strikes_df_italy <- strikes_df %>% filter(country == "Italy") # Data for Italy
+dim(strikes_df_italy)
+head(strikes_df_italy)
+
+italy_lm <- lm(strike.volume ~ left.parliament, data = strikes_df_italy)
+summary(italy_lm)
+
+ggplot(strikes_df_italy,
+       aes(x = left.parliament, y = strike.volume)) +
+  geom_jitter() +
+  geom_abline(intercept = coef(italy_lm)[1],
+              slope = coef(italy_lm)[2]) +
+  labs(title = "Italy strike volume versus leftwing alignment",
+       y = "Strike volume", x = "Leftwing alignment")
+```
+
+(Continued)
+===
+
+Now let's turn this into a function
+
+```{r}
+my_strike_lm <- function(data) {
+  formula <- as.formula("strike.volume ~ left.parliament")
+  coef_table <- broom::tidy(summary(lm(formula, data = data)))
+  # needs to provide a data frame (to preserve name structure)
+  return(coef_table %>% select(term, estimate))
+}
+
+my_strike_lm(strikes_df_italy) # New way 
+coef(italy_lm) # Old way, same results in different format
+```
+
+- `broom` package contains both `tidy` which converts common data from models into a `data.frame` (desirable for `tidyverse`) and `augment` (you can explore this function on your own).
+
+Split our data into appropriate chunks
+===
+
+Step 1: split our data into appropriate chunks, each of which can be handled by our function. Here, the function `nest()` is often helpful: `df %>% group_by(my_factor) %>% nest()` splits a data frame `df` into several data frames, defined by constant levels of the factor `my_factor` and "nests" these data.frames into the "tibble/data.frame" in the data column.
+
+So we want to split `strikes_df` into 18 smaller data frames, each of which has the data for just one country
+
+```{r}
+strikes_by_country <- 
+  strikes_df %>% group_by(country) %>%
+  nest()
+class(strikes_by_country) # It's a tibble (just a fancy data.frame)
+names(strikes_by_country) # It has a new column called `data`
+head(strikes_by_country, 3)
+head(strikes_by_country$data[strikes_by_country$country == "Italy"]) # Same as what we saw before
+```
+
+Apply our function and combine the results
+===
+
+Steps 2 and 3: apply our function to each chunk of data, and combine the results. Here, we'll apply our functions using `map` from `purrr`.
+
+So we want to apply `my_strikes_lm()` to each subset of the data in `strikes_by_country`. Think about what the output will be from each function call: vector of length 2 (intercept and slope):
+
+```{r}
+nested <- strikes_df %>%
+  group_by(country) %>%
+  nest() %>%
+  mutate(coef = map(data, my_strike_lm))
+
+head(nested, 3)  
+
+```
+
+Unnesting
+===
+
+Now, we're really looking for a data frame that looks like the following:
+
+| country    | (Intercept) | left.parliament |
+|------------|-------------|-----------------|
+| Austrialia | 415         | -0.86           |
+| Austria    | 423         | -8.21           |
+
+So we first just grab the columns of interest (`country` and `coef`) and then "unnest" the nested columns (which in this case is only `coef`).
+ 
+```{r}
+examine_coef <- nested %>% select(country, coef) %>%
+  unnest() 
+
+head(examine_coef, 4)
+
+```
+
+This is slightly different than our desired output, but `tidyr::spread` can help us out:
+
+```{r}
+strikes_coef <- examine_coef %>% spread(term, estimate)
+
+head(strikes_coef, 2)
+```
+
+Visualize
+===
+
+Now that we've create the coefficient matrix, let's visual the effect of a leftwing leaning parliment on the number of strikes:
+
+```{r}
+ggplot(strikes_coef, 
+       aes(x = forcats::fct_reorder(country, left.parliament), 
+           #^ forcats is a great tool to reorder levels of factors
+           y = left.parliament)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "grey") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x = "Country", y = "Leftwing alignment Coefficient")
+```
+
+1d output Example:
+===
+
+- The previous *count* be seen as "easy" since we had multiple rows, below we do a similar thing to a vector (using `broom::tidy`) to convert it to a `data.frame`.
+
+```{r}
+# my inner function
+summarize_left_parliament <- function(df) {
+  broom::tidy(summary(df$left.parliament))
+}
+
+# with the nexted data
+summary_lp_nest <- nested %>%
+  mutate(sum_lp = map(data, summarize_left_parliament))
+
+summary_lp_nest %>% head(2)
+
+# creating the desired data frame.
+summary_lp_unnested <- summary_lp_nest %>% select(country, sum_lp) %>%
+  unnest
+summary_lp_unnested %>% head(5)
+```
+
+Commentary:
+===
+
+1. can also use `split` to put data frames into a list and try doing things like
+`lapply` (see lectures like: [Ryan Tibshirani's](http://www.stat.cmu.edu/~ryantibs/statcomp-F16/) - search "split-apply-combine".)
+2. A lot of things can still intelligently be done using `for`-loops (and thinking about how you need to save your data)
+3. in general "split-apply-combine" requires you to think critically about the full process and how you'd like to present the data at the end (which is a very useful skill - knowing multiple ways to do so is every better)
+
+<span style="color: blue">Part II </span>
+===
+
+<span style="color: blue">*Parallel Computing*</span>
+
+Why Parallel Computing
+===
+- processing large amounts of data is time consuming. **My advisor will be working with data from the LSST (Large Synoptic Survey Telescope) what will have 500 petabytes (1 petabyte = 1024 TB) of data**
+- a lot of analysis is jsut a set of `for` loops, which do not require the previous to be computed befor the next step
+
+Why Parallel Computing (Continued)
+===
+Much R code runs fast and fine on a single processor. But at times, computations can be:
+
+- **cpu-bound**: Take too much cpu time
+- **memory-bound**: Take too much memory
+- **I/O-bound**: Take too much time to read/write from disk
+- **network-bound**: Take too much time to transfer
+
+To help with **cpu-bound** computations, one can take advantage of modern processor architectures that provide multiple cores on a single processor, and thereby enable multiple computations to take place at the same time. In addition, some machines ship with multiple processors, allowing large computations to occur across the entire cluster of those computers. Plus, these machines also have large amounts of memory to avoid **memory-bound** computing jobs.
+
+
+When to parallelize
+===
+- parallelization increases overhead and can reduce efficiency
+- some task cannot be parallelized 
+
+**Amdahl’s Law**: where the speedup of the computation (y-axis) is a function of both the number of cores (x-axis) and the proportion of the computation that can be parallelized (see colored lines):
+
+![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/parallelization.png)
+
+`parallel` library (`mclapply`)
+===
+
+The first package we will look at is `parallel`, which includes the function `mclapply` which can be used very similar to an `lapply`.
+
+```{r}
+library(parallel)
+numCores <- detectCores()
+numCores # number of cores on my computer :)
+```
+
+```{r}
+set.seed(1)
+my_k <- rep(1:14, each = 20)
+
+my_simulation <- function(k) {
+  x <- runif(30,-3, 3)
+  y <- 2*x + 2* rnorm(n = 30)
+  x0 <- runif(10000,-3, 3)
+  y0 <- 2*x0 + 2*rnorm(n = 10000)
+  
+  my_lm <- lm(y ~ poly(x,k))
+  y0_hat <- predict(my_lm, data.frame(x = x0))
+  return(mean((y0-y0_hat)^2))
+}
+
+# without parallelizing :
+system.time({
+  results <- lapply(my_k, my_simulation)
+  my_data <- data.frame(k = my_k,
+                        values = unlist(results))
+})
+
+# with:
+system.time({
+  results <- mclapply(my_k, my_simulation, mc.cores = numCores)
+  my_data <- data.frame(k = my_k,
+                        values = unlist(results))
+})
+
+```
+
+```{r ggvis, message = F, warning = F, out.width = "100%", fig.align="center"}
+ggplot(my_data, aes(x = k, y = values)) +
+  geom_point(alpha = .1) +
+  labs(x = "Polynomial Fit",
+       y = "Test Error") + 
+  geom_smooth()  +
+  ylim(0, 40)
+```
+
+- Resource: `parallel` [manual]( https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf)
+
+`foreach` and `doParallel` library (`foreach () %dopar%`)
+===
+
+`foreach` and `doParallel` provide parallelization that mirrors `for` loops:
+
+```{r warning = F, message = F}
+#base for-loop
+system.time({
+  storage_f <- c()
+  for (k in my_k) {
+    storage_f <- c(storage_f, my_simulation(k))
+  }
+})
+
+#single-core `foreach`
+library(foreach)
+system.time({
+  storage_fe <- foreach (k=my_k, .combine=c) %do% {
+    my_simulation(k)
+  }
+})
+
+#parallel `foreach`
+library(doParallel)
+registerDoParallel(numCores)  # use multicore, set to the number of our cores
+
+system.time({
+  storage_p <- foreach (k=my_k, .combine=c) %dopar% {
+     my_simulation(k)
+  }
+})
+
+# to stop implicitly using the clusters
+stopImplicitCluster()
+```
+
+- `foreach` has a specific parameter `.combine` which combines results in a set of different ways (you see above `.combine=c`, but it can also do `.combine=rbind` or `cbind`). The default is returned as a list.
+
+- Resource: `doParallel` + `foreach` [vignette](https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf)
+
+
+Summary and Extra resources for Parallelization:
+===
+- `parallel` library (`mclapply` - similar to `lapply`)
+- `foreach` library (`foreach () %dopar%` similar to `for` loops)
+- Good introduction: [Matt Jones](https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html)
+- Others: (multicore data science r and python)[https://blog.dominodatalab.com/multicore-data-science-r-python/]
+
+<span style="color: blue">Part III </span>
+===
+
+<span style="color: blue">*Deep Learning in R*</span>
+
+Why do we care about Deep Learning/ Neural Networks?
+===
+
+- Like mentioned in class, a non-trivial part of statistics (machine learning) is interested in prediction. 
+- It is common to see complex non-linear / non-parametric (techically neural nets are parametric) models statistical prediction machines
+
+What are Neural Networks?
+===
+- Neural Nets (which Deep Learning) is a part of, use a set of linear functions and non-linear link functions to represent complex structures.
+- Single layer Neural Network:
+![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/logistic_regression.png)
+    - Activation functions: 
+    
+    | Name     | Mathematics                                                  | Visual |
+    |----------|--------------------------------------------------------------|--------|
+    | logistic | $f(x) = 1/(1+e^{-x})$                                        | ![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/logistic.png) |
+    | reLU     | $f(x) = x \mathbb{I}(X > 0)$                                 | ![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/reLU.png) |
+    | softmax  | $f(\overset{\to}{x}) = \frac{e^{x_i}}{\sum_{j=1}^J e^{x_j}}$ | 
+    
+- Multiple Layer Neural Network ("deep" neural network)
+![](https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week6/neural_net.png)
+
+
+
+
+Deep Learning in R
+===
+
+- People do use R for Deep learning (Pittsburgh [`useR` group](https://www.meetup.com/Pittsburgh-useR-Group/) just had a session from Dick Sporting Goods about how they use it.)
+- There is a really nice tool in R called [Keras](https://keras.rstudio.com/) (developed as a API for Tensorflow by Google)
+
+```{r warning = F, message = F}
+library(keras)
+# install_keras() # installs backend to Tensorflow
+```
+
+Deep Learning Example
+===
+
+*I'm basically going to walk you through a basic example (that is found at https://keras.rstudio.com/)*
+
+
+
+Motivation: MNIST
+
+```{r message = F, warning = F}
+mnist <- dataset_mnist()
+x_train <- mnist$train$x
+y_train <- mnist$train$y
+x_test <- mnist$test$x
+y_test <- mnist$test$y
+
+dim(x_train)
+head(y_train, 2); length(y_train)
+```
+
+```{r message = F, warning = F}
+library(ggDiagnose) # just for quick viz
+library(gridExtra)
+grid.arrange(grobs = lapply(1:4, 
+                            function(idx) {ggDiagnose.matrix(
+                                              t(x_train[idx,seq(28,1),]), 
+                                              return = T,
+                                              show.plot = F,
+                                              type = "image")$ggout + 
+               theme_void() + theme(legend.position = "none") + 
+               labs(x = "", y = "") +
+               scale_fill_gradient(low = "white", high = "black")}), 
+             nrow = 1)
+
+```
+
+
+Reshaping and Scaling
+===
+
+```{r}
+# reshape
+x_train <- array_reshape(x_train, c(nrow(x_train), 784))
+x_test <- array_reshape(x_test, c(nrow(x_test), 784))
+# rescale
+x_train <- x_train / 255
+x_test <- x_test / 255
+
+five <- x_train[1,]
+
+
+# to categorical
+y_train_c <- to_categorical(y_train, 10)
+y_test_c <- to_categorical(y_test, 10)
+
+head(y_train_c, 2); dim(y_train_c)
+```
+
+Defining the model
+===
+
+**Defining the structure**
+
+```{r}
+model <- keras_model_sequential() # instead of RNN or CNN (the standard NN)
+model %>% 
+  layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
+  layer_dropout(rate = 0.4) %>% 
+  layer_dense(units = 128, activation = 'relu') %>%
+  layer_dropout(rate = 0.3) %>%
+  layer_dense(units = 10, activation = 'softmax')
+
+summary(model)
+```
+
+**Compiling model**
+
+```{r}
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+```
+
+Training model:
+===
+
+```{r message = F, warning = F, cache = T}
+history <- model %>% fit(
+  x_train, y_train_c, 
+  epochs = 30, batch_size = 128, 
+  validation_split = 0.2, verbose = T)
+```
+
+```{r eval = F, message = F}
+plot(history)
+```
+
+
+**Predict labels**
+
+```{r}
+yhat <- model %>% predict_classes(x_test)
+
+# accuracy
+mean(y_test == yhat)
+```
+
+**interpreting layers**
+
+This model doesn't have really descriptive layers, but see [Visualizing intermediate activation in CNN with Keras](https://towardsdatascience.com/visualizing-intermediate-activation-in-convolutional-neural-networks-with-keras-260b36d60d0)
+
+
+

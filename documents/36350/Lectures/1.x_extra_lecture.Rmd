@@ -1,0 +1,155 @@
+---
+title: "Extra Review of the First Material"
+author: "Statistical Computing, 36-350"
+date: "Week of Monday July 8, 2019"
+output: html_document
+---
+
+Getting Start:
+===
+
+**Vectors**
+
+```{r}
+x <- c(1, 2, 3, 4, 5)
+x <- 1:5
+x <- seq(1,5, by = 1)
+```
+
+```{r}
+set.seed(1)
+x2 <- sample(c(TRUE, FALSE), p = c(1/3, 2/3), size = 8, replace = T)
+x2
+# give x2 names c("X1", ... "X8")
+names(x2) <- c("X1", "X2",
+               "X3", "X4",
+               "X5", "X6",
+               "X7", "X8") #list or vector
+
+names(x2) <- paste("X", 1:8, sep = "")
+```
+
+```{r}
+x3 <- c("I", "took", "this", "class", "back", "in", "my", "day")
+```
+
+```{r}
+x4 <- c("I", 1, TRUE) # will all be strings since we only can have 1 type
+```
+
+
+**Matrices**
+
+```{r}
+x_mat <- matrix(x, nrow = 1)
+dim(x_mat)
+```
+
+```{r}
+x_mat2 <- matrix(c(1,1,2,3,5,8,
+                   2,4,8,16,32,64,
+                   0,1,0,-1,0,1),
+            nrow = 3, byrow = TRUE)
+x_mat2
+```
+
+
+```{r}
+x2_mat <- matrix(x2, nrow = 4)
+```
+
+```{r}
+x3_mat <- matrix(x3, nrow = 2)
+```
+
+**List**
+
+1. make a list of x2, x_mat2  (`my_list_1`)
+```{r}
+my_list_1 <- list(x2, x_mat2, x2)
+my_list_1[1] 
+typeof(my_list_1[1])
+
+my_list_1[[1]] 
+typeof(my_list_1[[1]])
+is.vector(my_list_1[[1]])
+
+my_list_1[1:2]
+my_list_1[c("x2", "x_mat2")]
+
+
+```
+
+2. name the elements in this list (`my_list_1`)
+```{r}
+names(my_list_1) <- c("x2","x_mat2")
+#my_list_1 <- 
+```
+
+3. make a list with all vectors above (`my_list_2`)
+
+**data.frame**
+1. make a data frame with all vector components... (`my_df`)
+
+```{r}
+my_df <- data.frame(x[1:3],x2[1:3],x3[1:3],x4[1:3])
+colnames(my_df) <- paste("banana", 1:4)
+names(my_df) <- paste("apple", 1:4)
+
+rownames(my_df) <- paste("pear", 1:3)
+
+my_df
+```
+
+
+2. Make new data frame from `x_mat2` (`my_df_2`). What will the columns names be?
+```{r}
+my_df_2 <- data.frame(x_mat2)
+```
+
+
+
+
+Boolean Logic
+===
+1. which indices for `x` are greater than or equal to 5?
+```{r}
+which(x >= 5)
+```
+
+2. which indices of `x_mat2` are greater than 5? Comment on format?
+```{r}
+which(x_mat2 >= 5)
+
+x_mat2[x_mat2 >= 5]
+```
+3. set values of `x_mat2` that are greater than 5 to be negative 1.
+```{r}
+x_mat2[x_mat2 >= 5] <- -1
+```
+
+
+Indexing
+===
+
+1. let's talk about which data types use: [], [,], [[]], $
+**DONE**
+2. what are the 3 ways to index into things
+3. take the third element of `x2` (what are all the ways we could do this?)
+4. How do we grab value `16` out of `x_mat2` (what are all the ways we could do this?)
+5. how can we grab the second column from `my_df`
+6. make those values > 5 in `x_mat2` equal to 0
+
+Iteration
+===
+0. print out each element of `x2` individually
+.5. storage in `count_true` out the number of element up to `i` that have been true in the `x2` vector
+
+1. write the fibinaci sequence using a for-loop
+2. write it with a while loop
+3. create a print out of the binomial expansion 
+
+Vector Duplication
+===
+1. add to `x1` 1 if the index is odd and -1 if the index is even
+2. override `x2` entries so that if they're false - they're now true if the index is even (else leave as is)

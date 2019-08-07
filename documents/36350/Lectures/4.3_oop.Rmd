@@ -1,0 +1,565 @@
+---
+title: "Object Oriented Programming"
+author: "Statistical Computing, 36-350"
+date: "Friday July 26, 2019"
+---
+
+On Wednesday: Fitting Models
+===
+
+- Fitting models is critical to both statistical inference and prediction
+- Exploratory data analysis is a very good first step and gives you a sense of what you're dealing with before you start modeling
+- Linear regression is the most basic modeling tool of all, and one of the most ubiquitous
+- `lm()` allows you to fit a linear model by specifying a formula, in terms of column names of a given data frame
+- Utility functions `coef()`, `fitted()`, `residuals()`, `summary()`, `plot()`/`autoplot`, `predict()` are very handy and should be used over manual access tricks
+- Logistic regression is the natural extension of linear regression to binary data; use `glm()` with `family = "binomial"` and all the same utility functions
+- Generalized additive models add a level of flexibility in that they allow the predictors to have nonlinear effects; use `gam()` and utility functions 
+
+**fill this in**
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*Object Oriented Programming 'Theory'/ Foundation*</span>
+
+
+What we've been doing so far (Functional Programming)
+===
+
+- We've been treating functions and the object of interest 
+    - applying them to data structures (through loops, etc) to create new objects
+    - concatenated functions them together (`x %>% f %>% g`)
+- But we've always assumed data would just be in the correct format to go into our functions and that, realistically speaking - our data is imputable and we **act on it**
+
+Object Oriented Programming (OOP)
+===
+    
+- Object Oriented Programming focuses on the object
+- specifically, OOP envisions:
+    - all operations being built around an object (which has a `class`) and use have `methods` that operate on the objects.
+    - that one would have the potential to extend off basic class structures to make more complicated class structures. E.g.
+    ```{r}
+    diamonds <- ggplot2::diamonds
+    class(lm(carat ~. , data = diamonds))
+    class(glm(I(cut %in% c("Fair", "Good")) ~. , 
+              data = diamonds, family = "binomial"))
+    ```
+
+OOP continued:
+===
+
+- the first point relates to the idea that OOP tries to **encapsulates** struction and functions (abstracting away details of an object)
+    ```{r}
+    diamond_lm <- lm(carat ~ ., data = diamonds)
+    class(diamond_lm)
+    names(diamond_lm) # no need to directly interact with these
+    ```
+
+- the second point (in a more genreal way) related to the idea that OOP is a **polymorphism** (many shapes) - encouragin functions to preform different tasks on different objects
+    - E.g. the `summary` function
+    ```{r}
+    summary(diamonds$carat)
+    summary(diamonds$cut)
+    ```
+  
+Why learn OOP in R?
+===
+
+- R's object structure is much less utilized on a day to day level than `python`'s class structure
+- Even so objects in `R` are all around
+- Understanding the structure of objects in `R` can help in other areas of `R` coding
+    
+    
+OOP in R
+===
+
+There are many class structures in `R`.
+
+- **`S3`**: is the first and most commonly used OOP system. (Pretty informal, imputable)
+
+    > "An S3 class is (most often) a list with a class attribute. It is constructed by the following code class(obj) <- 'class.name'." 
+    
+    \~ Professor Javier Rojo, Rice University
+
+- **`S4`**: more formal than `S3` (specific functions to define the `class`, a `method`, etc). Still imputable, uses "@" instead of "$"
+- **`R6`**: Allows for more complicated structure (like `python` classes). Methods below to objects, and objects are mutable
+    
+- others : `RC`, `R.oo`, `proto`
+
+You can read more about all the class structure options in the [Object Oriented](https://adv-r.hadley.nz/oo.html) part of in Hadley Wickham's 
+*Advanced R* book.
+
+Today's Lecture: OOP in R (S3)
+===
+
+- I'm going to rely on an [example structure](https://www.gastonsanchez.com/packyourcode/intro.html) taught by Professor Gaston Sanchez at UC Berkeley. 
+- We've going to focus on `S3` as most objects in `R` are this style
+- Understanding the build blocks of `S3` will give you a better understanding of all the functions and objects we've seen before
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*Motivation: Coin Toss*</span>
+
+
+Our Starting example: the coin flip
+===
+Let's start with a **functional** and **simulation-based** view of a coin flip.
+
+```{r}
+# coin object
+coin <- c("heads", "tails")
+```
+
+We can image we could toss the coin for some simulation event:
+
+```{r}
+sample(coin, size = 1)
+```
+
+Maybe more complicated:
+```{r}
+sample(coin, size = 5, replace = TRUE)
+```
+
+Functionalize
+===
+In our simulation lecture we saw the benefit of using functions to encapsulate things we'd like to do multiple times
+
+```{r}
+toss <- function(coin, times = 1) {
+  sample(coin, size = times, replace = TRUE)
+}
+
+toss(coin, times = 1)
+```
+
+Note how this "abstracts" away some of what is going on (**desirable**)
+
+Useful additions
+===
+Typical probability problems that have to do with coin tossing, require
+to compute the total proportion of `"heads"` or `"tails"`:
+
+```{r}
+# five tosses
+five <- toss(coin, times = 5)
+
+# proportion of heads
+sum(five == "heads") / 5
+```
+
+---
+
+It is also customary to compute the relative frequencies of `"heads"` or
+`"tails"` in a series of tosses:
+```{r }
+# relative frequencies of heads
+cumsum(five == "heads") / 1:length(five)
+```
+
+Or even to visualize this:
+
+```{r message = F, warning = F}
+library(tidyverse)
+set.seed(5938)
+hundreds <- toss(coin, times = 500)
+head_freqs <- cumsum(hundreds == "heads") / 1:500
+
+my_data_vis <- data.frame(index = 1:length(hundreds),
+                          flips = hundreds, 
+                          head_freqs = head_freqs)
+ggplot(my_data_vis) + 
+  geom_line(aes(x = index, y = head_freqs)) +
+  labs(y = "Head Frequency")
+
+```
+
+Overview:
+===
+
+So far we have written code in R that 
+
+- simulates tossing a coin one or more times. 
+- computed proportion of heads 
+- relative frequencies of heads in a series of tosses.
+- produced a plot of the relative frequencies and see how, as the number of tosses increases, the frequency of heads approach 0.5
+
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*Object Oriented Programming*</span>
+
+Motivating object structure
+===
+
+Take a look at these 2 experiments with coins (notice we basically did a quick "copy & paste"). 
+
+```{r}
+# random seed
+set.seed(534)
+
+# five tosses
+five <- toss(coin, times = 5)
+
+# prop of heads in five
+sum(five == "heads") / length(five)
+```
+
+The second experiment involves tossing a coin six times and computing the proportion of heads:
+
+```{r}
+# six tosses
+six <- toss(coin, times = 6)
+
+# prop of heads in six
+sum(six == "heads") / length(five)
+```
+
+Let's make a class 
+===
+
+To make a class, we should really be doing 3 things
+
+1. create a **constructor** (way to create a new element of the class)
+2. create **methods** to apply to the class
+3. create a **validator** to check to see that an element of the class follows
+the desired structure
+
+Constructing a class (S3)
+===
+
+S3 objects are usually built on top of lists, or atomic vectors with attributes. You can also turn functions into S3 objects.
+
+To make an object an instance of a class, you just take an existing base object 
+and set the `"class"` attribute. 
+
+- You can do that during creation of the object with `structure()`, 
+- *or after the object has been created with `class <- ()`*.
+
+```{r structure-class}
+# object coin
+coin1 <- structure(c("heads", "tails"), 
+                   class = "coin")  # better approach
+
+# object coin
+coin2 <- c("heads", "tails")
+class(coin2) <- "coin" 
+```
+
+You can also determine if an object inherits from a specific class using `inherits()`
+
+```{r inherits-example}
+inherits(coin2, "coin")
+```
+
+Making a method: let's flip our coin:
+===
+
+A coin could have a function `flip()`:
+
+```{r flip-function}
+flip <- function(coin, times = 1) {
+  sample(coin, size = times, replace = TRUE)
+}
+
+flip(coin1)
+```
+
+1 issue with this function is that it will "flip" anything - even things that aren't coins:
+
+```{r}
+flip(c('tic', 'tac', 'toe'))
+```
+
+
+Making a method: Only flipping coins:
+===
+
+We could add a `stop()` condition that checks if the argument `coin` is of the right class:
+```{r error=T}
+flip <- function(coin, times = 1) {
+  if (class(coin) != "coin") {
+    stop("\nflip() requires an object 'coin'")
+  }
+  sample(coin, size = times, replace = TRUE)
+}
+
+# ok
+flip(coin1)
+
+# bad coin
+flip(c('tic', 'tac', 'toe'))
+```
+
+Making a method: the OOP way 
+===
+
+- A more formal strategy, and one that follows OOP principles, is to create a flip __method__. 
+    - examples of methods:
+```{r print-plot}
+# print method
+print
+
+# plot method
+plot
+```
+
+- These functions (methods) are not unique functions
+    - typically comprise a colelction of functions to do similar - Depending on the class of the object, a generic method will look for a specific function for that class:
+    
+```{r matrix-methods}
+# methods for objects "matrix"
+methods(class = "matrix")
+```
+
+Making a Method: So..., only flipping coins (the better way):
+===
+
+`flip` method
+
+When implementing new methods, you begin by creating a **generic** method with the function `UseMethod()`:
+
+```{r flip-method}
+flip <- function(x, ...) UseMethod("flip")
+```
+
+A generic method alone is not very useful. You need to create specific
+cases for the generic function. In our example, we only have one class `"coin"`, we follow the naming scheme: "method_name.class_name"
+
+```{r flip-coin-specific}
+flip.coin <- function(x, times = 1) {
+  sample(x, size = times, replace = TRUE)
+}
+```
+
+Example:
+
+```{r error=TRUE}
+# good
+flip(coin1)
+
+# bad (no flip() method for regular vectors)
+flip(c('tic', 'tac', 'toe'))
+```
+
+Constructing a class: which option should I use?
+===
+
+Let's review our class `"coin"`. The way we defined a coin object was like this:
+
+```{r}
+# object coin
+coin1 <- c("heads", "tails")
+class(coin1) <- "coin" 
+
+# bad coin
+ttt <- c('tic', 'tac', 'toe')
+class(ttt) <- "coin"
+
+flip(ttt) # now flips :/
+```
+
+Constructing a class: create a function to wrap around element
+===
+
+**Constructor**
+
+
+For convenience purposes, we can define a class **constructor** function to initialize a `"coin"` object:
+
+```{r}
+coin <- function(object = c("heads", "tails")) {
+  class(object) <- "coin"
+  object
+}
+
+# default coin
+coin()
+# another coin
+coin(c("h", "t"))
+```
+
+Validation
+===
+
+- though not required, for larger objects it's beneficial to create functions that validate the construction of an object (this is similar to testing, etc that we will talk about Monday)
+
+```{r}
+ttt <- coin(c("tick", "tac", "toe")) # still undesirable
+```
+
+For now, we could just write our coin as:
+
+```{r error = T}
+coin <- function(object = c("heads", "tails")) {
+  if (length(object) != 2) {
+    stop("\n'object' must be of length 2")
+  }
+  class(object) <- "coin"
+  object
+}
+
+standard <- coin()
+standard
+ttt <- coin(c("tick", "tac", "toe"))
+```
+
+but more will be need in the future.
+
+<span style="color: blue">Part IV</span>
+===
+
+<span style="color: blue">*OOP attributes, standard methods*</span>
+
+Attributes: Biased coins anyone?
+===
+
+The `sample` function allows for different probabilities in sampling, why not allow our coins to be biased?
+
+```{r}
+coin <- function(object = c("heads", "tails"), prob = c(0.5, 0.5)) {
+  if (length(object) != 2) {
+    stop("\n'object' must be of length 2")
+  }
+  attr(object, "prob") <- prob
+  class(object) <- "coin"
+  object
+}
+
+coin()
+```
+
+- similar to attributes relative to factors (they have levels)
+
+```{r}
+sample(c("R","D"),size = 6, replace = TRUE) %>% 
+  factor() %>%
+  unclass %>% # unclass removes the class structure that makes print pretty
+  print
+```
+
+Validation 2.0: just a reminder to validate things...
+===
+
+```{r check-prob}
+check_prob <- function(prob) {
+  if (!is.numeric(prob)) {
+    stop("\n'prob' must be a numeric vector")
+  }
+  if (length(prob) != 2 | !is.numeric(prob)) {
+    stop("\n'prob' must be a numeric vector of length 2")
+  }
+  if (any(prob < 0) | any(prob > 1)) {
+    stop("\n'prob' values must be between 0 and 1")
+  }
+  if (sum(prob) != 1) {
+    stop("\nelements in 'prob' must add up to 1")
+  }
+  TRUE
+}
+```
+
+---
+
+Our updated coin class:
+
+```{r}
+coin <- function(object = c("heads", "tails"), prob = c(0.5, 0.5)) {
+  if (length(object) != 2) {
+    stop("\n'object' must be of length 2")
+  }
+  check_prob(prob)
+  attr(object, "prob") <- prob
+  class(object) <- "coin"
+  object
+}
+
+flip.coin <- function(x, times = 1) {
+  sample(x, prob = attr(x, "prob"),
+         size = times, replace = TRUE)
+}
+
+coin1 <- coin()
+```
+
+Inhertance: 
+===
+
+Some objects can be multiple classes. For example we saw before that `glm` objects actually had multiple classes.
+
+```{r}
+glm(I(cut %in% c("Fair", "Good")) ~. , 
+    data = diamonds, family = "binomial") %>% class
+```
+
+- **subclass**: `glm` is a subclass of `lm`, which we can see by the ordering of the classes. Additionally, if a method is applied to a `glm` object where no `glm` specific method is available, then the `lm` method will be applied
+- **superclass**: is the reverse (aka `lm` is the superclass of `glm`)
+
+(E.g. there is no `plot.glm` but there is a `plot.lm` function (in your console type `methods(plot)` after `library(glm)` and you'll see no `plot.glm`).)
+
+Inhertance: Coins
+===
+
+Some coins are special (people collect them), let's make a special coin class:
+
+```{r}
+rare_coin <- function(name, year, ...){
+  object <- coin(...)
+  attr(object, "name") <- name
+  attr(object, "year") <- year
+  class(object) <- c("rare_coin", "coin")
+  object
+}
+```
+
+```{r}
+my_penny <- rare_coin(name = "Lincoln penny", year =  1972)
+class(my_penny)
+flip(my_penny)
+```
+
+Standard generics (standard methods)
+===
+
+We already have a `flip` method for our class, but there are lots of common functions that we apply to may objects
+
+- Common in statistics: `summary`, `plot`, `predict`, `print`, ...
+- More specialized `[`, `[[`, `+`, ...
+
+    > "The greatest use of object oriented programming in R is through print methods, summary methods and plot methods. These methods allow us to have one generic function call, plot say, that dispatches on the type of its argument and calls a plotting function that is specific to the data supplied."
+    
+    \~ R Manual (referring to the S3 system).
+
+---
+
+```{r}
+print.coin <- function(coin){
+  cat(paste0("Coin: ", coin[1], "/", coin[2], "\n"))
+  prob <- attr(coin, "prob")
+  cat(paste0("  Prob: ", prob[1], "/", prob[2], "\n"))
+}
+
+print.rare_coin <- function(coin){
+  cat(paste0("Rare coin: ", attr(coin, "name"),
+      ", ", attr(coin, "year"), "\n"))
+  print.coin(coin)
+}
+
+print(coin1)
+print(my_penny)
+```
+
+Summary
+===
+
+- Object oriented programming (OOP) focuses on the object
+- in R, there are multiple class structures, with `S3` the base and most standard, and `S4` and `R6` additionally commonly used structures
+- `class()` defined and checks which class an object is (but a functionalized **constructor** is recommended)
+- (S3) class specific **methods** start with a generic (defined with `UseMethod()`), and then have specific methods per class `function_name.class_name`
+    - there are also standard generic functions which need not be reinitialized.
+- Best practice is to create **validators** to check if the assumptions of the class are met
+
+
+

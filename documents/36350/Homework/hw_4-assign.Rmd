@@ -1,0 +1,376 @@
+---
+title: "Homework 8: Simulation, Fitting Models and OOP"
+author: "Statistical Computing, 36-350"
+date: "Monday July 22, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+On this homework, you can collaborate with your classmates, but you
+must identify their names above, and you must submit **your own**
+homework as an knitted HTML file on Canvas, by Monday 10pm, next week.
+
+
+Bradley-Terry Model
+===
+In spirit of the Women's world cup (and just summer sports in general), let's simulate some tournaments. One model of competition is the Bradley-Terry model. Each team is assigned
+an ability score (team $i$ has score $z_{i}$, team $j$ has score
+$z_{j}$, etc). Then for each game the probability that team $i$
+defeats team $j$ is $\frac{z_{i}}{z_{i} + z_{j}}$.
+
+- **1a.** (3 points) Write a function `bt_compete(z1, z2)` which takes as its
+  arguments the scores `z1` and `z2` of two teams. Your function then
+  simulates a game between the two teams (with probabilities of
+  victory as described above) and returns 1 if the first team won and
+  2 if the second team won. Hint: look at the documentation for the
+  `probs` argument for `sample()`
+
+  To test your function run it 10,000 times for several values of `z1`
+  and `z2` and check that the proportion of times each team wins is
+  roughly equal to the probability (as per the Law of Large Numbers).
+
+
+- **1b.** (4 points) Let's now simulate the NCAA tournament with a function
+  `bt_tournament(scores, names)` where `scores` is a vector of `2^m`
+  scores and `names` is the team names. We start by simulating a round
+  of games. Team `2k-1` will play team `2k` with the loser being
+  eliminated. Thus if we started with `2n` teams after a single round
+  we have `n` teams. We then take all of the winners (in the same
+  order as they started) and continue this process until there's only
+  a single team left. Our function returns the name of the winning
+  team. Fill in the following function skeleton to finish this
+  function
+
+```{r, eval = FALSE}
+#' Simulates a single-elimination tournament
+#'
+#' @param scores a vector of Bradley-Terry scores. Length must be a power of 
+#' two.
+#' @param names a vector of identifiers for teams. Length must be the same as 
+#' scores
+#'
+#' @return The name of the victorious team.
+bt_tournament <- function(scores, names = seq_along(scores)) { # look at this structure
+  n_left <- length(scores)
+  # Make sure it has length equal to a power of two
+  power_left <- log(n_left)/log(2)
+  if (as.integer(power_left) != power_left) {
+    stop("scores need to be of length length 2^k, for some integer k")
+  }
+  if (length(scores) != length(names)) {
+    stop("scores and names need to be vectors of the same length") 
+  }
+
+  while (n_left != 1) { # iterate until we only have one team remaining
+    for (round_idx in seq_len(n_left / 2)) {
+      winner <- bt_compete(scores[2 * round_idx - 1], scores[2 * round_idx]) # returns 1 or 2
+
+      # Move winner to round_idx-th place for next round; we can reuse the
+      # array since we don't access element round_idx until the next round.
+      ## winner_index <- ??
+      scores[round_idx] <- scores[winner_index]
+      names[round_idx] <- names[winner_index] # keep names in sync with scores
+    }
+    n_left <- n_left / 2
+  }
+
+  ## return(names[??])
+}
+```
+
+  Now create 32 teams with scores initialized as `Gamma(5, 10)` random
+  variables and then run 10000 tournaments (with the scores held
+  constant). Report how many times the best team won. Plot the
+  scatterplot of score vs the number of times a team wins the
+  tournament.
+
+
+
+
+
+- **Challenge** A common complaint heard during the tournament is that
+  "my team got a bad seeding" (and notice how you never hear someone
+  discuss their good seeding). We might be curious, what is the effect
+  of seeding on one's probability of winning the tournament.
+
+  The following function will provide the usual seeding for
+  single-elimination tournament (the NCAA is a bit different).
+
+```{r}
+tournament_order <- function(scores) {
+  n <- length(scores)
+  power <- log(n)/log(2)
+
+  if (as.integer(power) != power) {
+    stop("scores need to be of length length 2^k, for some integer k")
+  }
+  
+  seeding = c(1, 2)
+  while(length(seeding) != n) {
+    new_seeding <- rep(NA, length(seeding) * 2)
+    new_seeding[c(TRUE, FALSE)] <- seeding
+    new_seeding[c(FALSE, TRUE)] <- length(new_seeding) + 1 - seeding
+    seeding <- new_seeding
+  }
+  return(order(scores, decreasing = TRUE)[seeding])
+}
+```
+
+
+We'll then compare against a "worst" case seeding determined by
+the following function.
+
+```{r}
+worst_order <- function(scores) {
+  return(order(scores, decreasing = TRUE))
+}
+```
+
+
+  First, explain how these functions work and why they're named as
+  they are (aka document them with Roxygen). Next, using the same scores 
+  as before run 10,000 tournaments with these two seedings. Record the 
+  number of times the /best/ team wins under each seeding. Is there a 
+  difference between the two? Should we conclude anything about whether 
+  seeding matters?
+
+
+
+AB Testing
+===
+The questions in this section build off of Lab 3.2. We will continue our
+investigation of an important statistical topic called the "Stopping rules".
+These questions will have you write and use functions to get a grasp
+of what this topic is about, and students who are curious for more 
+details can read about it by Googling "stopping rules clinical trials".
+
+To reiterate, in this field, the idea is: it's sometimes expensive to collect more data, so if
+you have determined that the effect of a drug is already substantial, you want to
+stop the clinical trial early (and save some money!). However, the exact procedure
+to determine when to stop collecting data can dramatically impact the conclusions
+you find. Luckily, it's possible to study the impact of different stopping rules at the
+safety of a simulation, which is what we will do.
+
+Recall what we ended with in Lab 3.2. We have quite a few functions:
+`simulate_data()` which generates the data, `stopping_rule_ttest()` 
+which is a stopping rule using a t-test, `simulate_difference()`
+which generates data and computes the difference according to a stopping rule,
+and `rep_sim()` which replicates `simulate_difference()` over many replications.
+We will make our setup much more general (by changing the inputs) but this generality
+will make our functions increasingly more complicated.
+
+- **2a.** (2 points) We will be modifying `simulate_data()`
+ so we can pass a function as an input to change how the data is simulated. 
+ Redefine `simulate_difference()` to take as input
+`n` as the number of subjects to take drug or not take drug 
+with default value of 200, `drug_distr()`
+as the function to generate random numbers for subjects who take the drug,
+and `no_drug_distr()` as the function to generate random numbers for subjects
+who do not take the drug. 
+Set the default function of `drug_dist()` to be be a function that takes
+`n` as input and simulate data from the following distribution, 
+$$
+X_{\mathrm{drug}} \sim \mathrm{Normal}(\mathrm{mean}=150, \mathrm{sd} = 10).
+$$
+Similarly, set the default function of `no_drug_distr()` to be a function
+that takes `n` as input and simulate from the following distribution,
+$$
+X_{\mathrm{no\,drug}} \sim \mathrm{Normal}(\mathrm{mean}=100, \mathrm{sd} = 10).
+$$
+Similar to Lab 3.2, `simulate_data()` will return
+a list should return a list with two vectors 
+called `no_drug` and `drug`. Each of these two vectors should 
+have length `n`. Using these default values, store the result
+of `simulate_data()` in a variable calld `data_1`.
+Compute the mean and standard deviation of `data_1$drug`
+and `data_1$no_drug` to ensure you properly simulated data. 
+
+
+- **2b.** (2 points) Now we want to design our stopping rules. First, copy-and-paste the
+stopping rule, `stopping_rule_ttest()`, from the Lab 4.1 (once again, it
+takes in two vectors `drug_vector` and `no_drug_vector` and a numeric `alpha` with
+default value of 0.05 as input, and outputs `TRUE` or `FALSE`). Then,
+write a new stopping rule called `stopping_rule_adaptive()`. Like before, it uses
+`t.test()`, but here's the difference: the threshold of the p-value will vary with
+the length of `drug_vector` and `no_drug_vector`. 
+Let `m` denote the length of `drug_vector` (assumed to be the same as
+the length of `no_drug_vector`). `stopping_rule_adaptive()` should output `TRUE` if 
+the p-value is less than
+
+$$
+\frac{\exp(m/25)}{60000},
+$$
+
+and return `FALSE` otherwise. 
+After writing `stopping_rule_ttest()` and `stopping_rule_adaptive()`, 
+use both stopping rules on `data_1` (where `drug_vector` is `data_1$drug`,
+and `no_drug_vector` is `data_1$no_drug`) to demonstrate your function works.
+
+
+- **2c.** (3 points) Although we changed `simulate_data()` to allow 
+for any distributions for `drug_distr()` and `no_drug_distr()`, 
+we have not changed `simulate_difference()` or `rep_sim()` yet to accommodate for
+this. In this question, you'll redefine `simulate_difference()` to
+accommodate for this. We also want to return the number of subjects we
+effectively used in our simulation.
+
+Specifically, `simulate_difference()` should take in 4 arguments, `n` as the number of subjects
+(same as before), `drug_distr()` and `no_drug_distr()` (same as in Question 3a)
+and `stopping_rule()` (same as in Lab 4.2 Question 3c). 
+This function should
+generate data using `simulate_data()` according to `drug_distr()` and `no_drug_distr()`,
+and then (just like in Lab 4.1 Question 3c), apply `stopping_rule()` starting
+from 5 cases and controls.
+If `stopping_rule()` returns `TRUE`, stop considering
+more subjects. Otherwise, apply `stopping_rule()` to 
+5 additional cases and controls, until all `n` cases and controls have been
+considered. 
+Use the same default values for each of the 4 arguments as before, where
+the default stopping rule is `stopping_rule_ttest()`.
+`simulate_difference()` returns a list (**Note, the output has changed from the Lab**) with
+two elements: `result` which is a string that says either "Positive", "Negative"
+or "Inconclusive", and `samples` which is a numeric that says how many
+cases were effectively considered (i.e., a number between `5` and `n`).
+Print out the result of `simulate_difference()` using the default values
+to demonstrate your function works. 
+
+
+- **2d.** (3 points) We need to modify `rep_sim()` as well before we can run our experiments.
+Modify `rep_sim()` (originally defined in Lab 4.1) to accommodate different
+stopping rules and distributions. Your new `rep_sim()` function will take in the 
+following 6 inputs: `nreps`, `n`, `drug_distr()`, `no_drug_distr()`,
+`stopping_rule()` and `seed`. Use the default values that we've been using thus-far.
+This function outputs a vector of length `n` containing `Positive` and `Negative` strings.
+`rep_sim()` should appropriately use all 6 inputs (which you will have to
+use your judgement to assess how to do this. This is not intended to be
+hard, but it might
+take some thinking to understand how the 6 inputs are used.)
+`rep_sim()` returns a list (**Note, the output has changed from the Lab**) with
+two elements: `table` (which is a vector that counts how many instances of
+"Positive", "Negative" and "Inconclusive" results there were among the
+`nreps` repetitions), and `mean_samples` (which is the mean number of
+cases considered when the result was **NOT** "Inconclusive").
+Print out the result of `rep_sim()` using the default values
+to demonstrate your function works. 
+
+
+- **2e.** (2 points) Now we are finally ready to use our generalized simulation step.
+We will be running `rep_sim()` four times, each time with slightly different
+arguments. In the first run, use all default arguments for `rep_sim()`.
+In the second run, set `stopping_rule()` to be `stopping_rule_adaptive()`.
+In the third run, set `drug_distr()` to be exactly the same as `no_drug_distr()`
+(i.e, both cases and controls are drawing from the same distribution, meaning
+there is no difference). In the last run, set `stopping_rule()` to be `stopping_rule_adaptive()`
+and `drug_distr()` to be exactly the same as `no_drug_distr()`.
+Each of these four runs should require exactly one line of code, where you are
+changing only the inputs to `rep_sim()`. Print all four results. 
+
+
+- **Challenge** This question is more about statistics than coding. 
+Provide a short (at most 5 sentences) explanation to interpret your results in
+Question 2e. In particular, think about the following things: 1 ) Our goal in this
+entire section was to design stopping rules so instead of collecting all `n = 200`
+cases and controls, we only needed to collect a smaller number of subjects.
+Was this achieved in simulation? 2) In some of the simulations in Question 2e, `drug_distr`
+and `no_drug_distr` were exactly the same. What do you hope would've happened
+`simulate.difference()` would have returned in this case, and what actually 
+happened based on your simulation results? 3) How exactly are `stopping_rule_ttest()`
+and `stopping_rule_adaptive()` different? What does this difference mean statistically?
+
+
+Reading in, exploring wage data
+===
+
+- **3a.** (1 point) A data table of dimension 3000 x 11, containing demographic and economic variables measured on individuals living in the mid-Atlantic region, is up at https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week4/wage.csv. (This has been adapted from the book [An Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/).) Load this data table into your R session with `read.csv()` and save the resulting data frame as `wage_df`. Check that `wage_df` has the right dimensions, and display its first 3 rows. Hint: the first several lines of the linked file just explain the nature of the data; open up the file (either directly in your web browser or after you download it to your computer), and count how many lines must be skipped before getting to the data; then use an appropriate setting for the `skip` argument to `read.csv()`.
+
+```{r}
+wage_df <- read.csv("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week4/wage.csv", 
+                   skip = 16, stringsAsFactors = T)
+dim(wage_df)
+head(wage_df, 3)
+```
+
+- **3b.** (4 points) Identify all of the factor variables in `wage_df`, set up a plotting grid of appropriate dimensions, and then plot each of these factor variables, with appropriate titles (don't use `geom_histogram()` - these are a discrete variables). What do you notice about the distributions?  (You may want to add `+ 
+    theme(axis.text.x = element_text(angle = 15, size = 5))`)
+
+
+Linear regression modeling
+===
+
+- **4a.** (2 points) Fit a linear regression model, using `lm()`, with response variable `wage` and predictor variables `year` and `age`, using the `wage_df` data frame. Call the result `wage_lm`. Display the coefficient estimates, using `coef()`, for `year` and `age`. Do they have the signs you would expect, i.e., can you explain their signs? Display a summary, using `summary()`, of this linear model. Report the standard errors and p-values associated with the coefficient estimates for `year` and `age`. Do both of these predictors appear to be significant, based on their p-values?
+
+
+- **4b.** (2 point) Save the standard errors of `year` and `age` into a vector called `wage_se`, and print it out to the console. Don't just type the values in you see from `summary()`; you need to determine these values programmatically. Hint: define `wage_sum` to be the result of calling `summary()` on `wage_lm`; then figure out what kind of R object `wage_sum` is, and how you can extract the standard errors.
+
+
+- **4c.** (3 points) Plot diagnostics of the linear model fit in the previous question, using `autoplot()` on `wage_lm` (`library(ggfortify)`). Look at the "Residuals vs Fitted", "Scale-Location", and "Residuals vs Leverage" plots---are there any groups of points away from the main bulk of points along the x-axis? Look at the "Normal Q-Q" plot---do the standardized residuals lie along the line $y = x$? Note: don't worry too if you're generally unsure how to interpret these diagnostic plots; you'll learn a lot more in your Modern Regression 36-401 course; for now, you can just answer the questions we asked. **Challenge**: what is causing the discrepancies you are (should be) seeing in these plots? Hint: look back at the histogram of the `wage` column you plotted above. 
+
+
+
+
+- **4d.** (3 points) Use your fitted linear model `wage_lm` to predict: (a) what a 30 year old person should be making this year; (b) what Bill Gates be making this year; (c) what you should be making 5 years from now. Comment on the results---which do you think is the most accurate prediction?
+
+
+Logistic regression modeling
+===
+
+- **5a.** (3 points) Fit a logistic regression model, using `glm()` with `family = "binomial"`, with the response variable being the indicator that `wage` is larger than 250, and the predictor variables being `year` and `age`. Call the result `wage_glm`. Note: you can set this up in two different ways: (i) you can manually define a new column (say) `wage_high` in the `wage_df` data frame to be the indicator that the `wage` column is larger than 250; or (ii) you can define an indicator variable "on-the-fly" in the call to `glm()` with an appropriate usage of `I()`. Display a summary, reporting the coefficient estimates for `year` and `age`, their standard errors, and associated p-values. Are the predictors `year` and `age` both significant?
+
+
+- **5b.** (2 points) Refit a logistic regression model with the same response variable as in the last question, but now with predictors `year`, `age`, and `education`. Note that the third predictor is stored as a factor variable, which we call a **categorical variable** (rather than a continuous variable, like the first two predictors) in the context of regression modeling. Display a summary. What do you notice about the predictor `education`: how many coefficients are associated with it in the end? **Challenge**: can you explain why the number of coefficients associated with `education` makes sense?
+
+
+- **5c.** (3 points) In general, one must be careful fitting a logistic regression model on categorial predictors. In order for logistic regression to make sense, for each level of the categorical predictor, we should have observations at this level for which the response is 0, and observations at this level for which the response is 1. In the context of our problem, this means that for each level of the `education` variable, we should have people at this education level that have a wage less than or equal to 250, and also people at this education level that have a wage above 250. Which levels of `education` fail to meet this criterion? Let's call these levels "incomplete", and the other levels "complete". (Try using `tidyverse` and make the data.frame the most readable.)
+
+
+- **5d.** (3 points) Refit the logistic regression model as in Q4b, with the same response and predictors, but now throwing out all data in `wage_df` that corresponds to the incomplete education levels (equivalently, using only the data from the complete education levels). Display a summary, and comment on the differences seen to the summary for the logistic regression model fitted in Q4b. Did any predictors become more significant, according to their p-values?
+
+
+Object Oriented Programming
+===
+
+In this problem you will be extending the class we saw in lecture on Friday. To get access to the code we saw in class run the following line of code once in your terminal:
+
+```{r eval = F}
+devtools::install_github("benjaminleroy/coin")
+```
+
+- **6a.** (2 points) Before we start anything (after you've installed the package from `github`), load the library using `library(coin)`, examine the documentation of `coin` and create a single `my_coin <- coin()` object. What does it print out? Do `unclass(my_coin)` what do you see? Run `flip(my_coin,times = 5)` and then try `flip(c(0,1), times = 5)` (make sure to put in the ``{r}` "error = TRUE"). Type `?flip.coin` in your console, does it say in the "usage" area (aka is it a regular function)?
+
+
+In this homework problem you will be completing the implimentation of `coin`'s functionality by creating a new object that could help understand basic coin flipping. Specifically, in class we talked about how we'd be interested in knowing information about the number of flips. 
+
+-**6b.** (5 points) *Create* a new object `toss` (using a function) that takes in a `coin` object, and a `times` parameter (default is 1). Use the flip function from the `coin` package to generate a sequence of flips (let's say we called the vector of these flips: `flips`). And then define a class object that looks like the following
+
+```{r eval = F}
+list(coin = coin, # the coin instance not the function / object class coin
+     tosses = flips,
+     total = length(flips),
+     heads = sum(flips == coin[1])
+)
+```
+
+Document your class function. Then create a bias coin (prob: .25, .75) named `my_coin` and create a toss object (`my_toss`) associated with it and flip the coin 10 times (show what `my_toss` looks like).
+
+
+
+- **6c.** (2 points) Write up a helper function to *validate* the input parameters of the `toss` function. Specifically, the `times` parameter (call it `valid_times()`). Make sure it errors (use some `if` statements with `stop()`s) if `times` is invalid and return `TRUE` otherwise. Specifically make sure it correct sees that `times = 5.5`, `times = "abc"`, and `times = -5` (run it with these parameters - `{r error = TRUE}`). Update the class function to include this validation.
+
+
+
+
+- **6d.** (3 points) In the lecture on OOP (slide 14) - only one with a figure. We see a figure that visualizes the cumulative number of heads from a simulation. Create a *method* for the `toss` object to create such a figure. Note: you do not need to initialize the `plot` generic, just define `plot.toss` (please create the plot in `ggplot`). Apply this function to `my_toss2` (same as `my_toss` but with 1000 tosses) using `plot.toss`'s generic name.
+
+
+
+- **Challenge:** Beyond the standard generics we've already see `plot`, `summary`, `predict` etc, we can also define functions like indexing and adding. Define the addition function for a toss object as `"+.toss" <- function(toss, times)` such that we toss the coin and additional amount of `times` (update all attributes that should be updated and make sure the function returns this new object). Use the `valid_times` function you wrote above to check make sure times parameter meets expectations. Try defining a new object `my_toss3 <- my_toss2 + 1000` and plot this object.
+
+
+
+

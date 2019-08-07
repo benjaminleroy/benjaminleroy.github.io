@@ -1,0 +1,423 @@
+---
+title: "Text Manipulation"
+author: "Statistical Computing, 36-350"
+date: "Friday - June 5, 2019"
+---
+
+Last time: Indexing and iteration
+===
+
+- Three ways to index vectors, matrices, data frames, lists: integers, Booleans, names
+- Boolean on-the-fly indexing can be very useful
+- Named indexing will be especially useful for data frames
+- Indexing lists can be a bit tricky (beware of the difference between `[ ]` and `[[ ]]`)
+- `if()`, `else if()`, `else`: standard conditionals
+- `ifelse()`: shortcut for using `if()` and `else` in combination
+- `switch()`: shortcut for using `if()`, `else if()`, and `else` in combination
+- `for()`, `while()`, `repeat`: standard loop constructs
+- Don't overuse explicit `for()` loops, vectorization is your friend!
+- `apply()`: can also be very useful (we'll see them later)
+
+<span style="color: blue">Part I</span>
+===
+
+<span style="color: blue">*String basics*</span>
+
+What are strings?
+===
+
+The simplest distinction:
+
+- **Character:** a symbol in a written language, like letters, numerals, punctuation, space, etc.
+
+- **String:** a sequence of characters bound together
+
+```{r}
+class("r")
+class("Ben")
+```
+
+Why do we care about strings?
+
+- A lot of interesting data out there is in text format!
+- Webpages, emails, surveys, logs, search queries, etc.
+- Even if you just care about numbers eventually, you'll need to understand how to get numbers from text
+
+Whitespaces
+===
+
+Whitespaces count as characters and can be included in strings:
+
+- `" "` for space
+- `"\n"` for newline
+- `"\t"` for tab
+
+```{r}
+my_str <- "Dear Mr. Carnegie,\n\tThanks for the great school!\n\nSincerely, Ben"
+my_str
+```
+
+Use `cat()` to print strings to the console, displaying whitespaces properly
+
+```{r}
+cat(my_str)
+```
+
+Vectors/matrices of strings
+===
+
+The character is a basic data type in R (like numeric, or logical), so we can make vectors or matrices of out them. Just like we would with numbers
+
+```{r}
+str_vec <- c("Statistical", "Computing", "isn't that bad") # Collect 3 strings
+str_vec # All elements of the vector
+str_vec[3] # The 3rd element
+str_vec[-(1:2)] # All but the 1st and 2nd
+
+str_mat <- matrix("", 2, 3) # Build an empty 2 x 3 matrix
+str_mat[1,] <- str_vec # Fill the 1st row with str_vec
+str_mat[2,1:2] <- str_vec[1:2] # Fill the 2nd row, only entries 1 and 2, with
+                              # those of str_vec
+str_mat[2,3] <- "isn't a fad" # Fill the 2nd row, 3rd entry, with a new string
+str_mat # All elements of the matrix
+t(str_mat) # Transpose of the matrix
+```
+
+Converting other data types to strings
+===
+
+Easy! Make things into strings with `as.character()`
+
+```{r}
+as.character(0.8)
+as.character(0.8e+10)
+as.character(1:5)
+as.character(TRUE)
+```
+
+Converting strings to other data types
+===
+
+Not as easy! Depends on the given string, of course
+
+```{r}
+as.numeric("0.5")
+as.numeric("0.5 ")
+as.numeric("0.5e-10")
+as.numeric("Hi!")
+as.logical("True")
+as.logical("TRU")
+```
+
+Number of characters
+===
+
+Use `nchar()` to count the number of characters in a string
+
+```{r}
+nchar("coffee")
+nchar("code monkey")
+length("code monkey")
+length(c("coffee", "code monkey"))
+nchar(c("coffee", "code monkey")) # Vectorization!
+```
+
+<span style="color: blue">Part II</span>
+===
+
+<span style="color: blue">*Substrings, splitting and combining strings*</span>
+
+
+Getting a substring
+===
+
+Use `substr()` to grab a subseqence of characters from a string, called a **substring**
+
+```{r}
+phrase <- "Give me a break"
+substr(phrase, 1, 4)
+substr(phrase, nchar(phrase)-4, nchar(phrase))
+substr(phrase, nchar(phrase)+1, nchar(phrase)+10)
+```
+
+`substr()` vectorizes
+===
+
+Just like `nchar()`, and many other string functions
+
+```{r}
+presidents <- c("Clinton", "Bush", "Reagan", "Carter", "Ford")
+substr(presidents, 1, 2) # Grab the first 2 letters from each
+substr(presidents, 1:5, 1:5) # Grab the first, 2nd, 3rd, etc.
+substr(presidents, 1, 1:5) # Grab the first, first 2, first 3, etc.
+substr(presidents, nchar(presidents)-1, nchar(presidents)) # Grab the last 2
+                                                           # letters from each
+```
+
+Replace a substring
+===
+
+Can also use `substr()` to replace a character, or a substring
+
+```{r}
+phrase
+substr(phrase, 1, 1) <- "L"
+phrase # "G" changed to "L"
+substr(phrase, 1000, 1001) <- "R"
+phrase # Nothing happened
+substr(phrase, 1, 4) <- "Show"
+phrase # "Live" changed to "Show"
+```
+
+Splitting a string
+===
+
+Use the `strsplit()` function to split based on a keyword
+
+```{r}
+ingredients <- "chickpeas, tahini, olive oil, garlic, salt"
+split_obj <- strsplit(ingredients, split=",")
+split_obj
+class(split_obj)
+length(split_obj)
+```
+
+Note that the output is actually a list! (With just one element, which is a vector of strings)
+
+`strsplit()` vectorizes
+===
+
+Just like `nchar()`, `substr()`, and the many others
+
+```{r}
+great_profs <- "Nugent, Tibshirani, Genovese, Rinaldo, Shalizi, Ventura"
+favorite_cats <- "tiger, leopard, jaguar, lion"
+split_list <- strsplit(c(ingredients, great_profs, favorite_cats), split=",")
+split_list
+```
+
+- Returned object is a list with 3 elements
+- Each one a vector of strings, having lengths 5, 6, and 4 
+- Do you see why `strsplit()` needs to return a list now?
+
+Splitting character-by-character
+===
+
+Finest splitting you can do is character-by-character: use `strsplit()` with `split=""`
+
+```{r}
+split_chars <- strsplit(ingredients, split = "")[[1]]
+split_chars
+length(split_chars)
+nchar(ingredients) # Matches the previous count
+```
+
+Combining strings
+===
+
+Use the `paste()` function to join two (or more) strings into one, separated by a keyword
+
+```{r}
+paste("Spider", "Man") # Default is to separate by " "
+paste("Spider", "Man", sep = "-")
+paste("Spider", "Man", "does whatever", sep = ", ")
+```
+
+`paste()` vectorizes
+===
+
+Just like `nchar()`, `substr()`, `strsplit()`, etc. Seeing a theme yet?
+
+```{r}
+presidents
+paste(presidents, c("D", "R", "R", "D", "R"))
+paste(presidents, c("D", "R")) # Notice the recycling (not historically accurate!)
+paste(presidents, " (", 42:38, ")", sep="")
+```
+
+Condensing a vector of strings
+===
+
+Can condense a vector of strings into one big string by using `paste()` with the `collapse` argument
+
+```{r}
+presidents
+paste(presidents, collapse = "; ")
+paste(presidents, " (", 42:38, ")", sep="", collapse = "; ")
+paste(presidents, " (", c("D", "R", "R", "D", "R"), 42:38, ")", sep = "", 
+      collapse=  "; ")
+paste(presidents, collapse=NULL) # No condensing, the default
+```
+
+<span style="color: blue">Part III</span>
+===
+
+<span style="color: blue">*Reading in text, summarizing text*</span>
+
+Text from the outside
+===
+
+How to get text, from an external source, into R? Use the `readLines()` function
+
+```{r}
+endgame_lines <- readLines("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/endgame.txt")
+class(endgame_lines) # We have a character vector
+length(endgame_lines) # Many lines (elements)!
+endgame_lines[1:6] # First 6 lines
+```
+
+Reading from a local file
+===
+
+We don't need to use the web; `readLines()` can be used on a local file. The following code would read in a text file from my (Ben's) computer:
+
+```{r, error=TRUE}
+endgame_lines_2 <- readLines("~/Documents/CMU/third_summer/36-350-summer-data/Week1/endgame.txt")
+```
+
+This will cause an error for you, unless your folder is set up exactly like the instructor's laptop! So using web links is more robust
+
+Reconstitution
+===
+
+Fancy word, but all it means: make one long string, then split the words
+
+```{r}
+endgame_text <- paste(endgame_lines, collapse = " ")
+endgame_words <- strsplit(endgame_text, split = " ")[[1]]
+
+# Sanity check
+substr(endgame_text, 4, 200)
+endgame_words[3:20]
+```
+
+Basic preprocessing
+===
+
+The most basic steps we'll do are
+- Convert words to lower case
+- Remove numbers and punctuation
+- Remove "empty" strings
+
+```{r}
+# Convert to lower case
+endgame_words <- tolower(endgame_words)
+
+# Removing numbers and punctuation (Don't worry if this doesn't make sense)
+endgame_words <- gsub("[[:punct:]]|[[:digit:]]", "", endgame_words)
+endgame_words <- gsub("[[:space:]]", "", endgame_words) # removing spaces
+
+
+
+# Remove empty strings
+endgame_words <- endgame_words[endgame_words != ""]
+endgame_words[1:20]
+```
+
+Notice that beforehand, punctuation mattered. 
+This is not ideal for us---we'll learn just a little bit about how to fix this on lab/homework, using **regular expressions**
+
+Counting words
+===
+
+Our most basic tool for summarizing text: **word counts**, retrieved using `table()`
+
+```{r}
+endgame_wordtab <- table(endgame_words)
+class(endgame_wordtab)
+length(endgame_wordtab)
+endgame_wordtab[1:10]
+```
+
+What did we get? Alphabetically sorted unique words, and their counts = number of appearances
+
+The names are words, the entries are counts
+===
+
+Note: this is actually a vector of numbers, and the words are the names of the vector
+
+```{r}
+endgame_wordtab[1:5]
+endgame_wordtab[3] == 4
+names(endgame_wordtab)[3] == "abandoned"
+```
+
+So with named indexing, we can now use this to look up whatever words we want
+
+```{r}
+endgame_wordtab["avengers"] 
+endgame_wordtab["thanos"] 
+endgame_wordtab["happy"]
+endgame_wordtab["sad"] # I guess we should classify this movie as a joyful one (at least less sad than Infinity Wars)
+```
+
+Most frequent words
+===
+
+Let's sort in decreasing order, to get the most frequent words
+
+```{r}
+endgame_wordtab_sorted <- sort(endgame_wordtab, decreasing = TRUE)
+length(endgame_wordtab_sorted)
+head(endgame_wordtab_sorted, 20) # First 20
+tail(endgame_wordtab_sorted, 20) # Last 20
+endgame_lines[1068] # sanity check
+```
+
+
+Visualizing frequencies
+===
+
+Let's use a plot to visualize frequencies
+
+```{r}
+nw <- length(endgame_wordtab_sorted)
+plot(1:nw, as.numeric(endgame_wordtab_sorted), type="l",
+     xlab="Rank", ylab="Frequency")
+```
+
+A pretty drastic looking trend! It looks as if $\mathrm{Frequency} \propto (1/\mathrm{Rank})^a$ for some $a>0$
+
+Zipf's law
+===
+
+This phenomenon, that frequency tends to be inversely proportional to a power of rank, is called **Zipf's law** 
+
+
+```{r echo = FALSE}
+my_data <- data.frame(Rank = 1:nw, Freq = as.numeric(endgame_wordtab_sorted))
+non_linear_model <- nls(Freq~C*(1/Rank)^a,data = my_data,start = list(C = 200, a = .5))
+#coef(non_linear_model)
+```
+
+
+For our data, Zipf's law approximately holds, with $\mathrm{Frequency} \approx C(1/\mathrm{Rank})^a$ for $C=1012$ and $a=0.73$
+
+```{r}
+C <- 1012; a <- 0.73
+endgame_wordtab_zipf <- C*(1/1:nw)^a
+cbind(endgame_wordtab_sorted[1:10], endgame_wordtab_zipf[1:10])
+```
+
+---
+
+Not perfect, but not bad. We can also plot the original sorted word counts, and those estimated by our formula law on top
+
+```{r}
+plot(1:nw, as.numeric(endgame_wordtab_sorted), type = "l",
+     xlab = "Rank", ylab = "Frequency")
+curve(C*(1/x)^a, from=1, to=nw, col="red", add=TRUE)
+```
+
+We'll learn about plotting tools in detail a bit later
+
+Summary
+===
+
+- Strings are, simply put, sequences of characters bound together
+- Text data occurs frequently "in the wild", so you should learn how to deal with it!
+- `nchar()`, `substr()`: functions for substring extractions and replacements
+- `strsplit()`, `paste()`: functions for splitting and combining strings
+- Reconstitution: take lines of text, combine into one long string, then split to get the words
+- `table()`: function to get word counts, useful way of summarizing text data
+- Zipf's law: word frequency tends to be inversely proportional to (a power of) rank

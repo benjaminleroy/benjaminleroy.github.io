@@ -1,0 +1,232 @@
+---
+title: "Version Control and Workflow"
+author: "Statistical Computing, 36-350"
+date: "Wednesday July 31nd, 2019"
+---
+
+Last time: Debugging
+===
+
+- Debugging involves diagnosing your code when you encounter an error or unexpected
+behavior
+    * Step 0: Reproduce the error
+    * Step 1: Characterize the error
+    * Step 2: Localize the error
+    * Step 3: Modify the code
+- Functions such as `traceback()`, `print()` and `browser()` can help you
+understand how your function is behaving at different points in time during the
+computations.
+- Assertations using `assert_that()` help ensure that the inputs to your function
+are correct, so your function can proceed without errors.
+- Unit tests using `test_that()` give a recorded list of simple properties you want your
+function to display, so you can ensure that it works correctly as you futher modify your code.
+- **Important:** It's hard to teach coding practices. The best way to learn is
+to use these practices from now onwards whenever you code!!
+
+Why Version Control?
+===
+
+>"The person who knows the most about your code is you-six-months-ago, and you-six-months-ago are not replying to your emailed questions."
+
+\~ Anon.
+
+The features of version control:
+
+- Complete record of changes allowing you to, e.g., revert back to a
+  previous version of your code if things have gone awry.
+
+- Store messages for every change, so that you can recall the
+  rationale for a change later.
+
+- With, e.g., <tt>Git</tt>, you can back your code remotely (e.g., on
+  <tt>GitHub</tt>), allowing for easy distribution.
+
+- Facilitates collaboration; changes can be developed independently
+  and merged together.
+
+Version control tools were designed for "code", but are useful for all
+sorts of files (e.g. text reports for 36-401).
+
+Git Basics
+===
+
+<tt>Git</tt> allows you to take "snapshots" of the contents of a
+folder on your machine as you make changes to them. Fix a bug? Take a
+snapshot. Add functionality? Take a snapshot. These snapshots are
+dubbed *commits*. Snapshot details are stored in the subfolder .git.
+
+Github
+===
+
++ "Centralized" version control: use Github as the canonical
+"copy" of the repository
++ Common host for R packages: `devtools::install_github()`
++ Bug tracker: Github Issues
++ Integration with other tools such as Travis CI
+
+Obtain a Github Account
+===
+
+If you do not have a <tt>GitHub</tt> account, get one at
+<tt>github.com</tt>.
+
+Install Git
+===
+
+If you do not have <tt>Git</tt> installed on your laptop, install
+it!
+
+- Linux: Use your package manager
+
+- Mac: <tt>Git for Mac</tt> (at
+  <tt>https://git-scm.com/downloads</tt>) or via <tt>homebrew</tt>
+  (<tt>brew install git</tt>)
+
+- Windows: <tt>Git for Windows</tt> (at
+  <tt>https://git-scm.com/downloads</tt>)
+
+During setup, configure <tt>Git</tt> with your user name (use your
+full name, not your Andrew ID) and your user email (which should be
+the same one you used to sign up for your <tt>GitHub</tt> account).
+
+GitHub First...
+===
+
+For this lab, we will follow the paradigm of "<tt>GitHub</tt> first".
+What this means is that when we create a repository, we will create it
+on <tt>GitHub</tt> first, then link a local repository to it from
+inside **RStudio**.
+
+In <tt>GitHub</tt>, do the following:
+
+- go to the top-level directory (i.e., <tt>github.com/&lt;your user
+  name&gt;</tt>)
+
+- click on "+" at top right, and select "New repository"
+
+- name the repository (e.g., "36-350")
+
+- provide a short description of the repository (don't leave
+  completely blank!)
+
+- keep the repository public (as students you have access to free
+  private repos https://education.github.com/pack, but for purposes of
+  this lab keep the repo public)
+
+- click on "Initialize this repository with a README" and select the R option in "Add .gitignore"... there is no need to "Add a license"
+
+- click on "Create Repository"
+
+...then RStudio
+===
+
+In **RStudio**, do the following:
+
+- click on <tt>File &gt; New Project...</tt>
+
+- click on "Version Control", then on "Git"
+
+- provide the *full* address for the "Repository URL" (including the
+  <tt>https</tt>, etc.; by default, this will provide the name of your
+  local repository)
+
+- make sure "Create project as subdirectory of:" points to where you
+  want to point it
+
+- click on "Create Project"
+
+At this point, you should find that your <tt>Files</tt> pane is
+listing the files in your local repository, including one ending in
+<tt>.Rproj</tt> and the <tt>README.md</tt> file that was created on
+<tt>GitHub</tt>.
+
+Commits
+===
+
+Commits are lists of file changes
++ new lines
++ modified lines
++ deleted lines
+
+The current state of your project is just the accumulated set of file
+changes over time.
+
+Updating Your Repository
+===
+
+To, e.g., add a new file to your local repository, do the following:
+
+- open the new file as you always would (as an <tt>R Script</tt>, an
+  <tt>R Markdown</tt> file, etc.)
+
+- fill the file with "stuff"
+
+- save the file...at this point, the file name should show up in the
+  <tt>Git</tt> pane next to an "M" symbol (for modified)
+
+- continue to modify the file, or...stage the file for a commit by
+  clicking on "Staged" in the Git pane
+
+- click on "Commit" in the <tt>Git</tt> pane
+
+- in the new window that opens, add a "Commit message", then click on
+  the "Commit" button
+
+- click on "Push" to push your changes from your local repo to your
+  <tt>GitHub</tt> repo
+
+Done.
+
+Commit Messages
+===
+
+Commit messages exist for your benefit:
+
+- Write meaningful commit messages, but not too long (1 line if possible)
+- Usually the reader (you) will not have full context
+- Commits should be a single conceptual "change"
+- Commits should be as small as feasible while being complete
+- Ideally the project is "working" after each commit
+- Definitely the project is "working" after each push
+
+Remember that the reader (usually you) will not have full context
+
+What should I commit?
+===
+
++ Commits should be a single conceptual "change"
++ Commits should be as small as feasable while being complete
++ Ideally the project is "working" after each commit
+
+Advanced Git
+===
+
++ branching: you can maintain "parallel" versions of your repository.
+This is useful for "exploratory" work. These can later be merged into
+the "main" branch.
++ bisecting: you can identify the commit responsible for introducing a
+bug using binary search
++ hooks: you can automatically execute tasks based upon git behaviors;
+can be used to automate testing/deployment
+
+Merges
+===
+
+In <tt>Git</tt>, two commits can be merged by applying the relevant changes one after the other.
+
+If the changes are independent this is straightforward.
+
+If the changes conflict it needs to be manually merged (typically due
+to incompatible changes).
+
+Sources of Information
+===
+
+- [Happy Git With R](http://happygitwithr.com) by Jenny Bryan and a
+  squad of TAs
+
+- [An Introduction to Git and How to Use It with
+  RStudio](http://r-bio.github.io/intro-git-rstudio/)
+
+- [Pro Git](https://git-scm.com/book/en/v2) by Scott Chacon &amp; Ben
+  Straub

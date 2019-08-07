@@ -1,0 +1,564 @@
+---
+title: "Writing R Packages"
+author: "Statistical Computing, 36-350"
+date: "Friday August 2, 2019"
+---
+
+Logistics
+===
+- Final Exam 
+    - Shorter than homeworks (will be cumulative)
+    - work by yourself, can only ask for help interpreting the questions
+    - 5% extra credit on Final Exam if $>80\%$ of the class fills out FCEs 
+    - **more details Monday**
+- Last week schedule 
+    - Monday & Tuesday like normal.
+    - Wednesday Lecture: Tidyverse Advance: Split-Apply-Combine, Parallel Computing, and Deep Learning (?) -> **Optional**
+    - Thursday: open work session (no need to attend)
+    - Friday: Either a "lecture" where I bring in other phd students who talk about how they use computing in their research, or nothing...
+
+Last time: Version control
+===
+- version control (git) creates "snapshots" of your code with a message to help for future you
+- Github is an example of a "centralized" version control tool (allows for easy sharing and collaboration.)
+- "Github First" is the approach of making a github repo first before creating a directory on your computer (in Rstudio followed with making a project connected to the repo)
+- `commit`s allow you to take a "snapshot" relative to new lines, modified lines, and  deleted lines 
+- `push/pull` sends the snap shots on your computer to github or brings the snap shots from github to your computer (respectively) 
+
+Why make an R Package?
+===
+
+- Packages are the "fundamental units of shareable code"
+- Organization, standardized tools
+- Fulfillment, building something
+
+> "... from user to programmer to contributor, in the gradual progress that R
+encourages."
+
+> \~ John Chambers (Software for Data Analysis: Programming with R)
+
+
+R package: Goals
+===
+
+- Build a minimal working package
+- Understand how `devtools`/ `usethis` can facilitate this process
+- Develop a better understanding of how R packages work
+
+
+What is an R Package?
+===
+
+- Collection of files, organized in a specific way
+- When installed by R, can be used in R sessions
+- Packages are installed into libraries: see yours using `.libPaths()`
+- Attached to the session using the `library()` function.
+
+
+```{r warning =F, message=F}
+library(tidyverse)
+search()
+```
+
+The 5 stages of an R package
+===
+
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/five-stages.png")
+```
+
+R provides tools (`R CMD INSTALL, R CMD BUILD, R CMD CHECK`, etc...) to move to different stages
+
+Packages to help with developing an R package 
+===
+
+```{r message = F, warning = F}
+library(devtools)
+library(usethis)
+# documentation
+library(roxygen2) 
+# tests
+library(testthat)
+```
+
+
+`devtools` and `usethis` allows us to get our package up an running
+===
+
+"The goal of devtools is to make package development as painless as possible"
+
+\~ Hadley Wickham (R Packages)
+
+```{r eval = F}
+  install.packages("devtools")
+  library("devtools")
+```
+
+- Provides a suite of functions which automate the higher level package details, which come with R itself
+
+Devtools serves as a wrapper to many other useful packages
+===
+
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/r_diagram.png")
+```
+
+`usethis` focuses on automating repetitive tasks in building packages
+===
+
+```{r eval = F}
+  install.packages("usethis")
+  library("usethis")
+```
+
+"usethis is a workflow package: it automates repetitive tasks that arise during project setup and development, both for R packages and non-package projects."
+
+\~ `usethis` package description
+
+Step 0: Setting up your github ("Github First")
+===
+
+Just like in the version control we are going to us the "Github First" Approach. Here are the reminder of the steps:
+
+**In <tt>GitHub</tt>, do the following:**
+
+- go to the top-level directory (i.e., <tt>github.com/&lt;your user
+  name&gt;</tt>)
+
+- click on "+" at top right, and select "New repository"
+
+- name the repository (e.g., "tartan")
+
+- provide a short description of the repository (don't leave
+  completely blank!)
+
+- keep the repository public (as students you have access to free
+  private repos https://education.github.com/pack, but for purposes of
+  this lab keep the repo public)
+
+- click on "Initialize this repository with a README" and select the R option in "Add .gitignore"... there is no need to "Add a license"
+
+- click on "Create Repository"
+
+---
+
+**...then RStudio**
+
+
+In **RStudio**, do the following:
+
+- click on <tt>File &gt; New Project...</tt>
+
+- click on "Version Control", then on "Git"
+
+- provide the *full* address for the "Repository URL" (including the
+  <tt>https</tt>, etc.; by default, this will provide the name of your
+  local repository)
+
+- make sure "Create project as subdirectory of:" points to where you
+  want to point it
+
+- click on "Create Project" (in this example we will be calling our package `tartan`)
+
+
+Step 1: Create the minimal source package
+===
+
+An R (*source*) package is just files in a directory, formatted in a specific way.
+
+To create the bare bones R package, just type:
+
+```{r eval = F} 
+usethis::create_package("tartan") 
+```
+
+```{r eval = F, echo = F}
+# output of the above command
+> usethis::create_package("tartan")
+✔ Setting active project to './tartan'
+✔ Creating 'R/'
+✔ Creating 'man/'
+✔ Writing 'DESCRIPTION'
+✔ Writing 'NAMESPACE'
+✔ Changing working directory to './tartan'
+```
+
+- if in the `tartan` project, may need to do `setwd("../")`, run the above line and then do `setwd("tartan")`.
+
+---
+
+This should give us:
+
+1. Directory <span style="color: darkblue">`R/`</span>
+2. Directory <span style="color: darkblue">`man/`</span>
+2. `NAMESPACE` file
+3. `DESCRIPTION` file
+4. `tartan.Rproj` file (if using RStudio)
+
+and anything else you included from intializing your git repo (`.gitignore`, `LICENSE`, etc)
+
+```{r eval = F, echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/tartan_folder.png")
+```
+
+The description file contains package meta-data
+===
+
+```{r echo=FALSE, out.height = "70%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/tartan_description.png")
+```
+
+`usethis` creates the "bare minimum" description file 
+
+This is fine for now, but becomes more important when you want to release your package
+
+Step 2: Writing a function
+===
+
+All of your R code goes into the `R/` directory. Generally, this code is made up of functions
+
+For example, lets create the file `R/welcome.R` and add the function:
+
+```{r eval = F}
+usethis::use_r("welcome") # opens up file (creates if need be)
+```
+
+
+```{r}
+call_scotty_demo <- function(your_name) {
+  if (nchar(your_name) > 30){
+    warning("your name is beyond 30 characters, and has been truncated")
+    your_name <- substr(your_name, 1, 30)
+  }
+  
+  name_length <- nchar(your_name)
+  
+  # Hiiiii
+  cat(paste("\n",
+    paste0(c("", rep("-", name_length + 8), "\n"), collapse = ""),
+    paste0(c("| Hi ", your_name, "! | \n"), collapse=""),
+    paste0(c("|   ", rep("-", name_length + 4), "\n"), collapse = ""),
+    paste0(c("| /\n")))
+  )
+
+  # from Scotty.
+  cat(paste0(
+      " |/  |\\_/|          \n",
+      " |   |q p|   /}      \n",
+      " |   ( 0 )\"\"\"\\   \n",
+      "  \\  |\"-\"`    |    \n",
+      "     || /=\\\\  |     \n",
+      "     \"'\"  '\"\"\"'"))
+  
+}
+```
+
+Now, we can load the package into memory:
+
+
+```{r eval =F}
+devtools::load_all()
+```
+
+More on devtools::load_all()
+========================================================
+
+`devtools::load_all()` loads your source package into memory
+
+This is important because in developing a package, you often need to re-install the package over and over
+
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/loading.png")
+```
+
+Contrasting with the  `library()` function, which loads (then attaches) already installed packages
+
+Step 2: Documentation our functions
+===
+
+- R comes with tools for documentation (`?sum`)
+- You can utilize these tools by storing `.Rd` files in a `man/` directory. The `.Rd` look a bit like LaTex
+- R renders these files into html, pdf, or whichever format is needed.
+
+Devtools connects with roxygen2 for more convinient documentation
+===
+
+```{r echo=F, warning = F, message=F}
+#devtools::install_github("hadley/emo")
+library(emo)
+my_emoji <- emo::ji("scream")
+```
+
+
+The easiest way to document your R code is `roxygen2` package (`r my_emoji` which we already learned how to use - *how useful*).
+
+Primarily, this allows you to combine code and documentation into a single file, and handles the `.Rd` formatting (and NAMESPACE) for you
+
+
+```{r eval = F}
+install.packages("roxygen2")
+library(roxygen2)
+```
+
+With roxygen2, we write documentation on top of the function
+===
+
+
+```{r}
+#' Meet Scotty, the Scottie Dog
+#'
+#' @param your_name string of your name (max length 30 characters)
+#'
+#' @return NULL. Though scotty appears on your screen and says Hi to you.
+#' @export
+#'
+#' @examples
+#' call_scotty_demo("Andrew Carnegie")
+call_scotty_demo <- function(your_name) {
+  
+  if (nchar(your_name) > 30){
+    warning("your name is beyond 30 characters, and has been truncated")
+    your_name <- substr(your_name, 1, 30)
+  }
+  
+  name_length <- nchar(your_name)
+  
+  # Hiiiii
+  cat(paste("\n",
+    paste0(c("", rep("-", name_length + 8), "\n"), collapse = ""),
+    paste0(c("| Hi ", your_name, "! | \n"), collapse=""),
+    paste0(c("|   ", rep("-", name_length + 4), "\n"), collapse = ""),
+    paste0(c("| /\n")))
+  )
+
+  # from Scotty.
+  cat(paste0(
+      " |/  |\\_/|          \n",
+      " |   |q p|   /}      \n",
+      " |   ( 0 )\"\"\"\\   \n",
+      "  \\  |\"-\"`    |    \n",
+      "     || /=\\\\  |     \n",
+      "     \"'\"  '\"\"\"'"))
+  
+}
+```
+
+Creating Documentation
+===
+
+As a standard workflow, we can use:
+
+```{r eval = F} 
+devtools::document()
+```
+
+- This creates a `man/` folder, and insert the corresponding `man/call_scotty_demo.Rd` file that R uses to generate documentation. 
+- It also updates the `NAMESPACE` file so when you load your functions you get the desired documenation (need to have `@export`)
+
+
+Let's see what this looks like:
+===
+
+```{r eval=F}
+% Generated by roxygen2: do not edit by hand
+% Please edit documentation in R/welcome.R
+\name{call_scotty_demo}
+\alias{call_scotty_demo}
+\title{Meet Scotty, the Scottie Dog}
+\usage{
+call_scotty_demo(your_name)
+}
+\arguments{
+\item{your_name}{string of your name (max length 30 characters)}
+}
+\value{
+\code{NULL}. Though scotty appears on your screen and says Hi to you.
+}
+\description{
+Meet Scotty, the Scottie Dog
+}
+\examples{
+call_scotty_demo("Andrew Carnegie")
+}
+```
+
+
+We can now view our documentation in the standard R format
+====
+
+```{r eval = F}
+devtools::load_all()
+?call_scotty_demo
+```
+***
+
+```{r echo=FALSE, out.height = "70%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/call_scotty_demo_doc.png")
+```
+
+
+Step 4: Testing
+===
+
+Testing is critical to making sure your packages do what you expect.
+
+The easiest way to get started with testing is the `testthat` package, which also integrates with `devtools`
+
+
+```{r eval = F} 
+install.packages("testthat")
+usethis::use_testthat()
+```
+
+This will set up the `tests/testthat` directory where we can store tests
+
+How does `testthat` work?
+========================================================
+
+Test-that works hierarchically:
+
+1. Expectation: Fundamental unit of testing. They describe what result is expected of your various computations. We can use these to make sure our functions are giving the expected output.
+
+
+```{r message=F, warning=F, error=T}
+  library(testthat)
+  expect_equal(1, 1)
+  expect_equal(1, 2)
+```
+
+2. Test: Group of Expectations
+
+```{r eval = T, error = T}
+test_that(paste("calling scotty works well (returns null",
+                 "and provides warning nchar > 30)"), {
+  expect_equal(call_scotty_demo("Oski Bear"), NULL)
+  expect_warning(call_scotty_demo("Oski Bear, your a wonderful, but slightly creepy Berkeley Bear"))
+  expect_equal(1, 2)
+})
+```
+
+
+3. File: File which contains tests. Must start with `test`
+
+Testing our function
+========================================================
+
+Next, let's create a file `tests/testthat/test-welcome.R`
+
+```{r eval = F}
+usethis::use_test("welcome")
+```
+
+```{r eval = F}
+✔ Setting active project to './tartan'
+✔ Adding 'testthat' to Suggests field in DESCRIPTION
+✔ Creating 'tests/testthat/'
+✔ Writing 'tests/testthat.R'
+✔ Writing 'tests/testthat/test-welcome.R'
+● Modify 'tests/testthat/test-welcome.R'
+```
+
+What we put in the `test-welcome.R` file:
+
+```{r eval = F}
+context("test welcome from scotty")
+
+test_that(paste("calling scotty works well (returns null",
+                 "and provides warning nchar > 30)"), {
+  expect_equal(call_scotty_demo("Oski Bear"), NULL)
+  expect_warning(call_scotty_demo("Oski Bear, your a wonderful, but slightly creepy Berkeley Bear"))
+  expect_equal(1, 2)
+})
+```
+
+Now run:
+
+
+```r
+devtools::test()
+```
+
+Example output from `testthat`:
+===
+
+```{r echo=FALSE, out.width = "60%", fig.align="center"}
+knitr::include_graphics("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/r_packages_images/devtool_test_example.png")
+```
+
+Step 5: Syncronizing with Github
+===
+
+This allows users to install your package without being hosted on CRAN.
+
+For example, you could install the R package I just made using:
+
+```{r eval = T, message=F, warning=F}
+devtools::install_github(repo = "benjaminleroy/tartan",
+                         force = F) 
+# so making the sides does do it a ton of times
+library(tartan)
+#?call_scotty_demo
+call_scotty_demo("Big Bird")
+```
+
+Remarkably, the package is available to everyone with an internet connection
+
+Instructions for syncronizing with Github
+===
+
+Remember, now that we've done the basics we can use Rstudio's built in git and connect to Github to commit all changes and push to Github.
+
+Now check out the Github page, all of the code is there!
+
+Congratulations! You now have your own personal R Package
+
+There are many more great features of to look into, including:
+===
+
+
+- Including data (can be [documented](http://r-pkgs.had.co.nz/data.html) too)
+    ```{r eval = F}
+    # suppose that I have a tarans dataset that I created - than I can save it this way
+    usethis::use_data(tartans)
+    # and document at 
+    usethis::use_r("data")
+    ```
+- Vignettes (long form documentation, knitr)
+- Compiled code (C, C++, Fortran...)
+- creating a CRAN ready package
+- explore all the things that [`usethis`](https://usethis.r-lib.org/reference/index.html) automates.
+
+Summary
+===
+
+- `devtools` (high level development tools) useful functions:
+    - `devtools::load()`: load package into global environment
+    - `devtools::document()`: document functions
+    - `devtools::test()`: run tests of functions
+- `usethis` (automation): set of desirable functions including `use_r` to open up or create a new function file in `R/` (similar for `use_test`). 
+- `roxygen2` (commenting): make desirable documentation
+- packaging you code consists mostly of 
+    - creating the package
+    - writing functions (and documenting them)
+    - writing tests (`testthat`)
+    - updating package and sharing it with `git` and `github`
+    
+Final comments:
+===
+
+You don't have to do use the "Github first", you can find other resources online about how to connect a package to github after you make it (using `usethis` even).
+
+Good Resources:
+===
+
+- [R Packages](http://r-pkgs.had.co.nz). Hadley Wickham
+- [Software for Data Analysis: Programming with R.](https://link.springer.com/book/10.1007/978-0-387-75936-4) John Chambers
+- [Writing R Extensions](https://cran.r-project.org/doc/manuals/r-release/R-exts.html) (the official documentation)
+
+
+
+
+
+
+
+

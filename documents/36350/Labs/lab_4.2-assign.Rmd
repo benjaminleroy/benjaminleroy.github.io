@@ -1,0 +1,113 @@
+---
+title: "Lab 4.2: Fitting Models to Data"
+author: "Statistical Computing, 36-350"
+date: "Wednesday, July 24, 2019"
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(cache=TRUE, autodep=TRUE, cache.comments=TRUE)
+```
+
+Name:  
+Andrew ID:  
+Collaborated with:  
+
+This lab is to be done in class (completed outside of class if need be). You can collaborate with your classmates, but you must identify their names above, and you must submit **your own** lab as an knitted HTML file on Canvas, by Tuesday 10pm, this week.
+
+**This week's agenda**: exploratory data analysis, cleaning data, fitting linear models, and using associated utility functions.
+
+Prostate cancer data
+===
+
+Recall the data set on 97 men who have prostate cancer (from the book [The Elements of Statistical Learning](http://statweb.stanford.edu/~tibs/ElemStatLearn/)). Reading it into our R session:
+
+```{r}
+pros_df <- 
+  read.table("https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week1/pros.dat")
+dim(pros_df)
+head(pros_df, 3)
+```
+
+Simple exploration and linear modeling
+===
+
+- **1a.** Define `pros_df_subset` to be the subset of observations (rows) of the prostate data set such the `lcp` measurement is greater than the minimum value (the minimum value happens to be `log(0.25)`, but you should not hardcode this value and should work it out from the data). As in lecture, plot histograms of all of the variables in `pros_df_subset`. 
+
+
+- **1b.** Also as in lecture, compute and display correlations between all pairs of variables in `pros_df_subset`. Report the two highest correlations between pairs of (distinct) variables, and also report the names of the associated variables. 
+
+
+- **1c.** Compute, using `lm()`, a linear regression model of `lpsa` (log PSA score) on `lcavol` (log cancer volume). Do this twice: once with the full data set, `pros_df`, and once with the subsetted data, `pros_df_subset`. Save the results as `pros_lm.` and `pros_subset_lm`, respectively. Using `coef()`, display the coefficients (intercept and slope) from each linear regression. Are they different?
+
+
+- **1d.** Let's produce a visualization to help us figure out how different these regression lines really are. Plot `lpsa` versus `lcavol`, using the full set of observations, in `pros_df`. Label the axes appropriately. Then, mark the observations in `pros_df_subset` by small filled red circles (shape = 16). Add a black line to your plot, displaying the fitted regression line from `pros_lm` using `geom_abline` (takes in a `intercept` and a `slope` value). Add a red line, displaying the fitted regression line from `pros_subset_lm`. Add a caption (for now) using `+ labs()` to describe what the colors mean. Please also add useful `x` and `y` axis labels.
+
+
+
+Exoplanets data set
+===
+
+There are now over 1,000 confirmed planets outside of our solar system. They have been discovered through a variety of methods, with each method providing access to different information about the planet. Many were discovered by NASA's [Kepler space telescope](https://en.wikipedia.org/wiki/Kepler_(spacecraft)), which observes the "transit" of a planet in front of its host star. In these problems you will use data from the [NASA Exoplanet Archive](http://exoplanetarchive.ipac.caltech.edu) to investigate some of the properties of these exoplanets. (You don't have to do anything yet, this was just by way of background.)
+
+Reading in, cleaning data
+===
+
+- **2a.** A data table of dimension 1892 x 10 on exoplanets (planets outside of our solar system, i.e., which orbit anothet star, other than our sun) is up at https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week4/exoplanets.csv. Load this data table into your R session with `read.csv()` and save the resulting data frame as `exo_df`. (Hint: the first 13 lines of the linked filed just explain the nature of the data, so you can use an appropriate setting for the `skip` argument in `read.csv()`.) Check that `exo_df` has the right dimensions, and display its first 3 rows.
+
+
+- **2b.** The last 6 columns of the `exo_df` data frame, `pl_pnum`,` pl_orbper`, `pl_orbsmax`, `pl_massj`, `pl_msinij`, and `st_mass`, are all numeric variables. Define a matrix `exo_mat` that contains these variables as columns. Display the first 3 rows of `exo_mat`.
+
+
+- **2c.** As we can see, at least one of the columns, `pl_massj`, has many NA values in it. How many missing values are present in each of the 6 columns of `exo_mat`? (Hint: you can do this easily with vectorization, you shouldn't use any loops.)
+
+
+- **2d.** Define `ind_clean` to be the vector of row indices corresponding to the "clean" rows in `exo_mat`, i.e., rows for which there are no NAs among the 6 variables. (Hint: again, you can do this easily with vectorization, you shouldn't use any loops.) Use `ind_clean` to define `exo_mat_clean`, a new matrix containing the corresponding clean rows of `exo_mat`. How many rows are left in `exo_mat_clean`?
+
+
+- **2e.** Yikes! You should have seen that, because there are so many missing values (NA values) in `exo_mat`, we only have 7 rows with complete observations! This is far too little data. Because of this, we're going to restrict our attention to the variables `pl_orbper`, `st_mass`, and `pl_orbsmax`. Redefine `exo_mat` to contain just these 3 variables as columns. Then repeat the previous part, i.e., define `ind_clean` to be the vector of row indices corresponding to the "clean" rows in `exo_mat`, and define `exo_mat_clean` accordingly. Now, how many rows are left in `exo_mat_clean`? Finally, check that `exo_mat_clean` is the same as the result of calling `na.omit()` (a handy built-in R function) on `exo_mat`. You can check for equality using `all.equal()` with the argument `check.attributes = FALSE`.
+
+
+Exploring the exoplanets
+===
+
+- **3a.** Convert `exo_mat_clean` to a `data frame`. Compute histograms of each of the variables in `exo_mat_clean` . Set the titles and label the x-axes appropriately (indicating the variable being considered). What do you notice about these distributions?
+
+
+- **3b.** Apply a log transformation to the variables in `exo_mat_clean`, saving the resulting matrix as `exo_mat_clean_log`. Name the columns of `exo_mat_clean_log` to be "pl\_orbper\_log", "st\_mass\_log", and "pl\_orbsmax\_log", respectively, to remind yourself that these variables are log transformed. Recompute histograms as in the last question. Now what do you notice about these distributions? How else could you have examined the log transformation of each distribution using your coding in **3a**?
+
+
+- **3c.** Plot the relationships between pairs of variables in `exo_mat_clean_log` with `ggpairs()`. What do you notice? 
+
+
+Kepler's third law
+===
+
+For our exoplanet data set, the orbital period $T$ is found in the variable `pl_orbper`, and the mass of the host star $M$ in the variable `st_mass`, and the semi-major axis $a$ in the variable `pl_orbsmax`. Kepler's third law states that (when the mass $M$ of the host star is much greater than the mass $m$ of the planet), the orbital period $T$ satisfies:
+
+$$
+T^2 \approx \frac{4\pi^2}{GM}a^3.
+$$ 
+
+Above, $G$ is Newton's constant. (You don't have to do anthing yet, this was just by way of background.)
+
+Linear regression in deep space
+===
+
+- **4a.** We are going to consider only the observations in `exo_mat_clean_log` for which the mass of the host star is between 0.9 and 1.1 (on the log scale, between $\log(0.9) \approx -0.105$ and $\log(1.1) \approx 0.095$), inclusive. Define `exo_reg_data` to be the corresponding data.frame. Check that it has 439 rows. 
+
+
+- **4b.** Perform a linear regression of a response variable $\log(T)$ onto predictor variables $\log(M)$ and $\log(a)$, using only planets for which the host star mass is between 0.9 and 1.1, i.e., the data in `exo_reg_data`. Save the result as `exo_lm`, and save the coefficients as `exo_coef`. What values do you get for the coefficients of the predictors $\log(M)$ and $\log(a)$? Does this match what you would expect, given Kepler's third law (displayed above)? 
+
+
+- **4c.** Call `summary()` on your regression object `exo_lm` and display the results. Do the estimated coefficients appear significantly different from zero, based on their p-values? **Challenge**: use the `summary()` object to answer the following question. Are the theoretical values for the coefficients of $\log(M)$ and $\log(a)$ from Kepler's third law within 2 standard errors of the estimated ones?
+
+
+- **Challenge.** What value do you get for the intercept in your regression model, and does this match what you would expect, given Kepler's third law?
+
+
+- **4d.** Using `fitted()`, retrieve the fitted values from your regression object `exo_lm`. Mathematically, this is giving you:
+$$
+\beta_0 + \beta_1 \log(M) + \beta_2 \log(a)
+$$
+for all the values of log mass $\log(M)$ and log semi-major axis $\log(a)$ in your data set, where $\beta_0,\beta_1,\beta_3$ are the estimated regression coefficients. Thus you can also compute these fitted values from the coefficients stored in `exo_coef`. Show that the two approaches give the same results.
+
