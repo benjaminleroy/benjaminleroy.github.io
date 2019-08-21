@@ -48,7 +48,7 @@ Motivation 2: Matrix Problems and Stability
 
 Suppose you came back to your computer and given that you're into Stats, you've coded up some iterative algorithm to solve some linear algebra stuffs (you know matrix multiplication, inversion etc).
 
-Say you have some code that does a lot of things, but can solve $Ax = b$ where
+Say you have some code that can solve $Ax = b$ where
 
 $$
 A = \begin{bmatrix} .78 &.563 \\
@@ -74,7 +74,7 @@ That is, we know the true solution is $\begin{bmatrix} 1 \\ -1 \end{bmatrix}$.
 
 ---
 
-So you decide that you just want your answer (from your function) to close to solving the equation, that is $A\hat{x} - b$ is really close to zero (say $l_2$ norm `< 1e-5`). Note that, since we know the true solution ($x$), we will also be checking the **relative error** of the $\hat{x}$ (your answer from your function), i.e. 
+So you decide that you want your answer (from your function) to be close to solving the equation, that is $A\hat{x} - b$ is really close to zero (say $l_2$ norm `< 1e-5`). Note that, since we know the true solution ($x$), we will also be checking the **relative error** of the $\hat{x}$ (your answer from your function), i.e. 
 $$|x-\hat{x}|/|x|$$
 
 The first function you write returns the following value for $\hat{x}_1$:
@@ -171,7 +171,7 @@ getOption("digits") #7
 signif(.1 + .2, digits = 7)
 ```
 
-And above we were showing 55 significant digits is base 10... - technically we just used `sprintf("%1.55f", .1)` (see Rmd file).
+And above we were showing 55 significant digits is base 10... Technically we just used `sprintf("%1.55f", .1)` (see Rmd file).
 
 IEEE 754 usage in R (finite storage)
 ===
@@ -296,7 +296,9 @@ When calculating sample variance...
 
 **Be careful when you're taking the difference of 2 number (that are large in absolute value), but their difference is relatively small**
 
-For example: calculation of sample variance ( [Algorithms for Computing the Sample Variance: Analysis and Recommendations](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115))
+For example: calculation of sample variance[^2]
+
+[^2]: [Algorithms for Computing the Sample Variance: Analysis and Recommendations](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115))
 
 They observe that if we use that trick we learning in stats class (i.e. calculate the $\sum x_i^2$ and $\sum x_i$ terms seperately we can run into problems).
 
@@ -338,7 +340,7 @@ Take away 1:
 ===
 - be careful with subtraction cancelation (expecially when $|a - b| << |a| + |b|$)
 
-Myth busting: (Accumulation of Errors will always be bad)
+Myth busting: (accumulation of errors will always be bad)
 ===
 "Most often, instability is caused by just a few rounding errors" ~ [Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf)
 
@@ -382,7 +384,7 @@ Early take aways:
 Matrix multiplications (designing stable algorithms)
 ===
 
-To understanding what's going on in our matrix problems we need a few more concepts. They are related to the above and emphasis that stability of an algorithm is based on more the just truncation of true values (based on floating point representation)
+To understanding what's going on in our matrix problems we need a few more concepts. They are related to the above and empahasize that stability of an algorithm is based on more the just truncation of true values (based on floating point representation)
 
 **Message:** even if you know a mathmatical representation - look for stable algorithms instead of writing your own
 
@@ -415,7 +417,7 @@ Stability
 - *condition number*: relative change in the output for a given relative
 change in the input, and it is called the (relative) condition number of f.
 
-- a large condition number means an instable algorithm (there are built in tools to assess the condition number of object and functions)
+- a large condition number means an unstable algorithm (there are built-in tools to assess the condition number of object and functions)
 
 Stability of a Matrix 
 ===
@@ -459,7 +461,7 @@ kappa(A) # remember large is bad
 kappa(diag(2))
 ```
 
-*Why should you care?* this should seem useful if you're doing things like linear regression (if you code it up yourself or even if you don't) - as a high `kappa` value means you have a matrix that is close to having zero eigenvalues (which could suggest that you matrix is almost "non-invertible")
+*Why should you care?* this should seem useful if you're doing things like linear regression (if you code it up yourself or even if you don't) - as a high `kappa` value means you have a matrix that is close to having zero eigenvalues (which could suggest that your matrix is almost "non-invertible")
 
 For `lm`, Chamber and Hastie[^1] say we should only worry when 
 
@@ -470,7 +472,7 @@ For `lm`, Chamber and Hastie[^1] say we should only worry when
 [^1]: Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth & Brooks/Cole Advanced Books & Software, 1992.
 
 
-Random Last slides: Log probabilities 
+Random last slides: log probabilities 
 ===
 
 - [Rstan](https://mc-stan.org/docs/2_18/functions-reference/get-log-prob.html) "The basic purpose of a Stan program is to compute a log probability function and its derivatives." (#bayesiancomputing) 
@@ -494,7 +496,7 @@ Imagine that you're doing a naive bayes model for bag-of-word analysis (say the 
 ===
 <span style="color: blue">*Summary*</span>
 
-Designing Stable Algorithms (Guidelines from [Accuracy and stability of numerical algorithms](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf))
+Designing Stable Algorithms
 ===
 
 1. Try to avoid subtracting quantities contaminated by error (though such subtractions may be unavoidable) .

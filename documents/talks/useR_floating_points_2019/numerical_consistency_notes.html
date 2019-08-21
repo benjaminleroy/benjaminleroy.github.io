@@ -239,7 +239,7 @@ all.equal(.1 + .2, .3, tolerance = .Machine$double.eps)</code></pre>
 <div id="motivation-2-matrix-problems-and-stability" class="section level1">
 <h1>Motivation 2: Matrix Problems and Stability</h1>
 <p>Suppose you came back to your computer and given that you’re into Stats, you’ve coded up some iterative algorithm to solve some linear algebra stuffs (you know matrix multiplication, inversion etc).</p>
-<p>Say you have some code that does a lot of things, but can solve <span class="math inline">\(Ax = b\)</span> where</p>
+<p>Say you have some code that can solve <span class="math inline">\(Ax = b\)</span> where</p>
 <p><span class="math display">\[
 A = \begin{bmatrix} .78 &amp;.563 \\
                     .913 &amp; .659 \end{bmatrix} \quad \quad 
@@ -257,7 +257,7 @@ x_true &lt;- solve(a = A,b = b); x_true</code></pre>
 <pre><code>## [1]  1 -1</code></pre>
 <p>That is, we know the true solution is <span class="math inline">\(\begin{bmatrix} 1 \\ -1 \end{bmatrix}\)</span>.</p>
 <hr />
-<p>So you decide that you just want your answer (from your function) to close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e. <span class="math display">\[|x-\hat{x}|/|x|\]</span></p>
+<p>So you decide that you want your answer (from your function) to be close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e. <span class="math display">\[|x-\hat{x}|/|x|\]</span></p>
 <p>The first function you write returns the following value for <span class="math inline">\(\hat{x}_1\)</span>:</p>
 <pre class="r"><code>x_hat1 &lt;- c(.999,-.999)
 res_1 &lt;- b - A %*% x_hat1
@@ -329,7 +329,7 @@ identical, etc
 <pre class="r"><code>getOption(&quot;digits&quot;) #7</code></pre>
 <pre class="r"><code>signif(.1 + .2, digits = 7)</code></pre>
 <pre><code>## [1] 0.3</code></pre>
-<p>And above we were showing 55 significant digits is base 10… - technically we just used <code>sprintf(&quot;%1.55f&quot;, .1)</code> (see Rmd file).</p>
+<p>And above we were showing 55 significant digits is base 10… Technically we just used <code>sprintf(&quot;%1.55f&quot;, .1)</code> (see Rmd file).</p>
 </div>
 <div id="ieee-754-usage-in-r-finite-storage" class="section level1">
 <h1>IEEE 754 usage in R (finite storage)</h1>
@@ -417,7 +417,7 @@ frac2bin &lt;- function(x){
 <div id="when-calculating-sample-variance" class="section level1">
 <h1>When calculating sample variance…</h1>
 <p><strong>Be careful when you’re taking the difference of 2 number (that are large in absolute value), but their difference is relatively small</strong></p>
-<p>For example: calculation of sample variance ( <a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)</p>
+<p>For example: calculation of sample variance<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <p>They observe that if we use that trick we learning in stats class (i.e. calculate the <span class="math inline">\(\sum x_i^2\)</span> and <span class="math inline">\(\sum x_i\)</span> terms seperately we can run into problems).</p>
 <p><span class="math display">\[\text{recall: } \quad 
 S = \frac{1}{n-1} \left( \sum_i x_i^2 - \frac{1}{n} \left(\sum_i x_i\right)^2\right) = \frac{1}{n-1} \left( \sum_i \left(x_i - \frac{1}{n}\sum_j x_j \right)^2 \right)\]</span></p>
@@ -450,7 +450,7 @@ n &lt;- length(x_sample)
 </ul>
 </div>
 <div id="myth-busting-accumulation-of-errors-will-always-be-bad" class="section level1">
-<h1>Myth busting: (Accumulation of Errors will always be bad)</h1>
+<h1>Myth busting: (accumulation of errors will always be bad)</h1>
 <p>“Most often, instability is caused by just a few rounding errors” ~ <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9</a></p>
 <p>Example:</p>
 <p><span class="math display">\[
@@ -458,8 +458,8 @@ e := \underset{n \to \infty}{\text{lim}} (1+1/n)^n
 \]</span></p>
 <pre class="r"><code>f &lt;- function(n) { (1 + 1/n)^n }
 n &lt;- 10^seq(2,20, by = 2)</code></pre>
-<div id="htmlwidget-8fa821590efd79d97c40" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8fa821590efd79d97c40">{"x":{"filter":"none","data":[[100,10000,1000000,100000000,10000000000,1000000000000,100000000000000,1e+16,1e+18,1e+20],[2.70481382942153,2.71814592682493,2.71828046909575,2.71828179834736,2.71828205323479,2.71852349603724,2.71611003408702,1,1,1],[0.0134679990375166,0.000135901634119584,1.3593632917086e-06,3.01116873657747e-08,2.24775742463379e-07,0.000241667578192661,0.00217179437202208,1.71828182845905,1.71828182845905,1.71828182845905]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>f(n)<\/th>\n      <th>error (|f(n) -e|)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatSignif(this, row, data, 0, 1, 3, ',', '.');\nDTWidget.formatSignif(this, row, data, 1, 5, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 2, 7, 3, ',', '.');\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-b0985f9ee3b630a42102" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b0985f9ee3b630a42102">{"x":{"filter":"none","data":[[100,10000,1000000,100000000,10000000000,1000000000000,100000000000000,1e+16,1e+18,1e+20],[2.70481382942153,2.71814592682493,2.71828046909575,2.71828179834736,2.71828205323479,2.71852349603724,2.71611003408702,1,1,1],[0.0134679990375166,0.000135901634119584,1.3593632917086e-06,3.01116873657747e-08,2.24775742463379e-07,0.000241667578192661,0.00217179437202208,1.71828182845905,1.71828182845905,1.71828182845905]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>f(n)<\/th>\n      <th>error (|f(n) -e|)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatSignif(this, row, data, 0, 1, 3, ',', '.');\nDTWidget.formatSignif(this, row, data, 1, 5, 3, ',', '.');\nDTWidget.formatRound(this, row, data, 2, 7, 3, ',', '.');\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <div id="early-take-aways" class="section level1">
 <h1>Early take aways:</h1>
@@ -475,7 +475,7 @@ n &lt;- 10^seq(2,20, by = 2)</code></pre>
 </div>
 <div id="matrix-multiplications-designing-stable-algorithms" class="section level1">
 <h1>Matrix multiplications (designing stable algorithms)</h1>
-<p>To understanding what’s going on in our matrix problems we need a few more concepts. They are related to the above and emphasis that stability of an algorithm is based on more the just truncation of true values (based on floating point representation)</p>
+<p>To understanding what’s going on in our matrix problems we need a few more concepts. They are related to the above and empahasize that stability of an algorithm is based on more the just truncation of true values (based on floating point representation)</p>
 <p>**<a href="Message:**" class="uri">Message:**</a> even if you know a mathmatical representation - look for stable algorithms instead of writing your own</p>
 </div>
 <div id="general-stability-analysis" class="section level1">
@@ -499,7 +499,7 @@ n &lt;- 10^seq(2,20, by = 2)</code></pre>
 <h1>Stability</h1>
 <ul>
 <li><p><em>condition number</em>: relative change in the output for a given relative change in the input, and it is called the (relative) condition number of f.</p></li>
-<li><p>a large condition number means an instable algorithm (there are built in tools to assess the condition number of object and functions)</p></li>
+<li><p>a large condition number means an unstable algorithm (there are built-in tools to assess the condition number of object and functions)</p></li>
 </ul>
 </div>
 <div id="stability-of-a-matrix" class="section level1">
@@ -545,13 +545,13 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 <pre><code>## [1] 2482775</code></pre>
 <pre class="r"><code>kappa(diag(2))</code></pre>
 <pre><code>## [1] 1</code></pre>
-<p><em>Why should you care?</em> this should seem useful if you’re doing things like linear regression (if you code it up yourself or even if you don’t) - as a high <code>kappa</code> value means you have a matrix that is close to having zero eigenvalues (which could suggest that you matrix is almost “non-invertible”)</p>
-<p>For <code>lm</code>, Chamber and Hastie<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> say we should only worry when</p>
+<p><em>Why should you care?</em> this should seem useful if you’re doing things like linear regression (if you code it up yourself or even if you don’t) - as a high <code>kappa</code> value means you have a matrix that is close to having zero eigenvalues (which could suggest that your matrix is almost “non-invertible”)</p>
+<p>For <code>lm</code>, Chamber and Hastie<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> say we should only worry when</p>
 <pre class="r"><code>.Machine$double.eps * kappa(A) # isn't super large </code></pre>
 <pre><code>## [1] 5.512868e-10</code></pre>
 </div>
 <div id="random-last-slides-log-probabilities" class="section level1">
-<h1>Random Last slides: Log probabilities</h1>
+<h1>Random last slides: log probabilities</h1>
 <ul>
 <li><a href="https://mc-stan.org/docs/2_18/functions-reference/get-log-prob.html">Rstan</a> “The basic purpose of a Stan program is to compute a log probability function and its derivatives.” (#bayesiancomputing)</li>
 <li>General reasoning for log probs example: <a href="http://www.cs.rhodes.edu/~kirlinp/courses/ai/f18/projects/proj3/naive-bayes-log-probs.pdf">Naive bayes on log probs</a></li>
@@ -569,8 +569,8 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 <h1><span style="color: blue">Part IV</span></h1>
 <p><span style="color: blue"><em>Summary</em></span></p>
 </div>
-<div id="designing-stable-algorithms-guidelines-from-accuracy-and-stability-of-numerical-algorithms" class="section level1">
-<h1>Designing Stable Algorithms (Guidelines from <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Accuracy and stability of numerical algorithms</a>)</h1>
+<div id="designing-stable-algorithms" class="section level1">
+<h1>Designing Stable Algorithms</h1>
 <ol style="list-style-type: decimal">
 <li><p>Try to avoid subtracting quantities contaminated by error (though such subtractions may be unavoidable) .</p></li>
 <li><p>Minimize the size of intermediate quantities relative to the final solution.</p></li>
@@ -584,7 +584,8 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p><a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
 
