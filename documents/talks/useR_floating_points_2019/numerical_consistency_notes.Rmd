@@ -1,0 +1,515 @@
+---
+title: "Floating Points: <br> living in a discretized, computerized world"
+author: "Benjamin LeRoy"
+date: "August 21st, 2019"
+output: 
+  html_document:
+    footer: "Benjamin LeRoy, useR Pittsburgh, 2019"
+---
+
+Potential Titles
+===
+- "Computing: real numbers need not apply"
+- "Floating-point-land:  A `R`omance of many bits"
+- "Floating points: When you think you're a mathematician"
+- "I wrote the tests correctly though!"
+
+Motivation 1: Testing (raw floating point errors)
+===
+
+- suppose you've coded up a really good example showing your functions work amazingly and you've checked your math (with a quick print statement)
+
+```{r}
+print(.1 + .2); print(.3)
+```
+
+and you think "wow, I really like coding, and I'm like a good mathematician", and then this happens...
+
+---
+
+```{r}
+.1 + .2 == .3
+```
+
+And that's when you go into pure mathematics cause no one likes computers anyway.
+
+*Technically here's a correction if you encounter this (but we'll talk about why you did soon):*
+
+```{r error = T}
+testthat::expect_equal(.1 + .2, .3, tolerance = 0) # says something useful
+
+testthat::expect_equal(.1 + .2, .3, tolerance = .Machine$double.eps)
+# or 
+all.equal(.1 + .2, .3, tolerance = .Machine$double.eps)
+```
+
+Motivation 2: Matrix Problems and Stability
+===
+
+Suppose you came back to your computer and given that you're into Stats, you've coded up some iterative algorithm to solve some linear algebra stuffs (you know matrix multiplication, inversion etc).
+
+Say you have some code that does a lot of things, but can solve $Ax = b$ where
+
+$$
+A = \begin{bmatrix} .78 &.563 \\
+                    .913 & .659 \end{bmatrix} \quad \quad 
+b = \begin{bmatrix}
+.217 \\ .254
+\end{bmatrix}
+$$
+
+Now, as mathematicians we know that $x = A^{-1}b$ (aka we have a closed form solution), but for this example, we will just use the fact that we know the answer mathematically and we'd like to assess preformance of our algorithm through tests. 
+
+So, the set up:
+
+```{r}
+A <- matrix(c(.78, .563,
+              .913, .659),
+            byrow = T, nrow = 2)
+b <- c(.217, .254)
+x_true <- solve(a = A,b = b); x_true
+```
+
+That is, we know the true solution is $\begin{bmatrix} 1 \\ -1 \end{bmatrix}$.
+
+---
+
+So you decide that you just want your answer (from your function) to close to solving the equation, that is $A\hat{x} - b$ is really close to zero (say $l_2$ norm `< 1e-5`). Note that, since we know the true solution ($x$), we will also be checking the **relative error** of the $\hat{x}$ (your answer from your function), i.e. 
+$$|x-\hat{x}|/|x|$$
+
+The first function you write returns the following value for $\hat{x}_1$:
+
+```{r}
+x_hat1 <- c(.999,-.999)
+res_1 <- b - A %*% x_hat1
+res_1
+sprintf("l_2 norm of residual is %.6f", norm(res_1))
+
+norm(x_true - x_hat1, type = "2")/norm(x_true, type = "2") 
+```
+
+A friend says they think they have a function that solved the problem, and
+sends over $\hat{x}_2$.
+
+```{r}
+x_hat2 <- c(.341, -.087)
+res_2 <- b - A %*% x_hat2
+res_2
+sprintf("l_2 norm of residual is %.6f", norm(res_2))
+
+norm(x_true - x_hat2, type = "2")/norm(x_true, type = "2")
+```
+
+Dang it...
+
+
+
+Outline
+===
+
+1. R and floating points
+    - IEEE representation & underlying structure
+2. Understanding & Avoiding Errors (algebraic)
+3. Understanding & Avoiding Errors (linear algebra)
+4. Summary
+
+<!-- - Computing: where
+- tools: kappa, sprintf, assertthat, testthat
+identical, etc
+- tricks to reformulate problems
+- floating points precession differences
+- Condition number (tools: kappa) and stability, backward and forward errors
+-->
+
+<span style="color: blue">Part I</span>
+===
+<span style="color: blue">*Introduction to floating points*</span>
+
+
+Introduction
+===
+
+```{r}
+print(.1 + .2); print(.3)
+.1 + .2 == .3
+```
+
+What's really happening?
+
+What's really happening?
+===
+
+$0.1 + 0.2$:
+
+```{r echo =F}
+cat(paste0(sprintf("  %1.55f", .1), "\n",
+           sprintf("+ %1.55f", .2), "\n",
+    paste0(c(rep("-", 60), "\n"), sep = "", collapse = ""),
+    sprintf("  %1.55f", .2 + .1)))
+```
+
+vs. $0.3$:
+
+```{r echo = F}
+cat(sprintf("  %1.55f", .3))
+```
+
+**why is "$.3$" is printed?**
+
+```{r eval = F}
+#?print.default
+```
+
+```{r eval = T, echo=FALSE, out.width = "100%", fig.align="center", message = F, warning = F}
+knitr::include_graphics("http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/print_default.png")
+```
+
+```{r eval = F}
+getOption("digits") #7
+```
+```{r}
+signif(.1 + .2, digits = 7)
+```
+
+And above we were showing 55 significant digits is base 10... - technically we just used `sprintf("%1.55f", .1)` (see Rmd file).
+
+IEEE 754 usage in R (finite storage)
+===
+
+1. R only has *double* precision floats
+
+2. Which means the raw digit information is contained in "53 bits, and represents to that precision a range of absolute values from about `2e-308` to `2e+308`" ~ [`help(float)`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/double.html)
+
+```{r eval = T, echo=FALSE, out.width = "100%", fig.align="center", message = F, warning = F}
+knitr::include_graphics("http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/640px-IEEE_754_Double_Floating_Point_Format.png")
+```
+
+---
+
+[Example - from youtube (in only 32 bits - we use 64)](https://www.youtube.com/watch?v=8afbTaA-gOQ):
+
+Express how to store: 263.3 in `R` (not going over).
+
+```{r}
+int2bin <- function(x) { 
+  R.utils::intToBin(x)
+}
+frac2bin <- function(x){
+  stringr::str_pad(R.utils::intToBin(x * 2^31), 31, pad="0")
+}
+```
+
+
+1. 263 = `r int2bin(263)`
+
+    0.3 = `r frac2bin(.3)`
+
+2. $\Rightarrow$ 263.3 = `r paste0(int2bin(263),".",frac2bin(.3))`
+
+3. (get exp bits): `r paste0(substr(int2bin(263),1,1), ".", substr(int2bin(263),2, stop = 100),frac2bin(.3))` $\times \; 2^8$ 
+
+4. tranform exp relative to 'bias' (below 1): `1023 + 8 = 1031` (bit = `r int2bin(1031)`) *note: 'bias' for IEEE 754 double = 1023*
+
+5. grab fraction bits from part 3.
+
+final answer:
+
+```{r echo = F}
+cat(paste0(paste0(c("1 ", 1:11 %% 10, " ", 1:53 %% 10), collapse =  ""), "\n",
+paste0("0", " ",
+       int2bin(1031),
+       " ",
+       substr(paste0(int2bin(263),
+       frac2bin(.3)), 2, 53), "..."
+)))
+```
+
+How can we think about this type of storage (with bits)
+===
+
+- "a fundamental issue": floating point number line is not dense
+
+- First, on the extreme end:
+
+- since we only have 53 bits to contain information, trying to express information that is has beyond 53 bits of information is truncated.
+
+- "can express 1/2 the integers after 2^53" (until 2^54... - then only 1/4, etc)
+```{r}
+(2^53 + 0:12) - 2^53 
+```
+
+```{r eval = F}
+  9007199254740992 (2^53)
++                5
+------------------
+  9007199254740997 (exact result)
+  9007199254740996 (rounded to nearest representable float)
+```
+
+```{r eval = F}
+  9007199254740992 
++                0.0001
+-----------------------
+  9007199254740992.0001 (exact result)
+  9007199254740992      (rounded to nearest representable float)
+```
+
+Example from [Floating Point Demystified, Part 1](http://blog.reverberate.org/2014/09/what-every-computer-programmer-should.html))
+
+Associating the storage with precision
+===
+
+- "The exponent bits tell you which power of two numbers you are between – $[2^{exponent}, 2^{exponent+1})$ – and the [fraction] tells you where you are in that range." 
+ $\sim$ [Demystifying Floating Point Precision](https://blog.demofox.org/2017/11/21/floating-point-precision/)
+- I.E., the exponent and fraction *tells you about precision* - the number of values that between those values is exactly have precise you can be.
+
+```{r eval = T, echo=FALSE, out.width = "100%", fig.align="center", message = F, warning = F}
+knitr::include_graphics("http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/640px-IEEE_754_Double_Floating_Point_Format.png")
+```
+
+Aside: What about the integers?
+===
+
+- "An numeric constant immediately followed by `L` is regarded as an integer number when possible" ~ [`help(NumericConstants)`](https://www.rdocumentation.org/packages/base/versions/3.6.1/topics/NumericConstants).
+- But at the same time - we actually don't store it as an integer (we still store it as a float -- "we" `==` `R`).
+
+- `1L` vs `1` 
+```{r}
+class(100L); class(100)
+```
+
+```{r}
+is.integer(1); is.integer(1:2)
+identical(1,1L); 1 == 1L
+```
+
+<span style="color: blue">Part II</span>
+===
+<span style="color: blue">*Understanding and Avoiding Errors (algebraic)*</span>
+
+Overview
+===
+In this section I'll give you some examples to showcase certain principles that should give you useful starting points 
+
+When calculating sample variance... 
+===
+
+**Be careful when you're taking the difference of 2 number (that are large in absolute value), but their difference is relatively small**
+
+For example: calculation of sample variance ( [Algorithms for Computing the Sample Variance: Analysis and Recommendations](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115))
+
+They observe that if we use that trick we learning in stats class (i.e. calculate the $\sum x_i^2$ and $\sum x_i$ terms seperately we can run into problems).
+
+$$\text{recall: } \quad 
+S = \frac{1}{n-1} \left( \sum_i x_i^2 - \frac{1}{n} \left(\sum_i x_i\right)^2\right) = \frac{1}{n-1} \left( \sum_i \left(x_i - \frac{1}{n}\sum_j x_j \right)^2 \right)$$
+
+```{r}
+x_sample <- c(50000000, 50000001, 50000002)
+x_sum <- sum(x_sample); x2_sum <- sum(x_sample^2)
+n <- length(x_sample)
+
+1/(n-1) * (x2_sum - 1/n* (x_sum)^2) # "shortcut"
+var(x_sample) # calculated the better way (iterative updates actually)
+```
+
+Relative error:
+```{r}
+abs(1 - 1/(n-1) * (x2_sum - 1/n* (x_sum)^2))
+```
+
+
+An extra slide for the math
+===
+Thinking about cancellation (that is $a-b$):
+
+We can express the estimated value $\hat{x}$ of the output value $x$ for the subtraction between $a$ and $b$ in the following way. We have $\hat{x} = \hat{a} - \hat{b}$ where $\hat{a} = a(1-\Delta a)$, $\hat{b} = b(1-\Delta b)$.
+
+Then the relative error can be bounded above by
+
+$$\bigg|\frac{x-\hat{x}}{x}\bigg| = \bigg|\frac{-a\Delta a + b \Delta b}{a - b} \bigg| \leq max(|\Delta a|, |\Delta b|) \frac{|a|+|b|}{|a-b|}$$
+
+[Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf)
+
+Notice how this is an upper bound for the error and includes the term $\frac{|a|+|b|}{|a-b|}$. This implies that, "the relative error bound for $\hat{x}$ is large when $|a - b| << |a| + |b|$" (subtractive cancelation can bring emphasis on early errors/ approximations)
+
+See 10 digit rounding example on [Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf) for a extreme example.
+
+Take away 1:
+===
+- be careful with subtraction cancelation (expecially when $|a - b| << |a| + |b|$)
+
+Myth busting: (Accumulation of Errors will always be bad)
+===
+"Most often, instability is caused by just a few rounding errors" ~ [Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf)
+
+Example: 
+
+$$
+e := \underset{n \to \infty}{\text{lim}} (1+1/n)^n
+$$
+```{r echo = F, message = F, warning = F}
+library(tidyverse)
+```
+
+```{r}
+f <- function(n) { (1 + 1/n)^n }
+n <- 10^seq(2,20, by = 2)
+```
+```{r echo = F}
+data.frame(n = 10^seq(2,20, by = 2)) %>%
+  mutate(`f(n)` = f(n),
+         `error (|f(n) -e|)` = abs(`f(n)` - exp(1))) %>%
+  DT::datatable(rownames = F) %>%
+  DT::formatSignif("n",1) %>%
+  DT::formatSignif("f(n)", 5) %>%
+  DT::formatRound("error (|f(n) -e|)", 7)
+```
+
+
+
+
+Early take aways:
+===
+
+- be prepared to allow for some tolerance (`all.equal(tolerance = ...)`) - if you spend enough time thinking about the floating point compression and the operations you could get a potentially good starting point.
+- be careful with subtraction cancelation (expecially when $|a - b| << |a| + |b|$)
+- instability is caused by just a few rounding errors
+
+<span style="color: blue">Part III</span>
+===
+<span style="color: blue">*Understanding and Avoiding Errors (linear algebra)*</span>
+
+Matrix multiplications (designing stable algorithms)
+===
+
+To understanding what's going on in our matrix problems we need a few more concepts. They are related to the above and emphasis that stability of an algorithm is based on more the just truncation of true values (based on floating point representation)
+
+**Message:** even if you know a mathmatical representation - look for stable algorithms instead of writing your own
+
+General Stability Analysis
+===
+
+1. backward and forward errors (perturbation theory)
+2. Condition number (tools: `kappa`)
+
+Stability in terms of backwards and forward errors
+===
+
+```{r eval = T, echo=FALSE, out.width = "100%", fig.align="center", message = F, warning = F}
+knitr::include_graphics("http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/backward_forward.png")
+```
+
+- *backward* stable: $y = f(x)$ is backward stable if, for any $x$ with $\hat{y}$ as it's computed value, then $\hat{y} = f(x + \Delta x)$ for some small $\Delta x$.
+
+- *backward-forward* stable: similar but $\hat{y} + \Delta y = f(x + \Delta x)$ for small $\Delta y$, $\Delta x$.
+
+```{r eval = T, echo=FALSE, out.width = "100%", fig.align="center", message = F, warning = F}
+knitr::include_graphics("http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/backward_and_forward.png")
+```
+
+[Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf)
+
+Stability
+===
+
+- *condition number*: relative change in the output for a given relative
+change in the input, and it is called the (relative) condition number of f.
+
+- a large condition number means an instable algorithm (there are built in tools to assess the condition number of object and functions)
+
+Stability of a Matrix 
+===
+
+Recalling the $Ax = b$ problem:
+
+$$
+A = \begin{bmatrix} .78 &.563 \\
+                    .913 & .659 \end{bmatrix} \quad \quad 
+b = \begin{bmatrix}
+.217 \\ .254
+\end{bmatrix}
+$$
+
+Suppose we were going to use the built in `solve` function to calculate `x`. How stable would this approach be (in terms of condition number)?
+
+```{r}
+# adding Error
+E <- .001 * matrix(c(1,1,
+                     1,-1),
+                   byrow = T, nrow = 2)
+A2 <- A + E
+A2; A
+x_hat3 <- solve(a = A2,b = b)
+x_hat3
+
+# delta_y
+rc_x <- norm(x_true - x_hat3, type = "2")/norm(x_true, type = "2"); rc_x
+# delta_x
+rc_A <- norm(E, type = "2")/norm(A, type = "2"); rc_A
+```
+
+This seems pretty instable, and in `R` we have ways to that the matrix would lead to this type of thing
+
+Condition Numbers for Matrices
+===
+
+- `kappa()`: computes condition number ($l_2$ norm). "The 2-norm condition number can be shown to be the ratio of the largest to the smallest non-zero singular value of the matrix."
+```{r}
+kappa(A) # remember large is bad
+kappa(diag(2))
+```
+
+*Why should you care?* this should seem useful if you're doing things like linear regression (if you code it up yourself or even if you don't) - as a high `kappa` value means you have a matrix that is close to having zero eigenvalues (which could suggest that you matrix is almost "non-invertible")
+
+For `lm`, Chamber and Hastie[^1] say we should only worry when 
+
+```{r}
+.Machine$double.eps * kappa(A) # isn't super large 
+```
+    
+[^1]: Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth & Brooks/Cole Advanced Books & Software, 1992.
+
+
+Random Last slides: Log probabilities 
+===
+
+- [Rstan](https://mc-stan.org/docs/2_18/functions-reference/get-log-prob.html) "The basic purpose of a Stan program is to compute a log probability function and its derivatives." (#bayesiancomputing) 
+- General reasoning for log probs example: [Naive bayes on log probs](http://www.cs.rhodes.edu/~kirlinp/courses/ai/f18/projects/proj3/naive-bayes-log-probs.pdf)
+  
+**Naive Bayes**
+    
+Imagine that you're doing a naive bayes model for bag-of-word analysis (say the spam/not-spam example)
+
+\begin{align*}
+    H^{MAP} &= \underset{i \in \{spam, not-spam\}}{\text{argmax}} \left[\prod_{w=1}^W \mathbb{P}(\text{Freq}_w|H_i) \right] \mathbb{P}(H_i) \\
+    &= \underset{i \in \{spam, not-spam\}}{\text{argmax}} \left[\sum_{w=1}^W \text{log } \mathbb{P}(\text{Freq}_w|H_i) \right] + \text{log } \mathbb{P}(H_i) 
+\end{align*}
+
+
+```{r}
+(1/2)^1000
+```
+
+<span style="color: blue">Part IV</span>
+===
+<span style="color: blue">*Summary*</span>
+
+Designing Stable Algorithms (Guidelines from [Accuracy and stability of numerical algorithms](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf))
+===
+
+1. Try to avoid subtracting quantities contaminated by error (though such subtractions may be unavoidable) .
+
+2. Minimize the size of intermediate quantities relative to the final solution.  
+
+3. Look for different formulations of a computation that are mathematically but not numerically equivalent. *Don't assume just because you know a mathematical expression that it's going to be stable*
+
+4. It is advantageous to express update formulae as
+$$\text{new-value} = \text{old-value} + \text{small-correction}$$
+if the small correction can be computed with many correct significant figures. Natural examples: Netwon's method, some ODEs
+
+5. Use only well-conditioned transformations of the problem. (associated with number 3)
+
+6. Take precautions to avoid unnecessary overflow and underflow (log prob)
+
+From: [Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002.](http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf)
+
