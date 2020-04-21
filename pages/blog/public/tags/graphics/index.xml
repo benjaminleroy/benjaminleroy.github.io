@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>graphics on Benjamin LeRoy&#39;s Blog</title>
-    <link>/pages/blog/public/tags/graphics/</link>
+    <link>http://benjaminleroy.github.io/pages/blog/public/tags/graphics/</link>
     <description>Recent content in graphics on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 16 May 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/pages/blog/public/tags/graphics/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://benjaminleroy.github.io/pages/blog/public/tags/graphics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Review of Tufte’s &#34;The Visual Display of Quantitative Information&#34;</title>
-      <link>/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</link>
+      <link>http://benjaminleroy.github.io/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</guid>
+      <guid>http://benjaminleroy.github.io/pages/blog/public/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</guid>
       <description>The blog post will be one of a few posts that focus on Graphical Theory based on some standard texts in the area. I suspect they will be little more than detailed book reports, but will also contain thoughts of mine of relative examples and will focus on formatting the ideas for students of 36-315, a course taught by the Statistics and Data Science Department at Carnegie Mellon University. That means it may be less of book report / review as a summary highlight points I found most relevant.</description>
     </item>
     
