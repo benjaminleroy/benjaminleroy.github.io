@@ -3,157 +3,157 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://benjaminleroy.github.io/post/2019/01/03/review-of-dsi-fellowship-2018/</loc>
+    <loc>/post/2019/01/03/review-of-dsi-fellowship-2018/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/post/2018/06/23/logistic-regression-lecture/</loc>
+    <loc>/post/2018/06/23/logistic-regression-lecture/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</loc>
+    <loc>/post/2018/05/16/review-of-tufte-s-the-visual-display-of-quantitative-information/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/about/</loc>
+    <loc>/about/</loc>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/advising/</loc>
+    <loc>/tags/advising/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/advising/</loc>
+    <loc>/categories/advising/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/</loc>
+    <loc>/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/</loc>
-    <lastmod>2019-01-03T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://benjaminleroy.github.io/tags/dsi/</loc>
+    <loc>/categories/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/dsi/</loc>
+    <loc>/tags/dsi/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/data-science-initiative/</loc>
+    <loc>/categories/dsi/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/data-science-inititive/</loc>
+    <loc>/categories/data-science-initiative/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/graphic-theory/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <loc>/tags/data-science-inititive/</loc>
+    <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/graphics/</loc>
+    <loc>/categories/graphic-theory/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/lectures/</loc>
-    <lastmod>2018-06-23T00:00:00+00:00</lastmod>
+    <loc>/categories/graphics/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/categories/logistic-regression/</loc>
+    <loc>/categories/lectures/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/post/</loc>
-    <lastmod>2019-01-03T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://benjaminleroy.github.io/categories/summer-program/</loc>
+    <loc>/categories/logistic-regression/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/</loc>
+    <loc>/post/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/tufte/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <loc>/categories/summer-program/</loc>
+    <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/word-clouds/</loc>
+    <loc>/tags/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/graphic-theory/</loc>
+    <loc>/tags/tufte/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/graphics/</loc>
+    <loc>/tags/word-clouds/</loc>
+    <lastmod>2019-01-03T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/graphic-theory/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/lecture/</loc>
+    <loc>/tags/graphics/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/lecture/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/logistic-regression/</loc>
+    <loc>/tags/logistic-regression/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/plot/</loc>
+    <loc>/tags/plot/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://benjaminleroy.github.io/tags/summer-program/</loc>
+    <loc>/tags/summer-program/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

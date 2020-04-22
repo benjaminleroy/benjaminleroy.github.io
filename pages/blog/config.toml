@@ -1,4 +1,4 @@
-baseurl = "http://benjaminleroy.github.io/"
+baseurl = "http://benjaminleroy.github.io/pages/blog/"
 languageCode = "en-us"
 title = "Benjamin LeRoy's Blog"
 googleAnalytics = ""
@@ -6,6 +6,7 @@ disqusShortname = "stat-cmu-edu-bpleroy"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 preserveTaxonomyNames = true
 footnotereturnlinkcontents = "↩"
+relativeURLs = true
 
 [permalinks]
     post = "/post/:year/:month/:day/:slug/"
