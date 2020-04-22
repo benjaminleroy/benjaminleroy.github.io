@@ -35,13 +35,14 @@
 				<li class="nav-item dropdown">
 					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
 					  <div class="dropdown-menu dropdown-menu-right bg-light">
-					    {{ range .Site.Menus.main }}
-					    <a class="dropdown-item nav-link" href="{{ baseURL | relURL }}">{{ .Name }}</a>
+					  <!--  {{ range .Site.Menus.main }}
+					    <a class="dropdown-item nav-link" href="{{ .URL | absURL }}">{{ .Name }}</a>
               {{ end }}
-						<!--<a class="dropdown-item nav-link" href="pages/blog/public/index.html">Home</a>
-						<a class="dropdown-item nav-link" href="pages/blog/public/categories/index.html">Categories</a>
-						<a class="dropdown-item nav-link" href="pages/blog/public/tags/index.html">Tags</a>
-						-->
+              -->
+						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/index.html">Home</a>
+						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/categories/index.html">Categories</a>
+						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/tags/index.html">Tags</a>
+						
 						</li>
 					</div>
 					</li>

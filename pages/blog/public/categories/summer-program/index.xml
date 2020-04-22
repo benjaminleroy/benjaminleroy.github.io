@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Summer Program on Benjamin LeRoy&#39;s Blog</title>
-    <link>http://benjaminleroy.github.io/pages/blog/public/categories/summer-program/</link>
+    <link>http://benjaminleroy.github.io/categories/summer-program/</link>
     <description>Recent content in Summer Program on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 23 Jun 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://benjaminleroy.github.io/pages/blog/public/categories/summer-program/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://benjaminleroy.github.io/categories/summer-program/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Logistic Regression Lecture</title>
-      <link>http://benjaminleroy.github.io/pages/blog/public/post/2018/06/23/logistic-regression-lecture/</link>
+      <link>http://benjaminleroy.github.io/post/2018/06/23/logistic-regression-lecture/</link>
       <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://benjaminleroy.github.io/pages/blog/public/post/2018/06/23/logistic-regression-lecture/</guid>
+      <guid>http://benjaminleroy.github.io/post/2018/06/23/logistic-regression-lecture/</guid>
       <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
 Introduction This lecture focuses on introducing a set of tools associated with logistic regression.</description>
     </item>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Logistic Regression Lecture | Benjamin LeRoy&#39;s Blog</title>
     
-    <link rel="stylesheet" href="/pages/blog/public/css/fonts.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
     	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
@@ -47,7 +47,7 @@
 
 
 
-    <link rel="stylesheet" href="/pages/blog/public/css/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
     
 
 
@@ -75,13 +75,10 @@
 				<li class="nav-item dropdown">
 					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
 					  <div class="dropdown-menu dropdown-menu-right bg-light">
-					    
-					    <a class="dropdown-item nav-link" href="/pages/blog/public/pages/blog/public/index.html">Blog Home</a>
-              
-					    <a class="dropdown-item nav-link" href="/pages/blog/public/pages/blog/public/categories/index.html">Categories</a>
-              
-					    <a class="dropdown-item nav-link" href="/pages/blog/public/pages/blog/public/tags/index.html">Tags</a>
-              
+					  
+						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/index.html">Home</a>
+						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/categories/index.html">Categories</a>
+						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/tags/index.html">Tags</a>
 						
 						</li>
 					</div>
@@ -103,15 +100,15 @@
 
 <main>
 
-<script src="/pages/blog/public/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="/pages/blog/public/rmarkdown-libs/jquery/jquery.min.js"></script>
-<link href="/pages/blog/public/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
-<script src="/pages/blog/public/rmarkdown-libs/datatables-binding/datatables.js"></script>
-<link href="/pages/blog/public/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="/pages/blog/public/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="/pages/blog/public/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
-<link href="/pages/blog/public/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
-<script src="/pages/blog/public/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
 
 
 <p><em>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using <code>R</code>. Note: this document was written for summer students in CMU Statistics and Data Sciences’ <a href="http://summer.stat.cmu.edu/">SURE</a> program, and was presented to them live.</em></p>
@@ -169,13 +166,13 @@ gg1d &lt;- function(data, ncol = 3){
 <pre class="r"><code># saving it as &quot;.&quot; is a way to ignore the returned list (it still is saved, 
 #   but &quot;out of sight, out of mind&quot;)
 . &lt;- gg1d(grad_admit, ncol = 2) </code></pre>
-<p><img src="/pages/blog/public/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="extra-pairs-plot" class="section level3">
 <h3>Extra Pairs Plot</h3>
 <pre class="r"><code>library(GGally)
 ggpairs(grad_admit)</code></pre>
-<p><img src="/pages/blog/public/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -199,24 +196,24 @@ summary(logit_fit)</code></pre>
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -1.4835  -0.8876  -0.5649   1.1297   2.0799  
+## -1.6195  -0.8550  -0.6105   1.1215   2.0651  
 ## 
 ## Coefficients:
 ##              Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept) -1.859604   1.585686  -1.173  0.24090   
-## gre          0.002723   0.001605   1.696  0.08985 . 
-## gpa          0.094992   0.460676   0.206  0.83663   
-## rank2       -0.451236   0.435548  -1.036  0.30019   
-## rank3       -1.517176   0.492291  -3.082  0.00206 **
-## rank4       -1.943835   0.602129  -3.228  0.00125 **
+## (Intercept) -3.601194   1.615423  -2.229   0.0258 * 
+## gre          0.003424   0.001593   2.149   0.0316 * 
+## gpa          0.468320   0.492862   0.950   0.3420   
+## rank2       -0.587685   0.459946  -1.278   0.2013   
+## rank3       -1.252356   0.491343  -2.549   0.0108 * 
+## rank4       -1.730472   0.627257  -2.759   0.0058 **
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 247.64  on 199  degrees of freedom
-## Residual deviance: 222.21  on 194  degrees of freedom
-## AIC: 234.21
+##     Null deviance: 246.02  on 199  degrees of freedom
+## Residual deviance: 223.94  on 194  degrees of freedom
+## AIC: 235.94
 ## 
 ## Number of Fisher Scoring iterations: 4</code></pre>
 </div>
@@ -243,10 +240,10 @@ logit(p) \sim &amp; \beta_0 + \beta_1 \cdot gre + \beta_2 \cdot gda \\
 <p><strong>Raw <span class="math inline">\(\beta\)</span> values</strong></p>
 <pre class="r"><code>logit_fit %&gt;% coef %&gt;% round(3)</code></pre>
 <pre><code>## (Intercept)         gre         gpa       rank2       rank3       rank4 
-##      -1.860       0.003       0.095      -0.451      -1.517      -1.944</code></pre>
+##      -3.601       0.003       0.468      -0.588      -1.252      -1.730</code></pre>
 <p><em>Question 2</em>: What is the interpretation in linear regression (we are <strong>not</strong> using a linear regression)?</p>
 <blockquote>
-<p>Answer: If this was linear regression, for coefficients like <span class="math inline">\(\beta_{gpa}\)</span> we would interpret the value of 0.095 as meaning that for every 1 unit increase of <code>gpa</code> we would expect to see an increase in a <em>continuous</em> prediction by .616 units. Note, that a smart person might multiple the <code>gpa</code> coeffiecent by .1 and then discuss the change relative to a .1 unit increase of <code>gpa</code> as that seems more likely / useful. Additionally, for our <span class="math inline">\(\beta_{rank2}\)</span> style coefficients, it’s common to interpret these relative to our ‘base’ / ‘benchmark’ group, that is, if we moved a student from <code>rank1</code> to <code>rank2</code> the model would predict a decline in our <em>continuous</em> prediciton by .273 units.</p>
+<p>Answer: If this was linear regression, for coefficients like <span class="math inline">\(\beta_{gpa}\)</span> we would interpret the value of 0.468 as meaning that for every 1 unit increase of <code>gpa</code> we would expect to see an increase in a <em>continuous</em> prediction by .616 units. Note, that a smart person might multiple the <code>gpa</code> coeffiecent by .1 and then discuss the change relative to a .1 unit increase of <code>gpa</code> as that seems more likely / useful. Additionally, for our <span class="math inline">\(\beta_{rank2}\)</span> style coefficients, it’s common to interpret these relative to our ‘base’ / ‘benchmark’ group, that is, if we moved a student from <code>rank1</code> to <code>rank2</code> the model would predict a decline in our <em>continuous</em> prediciton by .273 units.</p>
 </blockquote>
 <p>To interpret logistic regression <span class="math inline">\(\beta\)</span> values, I would encourage you to first think back to our linear equation that expressed the logistic regression model. The following steps capture how to get a clearer intepretation of the <span class="math inline">\(\beta\)</span> values:</p>
 <p><strong>Converted <span class="math inline">\(\beta\)</span> values</strong></p>
@@ -254,11 +251,11 @@ logit(p) \sim &amp; \beta_0 + \beta_1 \cdot gre + \beta_2 \cdot gda \\
 <p>Instead of change in <code>log(p/(1-p))</code> we can look at change in <code>p/(1-p)</code></p>
 <pre class="r"><code>logit_fit %&gt;% coef %&gt;% exp</code></pre>
 <pre><code>## (Intercept)         gre         gpa       rank2       rank3       rank4 
-##   0.1557343   1.0027267   1.0996496   0.6368406   0.2193305   0.1431539</code></pre>
+##  0.02729112  1.00343022  1.59730834  0.55561181  0.28583054  0.17720075</code></pre>
 <p>Since we should really be thinking about looking taking the <span class="math inline">\(e^{side}\)</span> for both sides in our original equation, as such these elements now relate to a <strong>multiplicative</strong> effect.</p>
 <p>That is we might interpret <span class="math inline">\(e^{\beta_2}\)</span> in the following manner:</p>
 <blockquote>
-<p>For every unit increase in gpa we’d expect to see the individual’s odds of acceptance to be increased by a multiple/factor of 1.1.</p>
+<p>For every unit increase in gpa we’d expect to see the individual’s odds of acceptance to be increased by a multiple/factor of 1.597.</p>
 </blockquote>
 <div id="confidence-intervals-for-beta-values" class="section level4">
 <h4>Confidence Intervals for <span class="math inline">\(\beta\)</span> values</h4>
@@ -266,21 +263,21 @@ logit(p) \sim &amp; \beta_0 + \beta_1 \cdot gre + \beta_2 \cdot gda \\
 <pre class="r"><code>base_beta_ci &lt;- logit_fit %&gt;% confint()
 base_beta_ci</code></pre>
 <pre><code>##                     2.5 %       97.5 %
-## (Intercept) -5.0239856235  1.226387662
-## gre         -0.0003793969  0.005945173
-## gpa         -0.8109115428  1.005008687
-## rank2       -1.3143562188  0.401896080
-## rank3       -2.5104424817 -0.569167861
-## rank4       -3.2134696397 -0.819791730</code></pre>
+## (Intercept) -6.8567231896 -0.493403208
+## gre          0.0003616687  0.006635809
+## gpa         -0.4933522323  1.449224456
+## rank2       -1.4995639592  0.314207851
+## rank3       -2.2340398675 -0.296672336
+## rank4       -3.0434235931 -0.552106338</code></pre>
 <pre class="r"><code>transformed_beta_ci &lt;- base_beta_ci %&gt;% exp
 transformed_beta_ci</code></pre>
 <pre><code>##                   2.5 %    97.5 %
-## (Intercept) 0.006578256 3.4088932
-## gre         0.999620675 1.0059629
-## gpa         0.444452744 2.7319310
-## rank2       0.268647218 1.4946560
-## rank3       0.081232287 0.5659962
-## rank4       0.040216833 0.4405234</code></pre>
+## (Intercept) 0.001052357 0.6105450
+## gre         1.000361734 1.0066579
+## gpa         0.610576167 4.2598096
+## rank2       0.223227475 1.3691743
+## rank3       0.107094906 0.7432875
+## rank4       0.047671402 0.5757358</code></pre>
 </div>
 </div>
 </div>
@@ -325,7 +322,7 @@ transformed_beta_ci</code></pre>
 diff_df &lt;- logit_fit$df.null - logit_fit$df.residual
 
 pchisq(diff_deviance,df = diff_df,lower.tail = FALSE)</code></pre>
-<pre><code>## [1] 0.0001152057</code></pre>
+<pre><code>## [1] 0.0005066875</code></pre>
 <p>A small p-value suggests our logistic model is better than the null. Significant reduction in deviance of the fitted model from the null model.</p>
 </div>
 <div id="dispersion" class="section level2">
@@ -373,9 +370,9 @@ Var(y) = \phi p(1-p)
   )
 
 dispersion </code></pre>
-<pre><code>## [1] 0.5639923</code></pre>
+<pre><code>## [1] 0.5683797</code></pre>
 <pre class="r"><code>pchisq(logit_fit$deviance,logit_fit$df.residual,lower.tail = FALSE)</code></pre>
-<pre><code>## [1] 0.08050549</code></pre>
+<pre><code>## [1] 0.06921604</code></pre>
 <p>Even though our dispersion is decently close to 1, our <span class="math inline">\(\chi^2\)</span> test suggests its far enough away from 1 that we need to correct for it.</p>
 <p><strong>What causes over-dispersion?</strong> For a binomial model the most likely problem is correlation across the individual Bernoulli trials within each binomial outcome.</p>
 <p>To conduct inference we must update the standard errors by multiplying by <span class="math inline">\(\sqrt{\phi}\)</span>.</p>
@@ -393,7 +390,7 @@ pred_y     &lt;- 1*(pred_prob &gt; .5)
 # explore all 3 above</code></pre>
 <p>How well would we do predicting the correct admit values for the training dataset? (Suppose we split on <span class="math inline">\(\hat{p} &gt; .5\)</span>).</p>
 <pre class="r"><code>mean(ga_test$admit == pred_y)</code></pre>
-<pre><code>## [1] 0.71</code></pre>
+<pre><code>## [1] 0.68</code></pre>
 <div id="confusion-matrix" class="section level3">
 <h3>Confusion Matrix</h3>
 <p>Generally for binary classification, we actually look at the confusion matrix,</p>
@@ -422,8 +419,8 @@ pred_y     &lt;- 1*(pred_prob &gt; .5)
 <pre class="r"><code>table(ga_test$admit, pred_y)</code></pre>
 <pre><code>##    pred_y
 ##       0   1
-##   0 127   8
-##   1  50  15</code></pre>
+##   0 122  12
+##   1  52  14</code></pre>
 </div>
 <div id="roc-curves" class="section level3">
 <h3>ROC curves</h3>
@@ -434,7 +431,7 @@ pred_y     &lt;- 1*(pred_prob &gt; .5)
 ggplot(vis_data, aes(x = prob, fill = truth)) + 
   geom_histogram(position = &quot;identity&quot;, alpha = .5)</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="/pages/blog/public/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Notice that the algorithm does generally give higher probabilities to those admitted, but that cutting off at <span class="math inline">\(.5\)</span> might now seem silly (this is probably due to differences in class memberships, which can be corrected with weighted regression - chad has talked about this).</p>
 <p>But we can also imagine just cutting at a different probability… But which one?</p>
 <p><strong>Why not all of them ;)</strong></p>
@@ -451,7 +448,7 @@ ggplot(vis_data, aes(d = as.numeric(as.character(truth)),
   labs(title = &quot;ROC curve&quot;,
        x = &quot;1 - TNR&quot;,
        y = &quot;TPR&quot;) </code></pre>
-<p><img src="/pages/blog/public/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="how-to-intepret-rocs" class="section level3">
 <h3>How to intepret ROCs</h3>
@@ -475,7 +472,7 @@ roc_obj &lt;- performance(pred_obj,x.measure = &quot;fpr&quot;, measure = &quot;
 # plot(roc_obj) # base graphic
 roc_obj_auc &lt;- performance(pred_obj, measure = &quot;auc&quot;)
 roc_obj_auc@y.values[[1]]</code></pre>
-<pre><code>## [1] 0.6391453</code></pre>
+<pre><code>## [1] 0.6762777</code></pre>
 </div>
 </div>
 <div id="goodness-of-fit-graphics" class="section level2">
@@ -490,7 +487,7 @@ hl_test</code></pre>
 ##  Hosmer and Lemeshow goodness of fit (GOF) test
 ## 
 ## data:  as.numeric(as.character(ga_train$admit)), logit_fit$fit
-## X-squared = 6.0004, df = 8, p-value = 0.6472</code></pre>
+## X-squared = 5.7638, df = 8, p-value = 0.6737</code></pre>
 <p>Such a test is slightly finicky, I tend to like graphical visualization:</p>
 <pre class="r"><code>expected_vs_actual &lt;- hl_test$observed %&gt;% cbind(hl_test$expected) %&gt;%
   data.frame %&gt;%
@@ -511,7 +508,7 @@ ggplot(expected_vs_actual, aes(x = expected_prop,
   xlim(0,1) + 
   labs(x = &quot;True Proportion/ True Response&quot;,
        y = &quot;Estimated Proportion&quot;) </code></pre>
-<p><img src="/pages/blog/public/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="/post/2018-06-23-logistic-regression-lecture_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 </div>
 </div>
 <div id="additional-resources" class="section level1">
