@@ -3,9 +3,10 @@ title: "Logistic Regression Lecture"
 date: '2018-06-23'
 slug: logistic-regression-lecture
 tags:
-- logistic regression
-- summer program
-- lecture
+- Logistic Regression
+- Regression
+- Summer Program
+- Lecture
 categories:
 - Lectures
 - Summer Program

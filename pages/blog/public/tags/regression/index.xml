@@ -6,20 +6,29 @@
     <description>Recent content in Regression on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Sat, 30 Jun 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/regression/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015/07/23/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Poisson Regression (and GAM) Lecture</title>
+      <link>/post/2018/06/30/poisson-regression-and-gam-lecture/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/2015/07/23/hello-r-markdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/post/2018/06/30/poisson-regression-and-gam-lecture/</guid>
+      <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
+Introduction This lecture focuses on introducing a set of tools associated with poisson regression (and general additive models).</description>
+    </item>
+    
+    <item>
+      <title>Logistic Regression Lecture</title>
+      <link>/post/2018/06/23/logistic-regression-lecture/</link>
+      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/06/23/logistic-regression-lecture/</guid>
+      <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
+Introduction This lecture focuses on introducing a set of tools associated with logistic regression.</description>
     </item>
     
   </channel>

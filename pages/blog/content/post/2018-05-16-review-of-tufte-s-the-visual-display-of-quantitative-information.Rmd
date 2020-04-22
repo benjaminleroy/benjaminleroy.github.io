@@ -6,9 +6,9 @@ categories:
   - Graphics
   - Graphic Theory
 tags:
-  - graphics
-  - plot
-  - graphic theory
+  - Graphics
+  - Plot
+  - Graphic Theory
   - Tufte
 ---
 

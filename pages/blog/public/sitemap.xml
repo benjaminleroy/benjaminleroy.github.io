@@ -8,6 +8,11 @@
   </url>
   
   <url>
+    <loc>/post/2018/06/30/poisson-regression-and-gam-lecture/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/2018/06/23/logistic-regression-lecture/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
   </url>
@@ -69,7 +74,43 @@
   </url>
   
   <url>
+    <loc>/tags/gam/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/gam/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/general-additive-models/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/general-additive-models/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/graphic-theory/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/graphic-theory/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/graphics/</loc>
     <lastmod>2018-05-16T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -81,7 +122,19 @@
   </url>
   
   <url>
+    <loc>/tags/lecture/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/lectures/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/logistic-regression/</loc>
     <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -93,14 +146,50 @@
   </url>
   
   <url>
+    <loc>/tags/plot/</loc>
+    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/poisson-regression/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/poisson-regression/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/post/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
+    <loc>/tags/regression/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/regression/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/summer-program/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/summer-program/</loc>
-    <lastmod>2018-06-23T00:00:00+00:00</lastmod>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -119,42 +208,6 @@
   <url>
     <loc>/tags/word-clouds/</loc>
     <lastmod>2019-01-03T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/graphic-theory/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/graphics/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/lecture/</loc>
-    <lastmod>2018-06-23T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/logistic-regression/</loc>
-    <lastmod>2018-06-23T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/plot/</loc>
-    <lastmod>2018-05-16T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/summer-program/</loc>
-    <lastmod>2018-06-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

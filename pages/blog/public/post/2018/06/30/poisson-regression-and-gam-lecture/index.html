@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Poisson Regression (and GAM) Lecture | Benjamin LeRoy&#39;s Blog</title>
+    
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+		$(function(){
+			var includes = $('[data-include]');
+			jQuery.each(includes, function(){
+				var file = 'pages/' + $(this).data('include') + '.html';
+				$(this).load(file);
+			});
+		});
+	</script>
+
+	<script>
+		$(window).load(function() {
+		$("#container1").twentytwenty();
+		});
+	</script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+
+
+
+
+	
+
+
+
+
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    
+
+
+  
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
+		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html"> Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#about">About</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#research">Research</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#teaching">Teaching</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#cv">Resume/CV</a>
+				</li>
+				<li class="nav-item dropdown">
+					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
+					  <div class="dropdown-menu dropdown-menu-right bg-light">
+					    
+					    <a class="dropdown-item nav-link" href="../../../../../index.html">Blog Home</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../categories/index.html">Categories</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../tags/index.html">Tags</a>
+              
+              
+						
+						</li>
+					</div>
+					</li>
+				</ul>
+			</div>
+	</nav>
+	
+	
+	</head>
+	<body>
+	<div id = "container">
+
+<div class="article-meta">
+<h1><span class="title">Poisson Regression (and GAM) Lecture</span></h1>
+<h2 class="author">Benjamin LeRoy</h2>
+<h2 class="date">2018/06/30</h2>
+</div>
+
+<main>
+
+<script src="../../../../../rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="../../../../../rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="../../../../../rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="../../../../../rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="../../../../../rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="../../../../../rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="../../../../../rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="../../../../../rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="../../../../../rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+
+<p><em>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using <code>R</code>. Note: this document was written for summer students in CMU Statistics and Data Sciences’ <a href="http://summer.stat.cmu.edu/">SURE</a> program, and was presented to them live.</em></p>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This lecture focuses on introducing a set of tools associated with poisson regression (and general additive models).</p>
+<p>This data comes from Princeton’s Database, but is a very common dataset. They had an error and ugly data so I cleaned it up a bit.</p>
+<pre class="r"><code>library(tidyverse)
+library(forcats)
+theme_set(theme_minimal())
+
+smoking &lt;- read_csv(paste0(&quot;https://raw.githubusercontent.com/benjaminleroy/&quot;,
+                           &quot;stat315summer_data/master/&quot;,
+                           &quot;data_sure/smoking_data.csv&quot;)) %&gt;%
+  mutate(smoke_binary = ifelse(smoke == &quot;no&quot;, 0, 1),
+         age = factor(age)) %&gt;%
+  select(-X1)</code></pre>
+<div class="figure">
+<img src="https://admission.princeton.edu/sites/default/files/speaking_of_princeton/img_0823_2_0.jpg" />
+
+</div>
+<p>The data we will be using today (explorable below) contains information from a Canadian study that focusing the relationship between smoking and death (related to different age groups).</p>
+<pre class="r"><code>DT::datatable(smoking)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36"],["40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80+","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80+","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80+","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80+"],[42,47,52,57,62,67,72,77,80,42,47,52,57,62,67,72,77,80,42,47,52,57,62,67,72,77,80,42,47,52,57,62,67,72,77,80],["no","no","no","no","no","no","no","no","no","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarPipeOnly","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarrettePlus","cigarretteOnly","cigarretteOnly","cigarretteOnly","cigarretteOnly","cigarretteOnly","cigarretteOnly","cigarretteOnly","cigarretteOnly","cigarretteOnly"],[656,359,249,632,1067,897,668,361,274,145,104,98,372,846,949,824,667,537,4531,3030,2267,4682,6052,3880,2033,871,345,3410,2239,1851,3270,3791,2421,1195,436,113],[18,22,19,55,117,170,179,120,120,2,4,3,38,113,173,212,243,253,149,169,193,576,1001,901,613,337,189,124,140,187,514,778,689,432,214,63],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>age<\/th>\n      <th>age_int<\/th>\n      <th>smoke<\/th>\n      <th>pop<\/th>\n      <th>dead<\/th>\n      <th>smoke_binary<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="exploratory-data-analysis" class="section level1">
+<h1>Exploratory Data Analysis</h1>
+<p>Quick EDA before any regression:</p>
+<pre class="r"><code>library(GGally)
+ggpairs(smoking, columns = c( &quot;smoke&quot;, &quot;smoke_binary&quot;, &quot;pop&quot;, &quot;dead&quot;))</code></pre>
+<p><img src="../../../../../post/2018-06-30-poisson-regression-and-gam-lecture_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># Create grid of 1d visuals of variable distributions in data frame
+# Args:
+#   data: data frame you&#39;d like to explore
+#   ncol: number of columns for the visual output
+#
+# Returns:
+#   list of graphics
+#   and creates the correct visualization
+gg1d &lt;- function(data, ncol = 3){
+  require(gridExtra)
+  require(ggplot2)  
+  columns &lt;- names(data)
+  types &lt;- sapply(data, class)
+  num_types &lt;- c(&quot;numeric&quot;, &quot;integer&quot;)
+
+  gglist &lt;- list()
+
+  for (i in 1:length(columns)) {
+    if (types[i] %in% num_types) {
+      gglist[[i]] &lt;- ggplot(data, aes_string(x = columns[i])) + 
+        geom_histogram()
+    }else{
+      gglist[[i]] &lt;- ggplot(data, aes_string(x = columns[i])) + 
+        geom_bar()
+    }
+  }
+  grid.arrange(grobs = gglist, ncol = ncol, top = &quot;1d EDA&quot;)
+  return(gglist)
+}
+
+. &lt;- gg1d(smoking, ncol = 2)</code></pre>
+<p><img src="../../../../../post/2018-06-30-poisson-regression-and-gam-lecture_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+</div>
+<div id="poisson-regression" class="section level1">
+<h1>Poisson Regression:</h1>
+<ul>
+<li><p>Poisson regression is useful when we are dealing with counts, for example the number of deaths of out of population of people (our example), terrorist attacks per year per region, etc.</p></li>
+<li><p>Additionally, poisson regression is useful when events occur rarely (otherwise one might jump to linear regression first. e.g. population per country). Though for events that occur too rarely (lots of 0s say - you should try using a slight update - see Resources below).</p></li>
+</ul>
+<div id="what-is-the-poisson-distribution-again" class="section level3">
+<h3>What is the poisson distribution again?</h3>
+<p><span class="math display">\[
+\mathbb{P}(X = x|\lambda) = \frac{\lambda^x e^{-\lambda}}{x!}, x \in \{0,1,2,...\} \quad \mathbb{E}(X) = \lambda, \quad \mathbb{V}(X) = \lambda
+\]</span></p>
+</div>
+<div id="motivation-for-the-link-function" class="section level3">
+<h3>Motivation for the Link function</h3>
+<p>Given that we has small amounts of counts (which tend also to be though of as rates - generally less than 1, a <code>log</code> transform would make the values stretch to the full real values <span class="math inline">\(\mathbb{R}\)</span>.</p>
+</div>
+<div id="inference" class="section level2">
+<h2>Inference</h2>
+<div id="model" class="section level3">
+<h3>Model</h3>
+<p>In our dataset we have the ability to explore the relationship between death and smoking. We should make sure to think about this problem in the poisson frame with respect to <span class="math inline">\(\lambda\)</span> (a rate), specifically the rate of death <strong>per individual</strong>. Note that our data just gives counts of death per group population.</p>
+<p>So we have 2 things:</p>
+<ul>
+<li>the counts of deaths per group</li>
+<li>and <span class="math inline">\(\lambda\)</span> the rate of death per person</li>
+</ul>
+<p>They obviously relate with a rate = count of deaths / total individuals.</p>
+<p>If we are looking at the regression</p>
+<span class="math display">\[\begin{align*}
+\log(\lambda | X) &amp;= X\beta \\
+\log(count/total |X) &amp;= X\beta \\
+\Leftrightarrow \log(count |X) &amp;= X\beta + \log(total)
+\end{align*}\]</span>
+<p>In the final transformation we call <span class="math inline">\(log(total)\)</span> the offset. There are cases when we don’t use offsets (e.g. number of papers a graduate student has published), but offsets can be like our example or more complicated, like area of region for growing mushrooms (vs number of mushrooms) etc. Also notice that the <span class="math inline">\(\log(total)\)</span> does not have a <span class="math inline">\(\beta\)</span> value associated with it.</p>
+<p><em>Additionally, in the graduate student example (where the population is 1 individual), you can also think of the offset being <span class="math inline">\(\log(1) = 0\)</span>.</em></p>
+<p>As such, in <code>R</code> we’d do the following:</p>
+<pre class="r"><code>poisson_glm &lt;- glm(dead ~ age_int + smoke, offset = log(pop), family = poisson,
+                   data = smoking)</code></pre>
+<p>The summary looks decently similar to our other <code>glm</code>s.</p>
+<pre class="r"><code>summary(poisson_glm)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = dead ~ age_int + smoke, family = poisson, data = smoking, 
+##     offset = log(pop))
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.7322  -1.3737  -0.1642   0.7407   2.7613  
+## 
+## Coefficients:
+##                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -6.249136   0.088890 -70.302  &lt; 2e-16 ***
+## age_int              0.068141   0.001154  59.073  &lt; 2e-16 ***
+## smokecigarretteOnly  0.390484   0.037330  10.460  &lt; 2e-16 ***
+## smokecigarrettePlus  0.189927   0.035892   5.292 1.21e-07 ***
+## smokeno             -0.039428   0.046880  -0.841      0.4    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 4055.984  on 35  degrees of freedom
+## Residual deviance:   67.681  on 31  degrees of freedom
+## AIC: 317.7
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Hmmmmmm… if we look at those levels of smoking it isn’t really as we expected… we really want the first level to “no” so that all those <span class="math inline">\(\beta\)</span> values compare against not smoking…</p>
+<pre class="r"><code>smoking &lt;- smoking %&gt;% mutate(smoke = fct_relevel(factor(smoke), &quot;no&quot;))
+
+poisson_glm2 &lt;- glm(dead ~ age_int + smoke, offset = log(pop), family = poisson,
+                   data = smoking) 
+poisson_glm2 %&gt;% summary</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = dead ~ age_int + smoke, family = poisson, data = smoking, 
+##     offset = log(pop))
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.7322  -1.3737  -0.1642   0.7407   2.7613  
+## 
+## Coefficients:
+##                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -6.288564   0.086484 -72.713  &lt; 2e-16 ***
+## age_int              0.068141   0.001154  59.073  &lt; 2e-16 ***
+## smokecigarPipeOnly   0.039428   0.046880   0.841      0.4    
+## smokecigarretteOnly  0.429912   0.039753  10.815  &lt; 2e-16 ***
+## smokecigarrettePlus  0.229356   0.038565   5.947 2.73e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 4055.984  on 35  degrees of freedom
+## Residual deviance:   67.681  on 31  degrees of freedom
+## AIC: 317.7
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div id="dispersion-correction" class="section level3">
+<h3>Dispersion correction</h3>
+<p>Before we talk about inference of the <span class="math inline">\(\beta\)</span> values and how to interpret them, let’s look at dispersion - which we talked about needing to do the get good confidence intervals.</p>
+<p>Recall that since the variance and mean of the poisson are directly linked dispersion tells us if that “linking” is actually correct, we can caculate an estimate of <span class="math inline">\(\phi\)</span> in the equation:</p>
+<p><span class="math display">\[
+Var(X) = \phi \lambda
+\]</span></p>
+<p>when <span class="math inline">\(X\)</span> is poisson.</p>
+<p>We can test whether the dispersion is different than 1 with a <span class="math inline">\(\chi^2\)</span> test:</p>
+<pre class="r"><code>dispersion &lt;-  poisson_glm$deviance/poisson_glm$df.residual
+pchisq(poisson_glm$deviance,df = poisson_glm$df.residual,
+       lower.tail = FALSE)</code></pre>
+<pre><code>## [1] 0.0001527248</code></pre>
+<p>Looks like <span class="math inline">\(\phi\)</span> isn’t 1, that’s ok we can use a <code>quasipoisson</code> model.</p>
+<pre class="r"><code>qpoisson_glm  &lt;- glm(dead ~ age_int + smoke, offset = log(pop),
+                                   family = quasipoisson, data = smoking)
+
+summary(qpoisson_glm)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = dead ~ age_int + smoke, family = quasipoisson, 
+##     data = smoking, offset = log(pop))
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.7322  -1.3737  -0.1642   0.7407   2.7613  
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)         -6.288564   0.125073 -50.279  &lt; 2e-16 ***
+## age_int              0.068141   0.001668  40.847  &lt; 2e-16 ***
+## smokecigarPipeOnly   0.039428   0.067797   0.582 0.565063    
+## smokecigarretteOnly  0.429912   0.057490   7.478    2e-08 ***
+## smokecigarrettePlus  0.229356   0.055772   4.112 0.000267 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for quasipoisson family taken to be 2.09146)
+## 
+##     Null deviance: 4055.984  on 35  degrees of freedom
+## Residual deviance:   67.681  on 31  degrees of freedom
+## AIC: NA
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p><strong>Question</strong>: How does the raw <span class="math inline">\(\beta\)</span> estimates change between the Quasi-Poisson model (that estimates <span class="math inline">\(\phi\)</span>) and the standard Poisson model?</p>
+</div>
+</div>
+<div id="interpretation-of-betas." class="section level2">
+<h2>Interpretation of <span class="math inline">\(\beta\)</span>s.</h2>
+<p>Again, if we directly looked at <span class="math inline">\(\beta\)</span> values we’d be looking at the linear change the in the <span class="math inline">\(X\)</span> variable related to <span class="math inline">\(log(y)\)</span>. If we wanted to discuss it more like a change of rate we could look at</p>
+<p><span class="math display">\[
+e^{log(\lambda)} = e^{\beta_0 + \beta_1 * age\_int + ...}
+\]</span></p>
+<p>Suppose we wanted to look at the likelihood/ rate of death between those that are 50 years old and a smoker vs a 55 year old and a non-smoker.</p>
+<p><strong>Question</strong>: What <span class="math inline">\(\beta\)</span> values are we comparing?</p>
+<blockquote>
+<p>We can’t really actually answer that question unless we assume that that all the types of smoke are the same, but let’s just assume that the first smoker only smoked cigarrettes, then we can examine <code>exp(sum(coef(qpoisson_glm)*c(0,5,-1,0,0)))</code>. So, comparing a 50 year-old-cigarrette smoker verse a 55-year-old non-smoker, the later is only 135% as likely to die compared to the former.</p>
+</blockquote>
+</div>
+<div id="intervals" class="section level2">
+<h2>Intervals</h2>
+<p>To estimate confidence intervals we can still use <code>confint</code>, but we</p>
+<pre class="r"><code>confint(qpoisson_glm,parm = &quot;age_int&quot;)</code></pre>
+<pre><code>## Waiting for profiling to be done...</code></pre>
+<pre><code>##      2.5 %     97.5 % 
+## 0.06487952 0.07141881</code></pre>
+<p>Should probably get a better CI for this since the data is small (if you’re doing it - ask your TA).</p>
+</div>
+</div>
+<div id="prediction" class="section level1">
+<h1>Prediction</h1>
+<p>Unlike logistic regression we can start using the <code>glm</code> version of residuals (deviance) for logistic regression, and it makes more sense.</p>
+<p>We can look at the standard diagonistics (this time with deviance residuals not residuals).</p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(qpoisson_glm)</code></pre>
+<p><img src="../../../../../post/2018-06-30-poisson-regression-and-gam-lecture_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div id="predicting" class="section level2">
+<h2>Predicting</h2>
+<p>Predicting new values (ok we’re just getting the fitted values in the code below, but same idea), is similar to Logistic regression, if you just leave <code>type</code> alone you’ll get the log value. Also note that the model we made also will take in the <code>offset</code>.</p>
+<pre class="r"><code>predict_log &lt;- predict(object = qpoisson_glm, newdata = smoking)
+predict &lt;- predict(object = qpoisson_glm, newdata = smoking, 
+                       type = &quot;response&quot;)
+
+predict %&gt;% head</code></pre>
+<pre><code>##         1         2         3         4         5         6 
+##  21.31690  16.40137  15.99375  57.07336 135.47095 160.11778</code></pre>
+</div>
+</div>
+<div id="gam" class="section level1">
+<h1>GAM</h1>
+<p>Now, let’s look at some GAMs (general additive models). From lecture you learned about nonlinear regression and that we can change a glm to a gam like so:</p>
+<span class="math display">\[\begin{align*}
+g(y) = \beta_0 + \beta_1 X_1 + \beta_2 X_2... \\
+g(y) = \beta_0 + f(X_1) + g(X_2) + ...
+\end{align*}\]</span>
+<p>Specifically, we generally have <span class="math inline">\(f,g\)</span> be loess (local polynomial regression) or smoothing splines. Using the <code>library(gam)</code>, we can use <code>gam</code> very similarly to what we do with <code>glm</code>, the only difference is we use <code>lo(X1)</code> or <code>s(X1)</code> to create a 1d Loess or Smoothing spline with that variable. <em>After this lecture I learned that <code>library(mgcv)</code> provides better toos for GAM - specifically, it allows the user to have interaction terms between features.</em></p>
+<pre class="r"><code>library(gam)
+data(iris)
+
+lm_gam &lt;- gam(Sepal.Length ~ lo(Sepal.Width) + s(Petal.Length) + Species,data = iris, family = gaussian)
+
+summary(lm_gam)</code></pre>
+<pre><code>## 
+## Call: gam(formula = Sepal.Length ~ lo(Sepal.Width) + s(Petal.Length) + 
+##     Species, family = gaussian, data = iris)
+## Deviance Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.78898 -0.22747  0.02056  0.19209  0.65905 
+## 
+## (Dispersion Parameter for gaussian family taken to be 0.0927)
+## 
+##     Null Deviance: 102.1683 on 149 degrees of freedom
+## Residual Deviance: 12.9049 on 139.1878 degrees of freedom
+## AIC: 81.3515 
+## 
+## Number of Local Scoring Iterations: 5 
+## 
+## Anova for Parametric Effects
+##                     Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## lo(Sepal.Width)   1.00  3.433   3.433  37.028 1.066e-08 ***
+## s(Petal.Length)   1.00 80.383  80.383 866.985 &lt; 2.2e-16 ***
+## Species           2.00  2.120   1.060  11.433 2.528e-05 ***
+## Residuals       139.19 12.905   0.093                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Anova for Nonparametric Effects
+##                 Npar Df Npar F  Pr(F)
+## (Intercept)                          
+## lo(Sepal.Width)     2.8 1.8159 0.1507
+## s(Petal.Length)     3.0 1.7429 0.1610
+## Species</code></pre>
+<p>Note that the statistics have been changed to <span class="math inline">\(F\)</span> statistics. For the nonparametric effects, it’s really wise to look at the ANOVA <span class="math inline">\(F\)</span>-statistics, and we could run following to see if the additional of a smoothing spline with <code>lo(Petal.Length)</code> is useful.</p>
+<pre class="r"><code>anova(lm_gam,
+      gam(Sepal.Length ~ s(Petal.Length) + Species,data = iris, family = gaussian))</code></pre>
+<pre><code>## Warning in model.matrix.default(mt, mf, contrasts): non-list contrasts argument
+## ignored</code></pre>
+<pre><code>## Analysis of Deviance Table
+## 
+## Model 1: Sepal.Length ~ lo(Sepal.Width) + s(Petal.Length) + Species
+## Model 2: Sepal.Length ~ s(Petal.Length) + Species
+##   Resid. Df Resid. Dev      Df Deviance  Pr(&gt;Chi)    
+## 1    139.19     12.905                               
+## 2    143.00     16.314 -3.8121  -3.4093 1.576e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div id="partial-dependence-plots" class="section level2">
+<h2>Partial Dependence Plots</h2>
+<p>To examine the relationship between the response and a single variable (even in logistic regression), we can do the following (using the built-in <code>plot</code> function). This creates a Partial Dependence Plot, basically think of them as averages of the estimated value of mean of <span class="math inline">\(Y\)</span> holding the variable of interest fixed.</p>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(lm_gam)</code></pre>
+<p><img src="../../../../../post/2018-06-30-poisson-regression-and-gam-lecture_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Additionally, you can still can use the basic plots from whatever <code>glm</code> function you’re using (in lm we would do the following graphics) - this time in ggplot):</p>
+<pre class="r"><code>diag_data &lt;- data.frame(y_train = lm_gam$y,
+                        fitted = lm_gam$fitted.values,
+                        residuals = lm_gam$residuals,
+                        st_resid = rstandard(lm_gam),
+                        leverage = hatvalues(lm_gam),
+                        cooks = cooks.distance(lm_gam)) %&gt;%
+  mutate(sqrt_st_res = sqrt(abs(st_resid)))
+
+fit_vs_y &lt;- ggplot(diag_data, aes(x = fitted, y = y_train)) + geom_point() +
+  geom_smooth()
+
+res_vs_fit &lt;- ggplot(diag_data, aes(x = fitted, y = residuals)) + geom_point() +
+  geom_smooth(se = F)
+           
+
+            
+qq_norm &lt;- ggplot(diag_data, aes(sample = residuals)) + 
+  geom_qq(distribution = stats::qnorm) +
+  geom_qq_line()
+
+sqrt_st_res_vs_fit &lt;- ggplot(diag_data, aes(x = fitted, y = sqrt_st_res)) +
+  geom_point() + geom_smooth(se = F)
+
+st_resid_vs_leverage &lt;- ggplot(diag_data, aes(x = leverage, y = st_resid,
+                                              color = cooks)) +
+  geom_point() +
+  geom_smooth(se = F)
+
+
+grid.arrange(fit_vs_y, ggplot(),
+             res_vs_fit, qq_norm,
+             sqrt_st_res_vs_fit, st_resid_vs_leverage, nrow = 3)</code></pre>
+<p><img src="../../../../../post/2018-06-30-poisson-regression-and-gam-lecture_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+</div>
+<div id="additional-resources" class="section level1">
+<h1>Additional Resources</h1>
+<ul>
+<li><p>Some more examples of GLMs and GAMs: <a href="http://www.stat.cmu.edu/~cshalizi/uADA/13/lectures/ch13.pdf">Cosma’s Textbook, Chapter 13</a></p></li>
+<li><p>R approaches for Poisson Regression <a href="https://cran.r-project.org/web/packages/pscl/vignettes/countreg.pdf">Cran Package vignette</a>: Deals with dispersion, zero-inflation (lots of 0 values as counts), other link functions, etc.</p></li>
+</ul>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js">
+  	$(window).resize(function(){
+
+	    $('.container').css({
+	        position:'absolute',
+	        left: ($(window).width() - $('body').outerWidth())/2,
+	        top: ($(window).height() - $('body').outerHeight())/2
+	    });
+
+	});
+
+	
+	$(window).resize();
+  
+</script>
+
+
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "stat-cmu-edu-bpleroy" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  
+  </footer>
+  </body>
+</html>
+

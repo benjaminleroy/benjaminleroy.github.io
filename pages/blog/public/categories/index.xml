@@ -39,6 +39,24 @@
     </item>
     
     <item>
+      <title>GAM</title>
+      <link>/categories/gam/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/gam/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>General Additive Models</title>
+      <link>/categories/general-additive-models/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/general-additive-models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Graphic Theory</title>
       <link>/categories/graphic-theory/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
@@ -59,7 +77,7 @@
     <item>
       <title>Lectures</title>
       <link>/categories/lectures/</link>
-      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/categories/lectures/</guid>
       <description></description>
@@ -75,9 +93,27 @@
     </item>
     
     <item>
+      <title>Poisson Regression</title>
+      <link>/categories/poisson-regression/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/poisson-regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Regression</title>
+      <link>/categories/regression/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Summer Program</title>
       <link>/categories/summer-program/</link>
-      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/categories/summer-program/</guid>
       <description></description>
