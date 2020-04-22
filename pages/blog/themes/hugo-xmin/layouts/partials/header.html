@@ -12,7 +12,7 @@
 
 
   
- 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav" style = "max-width:1200px;">
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
 		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html">Benjamin LeRoy</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
 		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,15 +20,53 @@
 		</button>
 			<div class="collapse navbar-collapse" id="navbarText">
 				<ul class="navbar-nav ml-auto">
-				<!--<ul class="menu">-->
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#about">About</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#research">Research</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#teaching">Teaching</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#cv">Resume/CV</a>
+				</li>
+				<li class="nav-item dropdown">
+					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
+					  <div class="dropdown-menu dropdown-menu-right bg-light">
+					    {{ range .Site.Menus.main }}
+					    <a class="dropdown-item nav-link" href="{{ .URL | relURL }}">{{ .Name }}</a>
+              {{ end }}
+						<!--<a class="dropdown-item nav-link" href="pages/blog/public/index.html">Home</a>
+						<a class="dropdown-item nav-link" href="pages/blog/public/categories/index.html">Categories</a>
+						<a class="dropdown-item nav-link" href="pages/blog/public/tags/index.html">Tags</a>
+						-->
+						</li>
+					</div>
+					</li>
+				</ul>
+			</div>
+	</nav>
+	
+	<!--<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav" style = "max-width:1200px;">
+		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html">Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-auto">
+				<!--<ul class="menu">-|->
       {{ range .Site.Menus.main }}
       <li class=nav-item><a href="{{ .URL | relURL }}" class="nav-link">{{ .Name }}</a></li>
       {{ end }}
     </ul>
-				<!--</li>-->
-				<!--</ul>-->
+				<!--</li>-|->
+				<!--</ul>-|->
 			</div>
 	</nav>
+	-->
 	</head>
 	<body>
 	<div id = "container">

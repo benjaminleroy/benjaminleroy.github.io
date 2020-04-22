@@ -3,14 +3,10 @@ title: Blog Home
 ---
 
 # Blog Home
-This blog is a location where I hope to provide (probably pretty unfiltered) thoughts on research, graphics and statistics in general. Maybe a little life too.
 
-Sorry for the slight difference in design - this blog is built using [blogdown](https://bookdown.org/yihui/blogdown/) using an alterated theme [Xmin](https://github.com/yihui/hugo-xmin), both by Yihui Xie. 
+Welcome to my *small* blog. It contains random posts on things I've learned, things I'd like to share, and things I've abandoned. It rarely get's updated.
 
-
-~Ben
-
-
+The blog side of my website was created with [blogdown](https://bookdown.org/yihui/blogdown/) using the [Xmin](https://github.com/yihui/hugo-xmin) theme, both by Yihui Xie. 
 
 ***
 

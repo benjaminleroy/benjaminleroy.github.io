@@ -138,6 +138,10 @@ img{
     margin: auto;
 }
 
+
+a:active.dropdown-item{
+ background-color: #f8f9fa; /* dropdown-item background color */
+}
 /*
 
 .col-1{
