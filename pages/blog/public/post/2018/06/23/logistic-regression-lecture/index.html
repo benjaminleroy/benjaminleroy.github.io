@@ -200,24 +200,24 @@ summary(logit_fit)</code></pre>
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -1.4927  -0.8542  -0.6714   1.1871   1.9355  
+## -1.7238  -0.8529  -0.5883   1.0656   2.2559  
 ## 
 ## Coefficients:
 ##              Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept) -4.118761   1.566655  -2.629  0.00856 **
-## gre          0.002887   0.001544   1.870  0.06152 . 
-## gpa          0.636029   0.457218   1.391  0.16420   
-## rank2       -0.311025   0.449166  -0.692  0.48866   
-## rank3       -0.989179   0.483765  -2.045  0.04088 * 
-## rank4       -1.081166   0.572164  -1.890  0.05881 . 
+## (Intercept) -5.192296   1.645772  -3.155  0.00161 **
+## gre          0.002689   0.001660   1.619  0.10542   
+## gpa          1.075710   0.491852   2.187  0.02874 * 
+## rank2       -0.625321   0.446264  -1.401  0.16114   
+## rank3       -1.551402   0.519147  -2.988  0.00280 **
+## rank4       -1.227737   0.539889  -2.274  0.02296 * 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 247.64  on 199  degrees of freedom
-## Residual deviance: 231.24  on 194  degrees of freedom
-## AIC: 243.24
+##     Null deviance: 249.22  on 199  degrees of freedom
+## Residual deviance: 223.34  on 194  degrees of freedom
+## AIC: 235.34
 ## 
 ## Number of Fisher Scoring iterations: 4</code></pre>
 </div>
@@ -244,10 +244,10 @@ logit(p) \sim &amp; \beta_0 + \beta_1 \cdot gre + \beta_2 \cdot gda \\
 <p><strong>Raw <span class="math inline">\(\beta\)</span> values</strong></p>
 <pre class="r"><code>logit_fit %&gt;% coef %&gt;% round(3)</code></pre>
 <pre><code>## (Intercept)         gre         gpa       rank2       rank3       rank4 
-##      -4.119       0.003       0.636      -0.311      -0.989      -1.081</code></pre>
+##      -5.192       0.003       1.076      -0.625      -1.551      -1.228</code></pre>
 <p><em>Question 2</em>: What is the interpretation in linear regression (we are <strong>not</strong> using a linear regression)?</p>
 <blockquote>
-<p>Answer: If this was linear regression, for coefficients like <span class="math inline">\(\beta_{gpa}\)</span> we would interpret the value of 0.636 as meaning that for every 1 unit increase of <code>gpa</code> we would expect to see an increase in a <em>continuous</em> prediction by .616 units. Note, that a smart person might multiple the <code>gpa</code> coeffiecent by .1 and then discuss the change relative to a .1 unit increase of <code>gpa</code> as that seems more likely / useful. Additionally, for our <span class="math inline">\(\beta_{rank2}\)</span> style coefficients, it’s common to interpret these relative to our ‘base’ / ‘benchmark’ group, that is, if we moved a student from <code>rank1</code> to <code>rank2</code> the model would predict a decline in our <em>continuous</em> prediciton by .273 units.</p>
+<p>Answer: If this was linear regression, for coefficients like <span class="math inline">\(\beta_{gpa}\)</span> we would interpret the value of 1.076 as meaning that for every 1 unit increase of <code>gpa</code> we would expect to see an increase in a <em>continuous</em> prediction by .616 units. Note, that a smart person might multiple the <code>gpa</code> coeffiecent by .1 and then discuss the change relative to a .1 unit increase of <code>gpa</code> as that seems more likely / useful. Additionally, for our <span class="math inline">\(\beta_{rank2}\)</span> style coefficients, it’s common to interpret these relative to our ‘base’ / ‘benchmark’ group, that is, if we moved a student from <code>rank1</code> to <code>rank2</code> the model would predict a decline in our <em>continuous</em> prediciton by .273 units.</p>
 </blockquote>
 <p>To interpret logistic regression <span class="math inline">\(\beta\)</span> values, I would encourage you to first think back to our linear equation that expressed the logistic regression model. The following steps capture how to get a clearer intepretation of the <span class="math inline">\(\beta\)</span> values:</p>
 <p><strong>Converted <span class="math inline">\(\beta\)</span> values</strong></p>
@@ -255,11 +255,11 @@ logit(p) \sim &amp; \beta_0 + \beta_1 \cdot gre + \beta_2 \cdot gda \\
 <p>Instead of change in <code>log(p/(1-p))</code> we can look at change in <code>p/(1-p)</code></p>
 <pre class="r"><code>logit_fit %&gt;% coef %&gt;% exp</code></pre>
 <pre><code>## (Intercept)         gre         gpa       rank2       rank3       rank4 
-##  0.01626466  1.00289163  1.88896534  0.73269581  0.37188196  0.33919990</code></pre>
+## 0.005559226 1.002692180 2.932073320 0.535089374 0.211950549 0.292954793</code></pre>
 <p>Since we should really be thinking about looking taking the <span class="math inline">\(e^{side}\)</span> for both sides in our original equation, as such these elements now relate to a <strong>multiplicative</strong> effect.</p>
 <p>That is we might interpret <span class="math inline">\(e^{\beta_2}\)</span> in the following manner:</p>
 <blockquote>
-<p>For every unit increase in gpa we’d expect to see the individual’s odds of acceptance to be increased by a multiple/factor of 1.889.</p>
+<p>For every unit increase in gpa we’d expect to see the individual’s odds of acceptance to be increased by a multiple/factor of 2.932.</p>
 </blockquote>
 <div id="confidence-intervals-for-beta-values" class="section level4">
 <h4>Confidence Intervals for <span class="math inline">\(\beta\)</span> values</h4>
@@ -267,21 +267,21 @@ logit(p) \sim &amp; \beta_0 + \beta_1 \cdot gre + \beta_2 \cdot gda \\
 <pre class="r"><code>base_beta_ci &lt;- logit_fit %&gt;% confint()
 base_beta_ci</code></pre>
 <pre><code>##                     2.5 %       97.5 %
-## (Intercept) -7.282313e+00 -1.112417052
-## gre         -9.632249e-05  0.005986685
-## gpa         -2.511879e-01  1.550602412
-## rank2       -1.192832e+00  0.578026731
-## rank3       -1.950909e+00 -0.043313217
-## rank4       -2.248119e+00  0.015555424</code></pre>
+## (Intercept) -8.5362870210 -2.056378545
+## gre         -0.0005226048  0.006018739
+## gpa          0.1275312934  2.064251340
+## rank2       -1.5103203798  0.248484548
+## rank3       -2.6014284465 -0.553568303
+## rank4       -2.3208089538 -0.190428949</code></pre>
 <pre class="r"><code>transformed_beta_ci &lt;- base_beta_ci %&gt;% exp
 transformed_beta_ci</code></pre>
 <pre><code>##                    2.5 %    97.5 %
-## (Intercept) 0.0006875931 0.3287634
-## gre         0.9999036821 1.0060046
-## gpa         0.7778761643 4.7143093
-## rank2       0.3033609293 1.7825176
-## rank3       0.1421447415 0.9576114
-## rank4       0.1055976150 1.0156770</code></pre>
+## (Intercept) 0.0001962175 0.1279164
+## gre         0.9994775318 1.0060369
+## gpa         1.1360204177 7.8793967
+## rank2       0.2208392142 1.2820810
+## rank3       0.0741675581 0.5748947
+## rank4       0.0981941190 0.8266045</code></pre>
 </div>
 </div>
 </div>
@@ -326,7 +326,7 @@ transformed_beta_ci</code></pre>
 diff_df &lt;- logit_fit$df.null - logit_fit$df.residual
 
 pchisq(diff_deviance,df = diff_df,lower.tail = FALSE)</code></pre>
-<pre><code>## [1] 0.005801075</code></pre>
+<pre><code>## [1] 9.43229e-05</code></pre>
 <p>A small p-value suggests our logistic model is better than the null. Significant reduction in deviance of the fitted model from the null model.</p>
 </div>
 <div id="dispersion" class="section level2">
@@ -374,9 +374,9 @@ Var(y) = \phi p(1-p)
   )
 
 dispersion </code></pre>
-<pre><code>## [1] 0.5869156</code></pre>
+<pre><code>## [1] 0.5668563</code></pre>
 <pre class="r"><code>pchisq(logit_fit$deviance,logit_fit$df.residual,lower.tail = FALSE)</code></pre>
-<pre><code>## [1] 0.03475216</code></pre>
+<pre><code>## [1] 0.07298258</code></pre>
 <p>Even though our dispersion is decently close to 1, our <span class="math inline">\(\chi^2\)</span> test suggests its far enough away from 1 that we need to correct for it.</p>
 <p><strong>What causes over-dispersion?</strong> For a binomial model the most likely problem is correlation across the individual Bernoulli trials within each binomial outcome.</p>
 <p>To conduct inference we must update the standard errors by multiplying by <span class="math inline">\(\sqrt{\phi}\)</span>.</p>
@@ -394,7 +394,7 @@ pred_y     &lt;- 1*(pred_prob &gt; .5)
 # explore all 3 above</code></pre>
 <p>How well would we do predicting the correct admit values for the training dataset? (Suppose we split on <span class="math inline">\(\hat{p} &gt; .5\)</span>).</p>
 <pre class="r"><code>mean(ga_test$admit == pred_y)</code></pre>
-<pre><code>## [1] 0.7</code></pre>
+<pre><code>## [1] 0.695</code></pre>
 <div id="confusion-matrix" class="section level3">
 <h3>Confusion Matrix</h3>
 <p>Generally for binary classification, we actually look at the confusion matrix,</p>
@@ -423,8 +423,8 @@ pred_y     &lt;- 1*(pred_prob &gt; .5)
 <pre class="r"><code>table(ga_test$admit, pred_y)</code></pre>
 <pre><code>##    pred_y
 ##       0   1
-##   0 130   5
-##   1  55  10</code></pre>
+##   0 123  13
+##   1  48  16</code></pre>
 </div>
 <div id="roc-curves" class="section level3">
 <h3>ROC curves</h3>
@@ -476,7 +476,7 @@ roc_obj &lt;- performance(pred_obj,x.measure = &quot;fpr&quot;, measure = &quot;
 # plot(roc_obj) # base graphic
 roc_obj_auc &lt;- performance(pred_obj, measure = &quot;auc&quot;)
 roc_obj_auc@y.values[[1]]</code></pre>
-<pre><code>## [1] 0.7019943</code></pre>
+<pre><code>## [1] 0.6676241</code></pre>
 </div>
 </div>
 <div id="goodness-of-fit-graphics" class="section level2">
@@ -491,7 +491,7 @@ hl_test</code></pre>
 ##  Hosmer and Lemeshow goodness of fit (GOF) test
 ## 
 ## data:  as.numeric(as.character(ga_train$admit)), logit_fit$fit
-## X-squared = 13.061, df = 8, p-value = 0.1098</code></pre>
+## X-squared = 3.9145, df = 8, p-value = 0.8648</code></pre>
 <p>Such a test is slightly finicky, I tend to like graphical visualization:</p>
 <pre class="r"><code>expected_vs_actual &lt;- hl_test$observed %&gt;% cbind(hl_test$expected) %&gt;%
   data.frame %&gt;%

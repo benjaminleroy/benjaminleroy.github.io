@@ -1,4 +1,4 @@
-baseurl = "http://benjaminleroy.github.io/pages/blog/"
+baseurl = "http://benjaminleroy.github.io/pages/blog/public/"
 languageCode = "en-us"
 title = "Benjamin LeRoy's Blog"
 googleAnalytics = ""
