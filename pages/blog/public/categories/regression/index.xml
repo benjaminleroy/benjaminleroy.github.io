@@ -21,5 +21,15 @@
 Introduction This lecture focuses on introducing a set of tools associated with poisson regression (and general additive models).</description>
     </item>
     
+    <item>
+      <title>Logistic Regression Lecture</title>
+      <link>/post/2018/06/23/logistic-regression-lecture/</link>
+      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018/06/23/logistic-regression-lecture/</guid>
+      <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
+Introduction This lecture focuses on introducing a set of tools associated with logistic regression.</description>
+    </item>
+    
   </channel>
 </rss>

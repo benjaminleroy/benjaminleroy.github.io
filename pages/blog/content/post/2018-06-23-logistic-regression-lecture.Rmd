@@ -8,6 +8,7 @@ tags:
 - Summer Program
 - Lecture
 categories:
+- Regression
 - Lectures
 - Summer Program
 - Logistic Regression
