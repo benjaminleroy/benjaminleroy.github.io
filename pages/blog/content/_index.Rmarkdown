@@ -10,4 +10,4 @@ The blog side of my website was created with [blogdown](https://bookdown.org/yih
 
 ***
 
-### Blog Posts:
+### Posts

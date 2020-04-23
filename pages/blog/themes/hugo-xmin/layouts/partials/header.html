@@ -13,7 +13,7 @@
 
   
  	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
-		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html"> Benjamin LeRoy</a>
+		<a class="navbar-brand" href="{{ "/../../index.html" | relURL }}"> Benjamin LeRoy</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
 		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -38,11 +38,6 @@
 					    {{ range .Site.Menus.main }}
 					    <a class="dropdown-item nav-link" href="{{ .URL | relURL }}">&ensp;{{ .Name }}</a>
               {{ end }}
-              
-						<!-- <a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/index.html">Home</a>
-						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/categories/index.html">Categories</a>
-						<a class="dropdown-item nav-link" href="https://benjaminleroy.github.io/pages/blog/public/tags/index.html">Tags</a>
-						-->
 						</li>
 					</div>
 					</li>
@@ -50,24 +45,7 @@
 			</div>
 	</nav>
 	
-	<!--<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav" style = "max-width:1200px;">
-		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html">Benjamin LeRoy</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-		</button>
-			<div class="collapse navbar-collapse" id="navbarText">
-				<ul class="navbar-nav ml-auto">
-				<!--<ul class="menu">-|->
-      {{ range .Site.Menus.main }}
-      <li class=nav-item><a href="{{ .URL | relURL }}" class="nav-link">{{ .Name }}</a></li>
-      {{ end }}
-    </ul>
-				<!--</li>-|->
-				<!--</ul>-|->
-			</div>
-	</nav>
-	-->
+
 	</head>
 	<body>
 	<div id = "container">

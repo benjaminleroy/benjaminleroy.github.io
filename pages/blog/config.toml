@@ -17,11 +17,6 @@ relativeURLs = true
     url = "/index.html"
     weight = 1
 [[menu.main]]
-    name = "Categories"
-    url = "/categories/index.html"
+    name = "Posts"
+    url = "/post/index.html"
     weight = 2
-[[menu.main]]
-    name = "Tags"
-    url = "/tags/index.html"
-    weight = 3
-
