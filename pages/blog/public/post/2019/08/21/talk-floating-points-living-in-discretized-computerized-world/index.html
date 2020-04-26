@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Talk: Floating points, living in discretized, computerized world | Benjamin LeRoy&#39;s Blog</title>
+    
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+		$(function(){
+			var includes = $('[data-include]');
+			jQuery.each(includes, function(){
+				var file = 'pages/' + $(this).data('include') + '.html';
+				$(this).load(file);
+			});
+		});
+	</script>
+
+	<script>
+		$(window).load(function() {
+		$("#container1").twentytwenty();
+		});
+	</script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+
+
+
+
+	
+
+
+
+
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    
+
+
+  
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
+		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html"> Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#about">About</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#research">Research</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#teaching">Teaching</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#cv">Resume/CV</a>
+				</li>
+				<li class="nav-item dropdown">
+					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
+					  <div class="dropdown-menu dropdown-menu-right bg-light", style = "border-style:none">
+					    
+					    <a class="dropdown-item nav-link" href="../../../../../index.html">&ensp;Blog Home</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../post/index.html">&ensp;Posts</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../categories/index.html">&ensp;Categories</a>
+              
+						</li>
+					</div>
+					</li>
+				</ul>
+			</div>
+	</nav>
+	
+
+	</head>
+	<body>
+	<div id = "container">
+
+<div class="article-meta">
+<h1><span class="title">Talk: Floating points, living in discretized, computerized world</span></h1>
+<h2 class="author">Benjamin LeRoy</h2>
+<h2 class="date">2019/08/21</h2>
+</div>
+
+<main>
+
+<script src="../../../../../rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="../../../../../rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="../../../../../rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="../../../../../rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="../../../../../rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="../../../../../rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="../../../../../rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="../../../../../rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="../../../../../rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+
+<p><em>The following is the “notes” version of a talk I gave to <a href="">useR Pittsburgh</a> in August of 2019. I’d always been interesting in learning more about precision and figured giving a talk would help me learn about it. I definitely am not expert on this material (and I’d say that my grad school colleague <a href="https://sites.google.com/site/neilarchspencer/">Neil Spencer</a> is much more an expert than I am). You can find the original slides (<a href="https://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/numerical_consistency.html">html</a>) and notes (<a href="https://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/numerical_consistency_notes.Rmd">Rmd</a>, <a href="https://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/numerical_consistency_notes.html">html</a>) imbedded in this sentence, and you’ll find that this document has been cleaned up a little for a more easy read.</em></p>
+<div id="potential-titles" class="section level1">
+<h1>Potential Titles</h1>
+<p>While procrastinating on this talk, I thought about all the potential titles. Below are are few (maybe they reflect what I think about this talk).</p>
+<ul>
+<li>“Computing: real numbers need not apply”</li>
+<li>“Floating-point-land: A <code>R</code>omance of many bits”</li>
+<li>“Floating points: When you think you’re a mathematician”</li>
+<li>“I wrote the tests correctly though!”</li>
+</ul>
+<p>In the next few slides (sections) you’ll see 2 examples of reasons we, as statistians / data scientists, should care about understanding how a computer stores numerical values.</p>
+</div>
+<div id="motivation-1-testing-raw-floating-point-errors" class="section level1">
+<h1>Motivation 1: Testing (raw floating point errors)</h1>
+<p>Suppose you’ve coded up a really good example showing your functions work amazingly and you’ve checked your math (with a quick print statement)</p>
+<pre class="r"><code>print(.1 + .2); print(.3)</code></pre>
+<pre><code>## [1] 0.3</code></pre>
+<pre><code>## [1] 0.3</code></pre>
+<p>and you think “wow, I really like coding, and I’m like a good mathematician”, and then this happens…</p>
+<hr />
+<pre class="r"><code>.1 + .2 == .3</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>And that’s when you go into pure mathematics cause no one likes computers anyway.</p>
+<p><em>Technically here’s a correction if you encounter this (but we’ll talk about why you did soon):</em></p>
+<pre class="r"><code>testthat::expect_equal(.1 + .2, .3, tolerance = 0) # says something useful</code></pre>
+<pre><code>## Error: 0.1 + 0.2 not equal to 0.3.
+## 1/1 mismatches
+## [1] 0.3 - 0.3 == 5.55e-17</code></pre>
+<pre class="r"><code>testthat::expect_equal(.1 + .2, .3, tolerance = .Machine$double.eps)
+# or 
+all.equal(.1 + .2, .3, tolerance = .Machine$double.eps)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="motivation-2-matrix-problems-and-stability" class="section level1">
+<h1>Motivation 2: Matrix Problems and Stability</h1>
+<p>Suppose you came back to your computer and given that you’re into Stats, you’ve coded up some iterative algorithm to solve some linear algebra stuffs (you know matrix multiplication, inversion etc).</p>
+<p>Say you have some code that can solve <span class="math inline">\(Ax = b\)</span> where</p>
+<p><span class="math display">\[
+A = \begin{bmatrix} .78 &amp;.563 \\
+                    .913 &amp; .659 \end{bmatrix} \quad \quad 
+b = \begin{bmatrix}
+.217 \\ .254
+\end{bmatrix}
+\]</span></p>
+<p>Now, as mathematicians we know that <span class="math inline">\(x = A^{-1}b\)</span> (aka we have a closed form solution), but for this example, we will just use the fact that we know the answer mathematically and we’d like to assess preformance of our algorithm through tests.</p>
+<p>So, the set up:</p>
+<pre class="r"><code>A &lt;- matrix(c(.78, .563,
+              .913, .659),
+            byrow = T, nrow = 2)
+b &lt;- c(.217, .254)
+x_true &lt;- solve(a = A,b = b); x_true</code></pre>
+<pre><code>## [1]  1 -1</code></pre>
+<p>That is, we know the true solution is <span class="math inline">\(\begin{bmatrix} 1 \\ -1 \end{bmatrix}\)</span>.</p>
+<hr />
+<p>So you decide that you want your answer (from your function) to be close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e. <span class="math display">\[|x-\hat{x}|/|x|\]</span></p>
+<p>The first function you write returns the following value for <span class="math inline">\(\hat{x}_1\)</span>:</p>
+<pre class="r"><code>x_hat1 &lt;- c(.999,-.999)
+res_1 &lt;- b - A %*% x_hat1
+res_1</code></pre>
+<pre><code>##          [,1]
+## [1,] 0.000217
+## [2,] 0.000254</code></pre>
+<pre class="r"><code>sprintf(&quot;l_2 norm of residual is %.6f&quot;, norm(res_1))</code></pre>
+<pre><code>## [1] &quot;l_2 norm of residual is 0.000471&quot;</code></pre>
+<pre class="r"><code>norm(x_true - x_hat1, type = &quot;2&quot;)/norm(x_true, type = &quot;2&quot;) </code></pre>
+<pre><code>## [1] 0.0009999999</code></pre>
+<p>A friend says they think they have a function that solved the problem, and sends over <span class="math inline">\(\hat{x}_2\)</span>.</p>
+<pre class="r"><code>x_hat2 &lt;- c(.341, -.087)
+res_2 &lt;- b - A %*% x_hat2
+res_2</code></pre>
+<pre><code>##       [,1]
+## [1,] 1e-06
+## [2,] 0e+00</code></pre>
+<pre class="r"><code>sprintf(&quot;l_2 norm of residual is %.6f&quot;, norm(res_2))</code></pre>
+<pre><code>## [1] &quot;l_2 norm of residual is 0.000001&quot;</code></pre>
+<pre class="r"><code>norm(x_true - x_hat2, type = &quot;2&quot;)/norm(x_true, type = &quot;2&quot;)</code></pre>
+<pre><code>## [1] 0.7961941</code></pre>
+<p>Dang it…</p>
+</div>
+<div id="outline" class="section level1">
+<h1>Outline</h1>
+<p>The rest of this talk is broken up into the following sections</p>
+<ol style="list-style-type: decimal">
+<li>R and floating points
+<ul>
+<li>IEEE representation &amp; underlying structure</li>
+</ul></li>
+<li>Understanding &amp; Avoiding Errors (algebraic)</li>
+<li>Understanding &amp; Avoiding Errors (linear algebra)</li>
+<li>Summary</li>
+</ol>
+<!-- - Computing: where
+- tools: kappa, sprintf, assertthat, testthat
+identical, etc
+- tricks to reformulate problems
+- floating points precession differences
+- Condition number (tools: kappa) and stability, backward and forward errors
+-->
+</div>
+<div id="part-i" class="section level1">
+<h1><span style="color: blue">Part I</span></h1>
+<p><span style="color: blue"><em>Introduction to floating points</em></span></p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<pre class="r"><code>print(.1 + .2); print(.3)</code></pre>
+<pre><code>## [1] 0.3</code></pre>
+<pre><code>## [1] 0.3</code></pre>
+<pre class="r"><code>.1 + .2 == .3</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>What’s really happening?</p>
+</div>
+<div id="whats-really-happening" class="section level1">
+<h1>What’s really happening?</h1>
+<p><span class="math inline">\(0.1 + 0.2\)</span>:</p>
+<pre><code>##   0.1000000000000000055511151231257827021181583404541015625
+## + 0.2000000000000000111022302462515654042363166809082031250
+## ------------------------------------------------------------
+##   0.3000000000000000444089209850062616169452667236328125000</code></pre>
+<p>vs. <span class="math inline">\(0.3\)</span>:</p>
+<pre><code>##   0.2999999999999999888977697537484345957636833190917968750</code></pre>
+<p><strong>why is “<span class="math inline">\(.3\)</span>” is printed?</strong></p>
+<pre class="r"><code>#?print.default</code></pre>
+<p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/print_default.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>getOption(&quot;digits&quot;) #7</code></pre>
+<pre class="r"><code>signif(.1 + .2, digits = 7)</code></pre>
+<pre><code>## [1] 0.3</code></pre>
+<p>And above we were showing 55 significant digits is base 10… Technically we just used <code>sprintf(&quot;%1.55f&quot;, .1)</code> (see Rmd file).</p>
+</div>
+<div id="ieee-754-usage-in-r-finite-storage" class="section level1">
+<h1>IEEE 754 usage in R (finite storage)</h1>
+<ol style="list-style-type: decimal">
+<li><p>R only has <em>double</em> precision floats</p></li>
+<li><p>Which means the raw digit information is contained in “53 bits, and represents to that precision a range of absolute values from about <code>2e-308</code> to <code>2e+308</code>” ~ <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/double.html"><code>help(float)</code></a></p></li>
+</ol>
+<p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/640px-IEEE_754_Double_Floating_Point_Format.png" width="100%" style="display: block; margin: auto;" /></p>
+<hr />
+<p>I would recommend one watch the following video to understand how a value is actually stored - <a href="https://www.youtube.com/watch?v=8afbTaA-gOQ">Example - from youtube (in only 32 bits - we use 64)</a>.</p>
+<p><strong>Express how to store: 263.3 in <code>R</code> (not going over).</strong></p>
+<pre class="r"><code>int2bin &lt;- function(x) { 
+  R.utils::intToBin(x)
+}
+frac2bin &lt;- function(x){
+  stringr::str_pad(R.utils::intToBin(x * 2^31), 31, pad=&quot;0&quot;)
+}</code></pre>
+<ol style="list-style-type: decimal">
+<li><p>263 = 100000111</p>
+<p>0.3 = 0100110011001100110011001100110</p></li>
+<li><p><span class="math inline">\(\Rightarrow\)</span> 263.3 = 100000111.0100110011001100110011001100110</p></li>
+<li><p>(get exp bits): 1.000001110100110011001100110011001100110 <span class="math inline">\(\times \; 2^8\)</span></p></li>
+<li><p>tranform exp relative to ‘bias’ (below 1): <code>1023 + 8 = 1031</code> (bit = 10000000111) <em>note: ‘bias’ for IEEE 754 double = 1023</em></p></li>
+<li><p>grab fraction bits from part 3.</p></li>
+</ol>
+<p>final answer:</p>
+<pre><code>## 1 12345678901 12345678901234567890123456789012345678901234567890123
+## 0 10000000111 000001110100110011001100110011001100110...</code></pre>
+</div>
+<div id="how-can-we-think-about-this-type-of-storage-with-bits" class="section level1">
+<h1>How can we think about this type of storage (with bits)</h1>
+<ul>
+<li><p>“a fundamental issue”: floating point number line is not dense</p></li>
+<li><p>First, on the extreme end:</p></li>
+<li><p>since we only have 53 bits to contain information, trying to express information that is has beyond 53 bits of information is truncated.</p></li>
+<li><p>“can express 1/2 the integers after 2^53” (until 2^54… - then only 1/4, etc)</p></li>
+</ul>
+<pre class="r"><code>(2^53 + 0:12) - 2^53 </code></pre>
+<pre><code>##  [1]  0  0  2  4  4  4  6  8  8  8 10 12 12</code></pre>
+<pre class="r"><code>  9007199254740992 (2^53)
++                5
+------------------
+  9007199254740997 (exact result)
+  9007199254740996 (rounded to nearest representable float)</code></pre>
+<pre class="r"><code>  9007199254740992 
++                0.0001
+-----------------------
+  9007199254740992.0001 (exact result)
+  9007199254740992      (rounded to nearest representable float)</code></pre>
+<p>Example from <a href="http://blog.reverberate.org/2014/09/what-every-computer-programmer-should.html">Floating Point Demystified, Part 1</a>)</p>
+</div>
+<div id="associating-the-storage-with-precision" class="section level1">
+<h1>Associating the storage with precision</h1>
+<ul>
+<li>“The exponent bits tell you which power of two numbers you are between – <span class="math inline">\([2^{exponent}, 2^{exponent+1})\)</span> – and the [fraction] tells you where you are in that range.” <span class="math inline">\(\sim\)</span> <a href="https://blog.demofox.org/2017/11/21/floating-point-precision/">Demystifying Floating Point Precision</a></li>
+<li>I.E., the exponent and fraction <em>tells you about precision</em> - the number of values that between those values is exactly have precise you can be.</li>
+</ul>
+<p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/640px-IEEE_754_Double_Floating_Point_Format.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="aside-what-about-the-integers" class="section level1">
+<h1>Aside: What about the integers?</h1>
+<ul>
+<li>“An numeric constant immediately followed by <code>L</code> is regarded as an integer number when possible” ~ <a href="https://www.rdocumentation.org/packages/base/versions/3.6.1/topics/NumericConstants"><code>help(NumericConstants)</code></a>.</li>
+<li><p>But at the same time - we actually don’t store it as an integer (we still store it as a float – “we” <code>==</code> <code>R</code>).</p></li>
+<li><p><code>1L</code> vs <code>1</code></p></li>
+</ul>
+<pre class="r"><code>class(100L); class(100)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>is.integer(1); is.integer(1:2)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>identical(1,1L); 1 == 1L</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="part-ii" class="section level1">
+<h1><span style="color: blue">Part II</span></h1>
+<p><span style="color: blue"><em>Understanding and Avoiding Errors (algebraic)</em></span></p>
+</div>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>In this section I’ll give you some examples to showcase certain principles that should give you useful starting points</p>
+</div>
+<div id="when-calculating-sample-variance" class="section level1">
+<h1>When calculating sample variance…</h1>
+<p><strong>Be careful when you’re taking the difference of 2 number (that are large in absolute value), but their difference is relatively small</strong></p>
+<p>For example: calculation of sample variance<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>They observe that if we use that trick we learning in stats class (i.e. calculate the <span class="math inline">\(\sum x_i^2\)</span> and <span class="math inline">\(\sum x_i\)</span> terms seperately we can run into problems).</p>
+<p><span class="math display">\[\text{recall: } \quad 
+S = \frac{1}{n-1} \left( \sum_i x_i^2 - \frac{1}{n} \left(\sum_i x_i\right)^2\right) = \frac{1}{n-1} \left( \sum_i \left(x_i - \frac{1}{n}\sum_j x_j \right)^2 \right)\]</span></p>
+<pre class="r"><code>x_sample &lt;- c(50000000, 50000001, 50000002)
+x_sum &lt;- sum(x_sample); x2_sum &lt;- sum(x_sample^2)
+n &lt;- length(x_sample)
+
+1/(n-1) * (x2_sum - 1/n* (x_sum)^2) # &quot;shortcut&quot;</code></pre>
+<pre><code>## [1] 1.5</code></pre>
+<pre class="r"><code>var(x_sample) # calculated the better way (iterative updates actually)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Relative error:</p>
+<pre class="r"><code>abs(1 - 1/(n-1) * (x2_sum - 1/n* (x_sum)^2))</code></pre>
+<pre><code>## [1] 0.5</code></pre>
+</div>
+<div id="an-extra-slide-for-the-math" class="section level1">
+<h1>An extra slide for the math</h1>
+<p>Thinking about cancellation (that is <span class="math inline">\(a-b\)</span>):</p>
+<p>We can express the estimated value <span class="math inline">\(\hat{x}\)</span> of the output value <span class="math inline">\(x\)</span> for the subtraction between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the following way. We have <span class="math inline">\(\hat{x} = \hat{a} - \hat{b}\)</span> where <span class="math inline">\(\hat{a} = a(1-\Delta a)\)</span>, <span class="math inline">\(\hat{b} = b(1-\Delta b)\)</span>.</p>
+<p>Then the relative error can be bounded above by</p>
+<p><span class="math display">\[\bigg|\frac{x-\hat{x}}{x}\bigg| = \bigg|\frac{-a\Delta a + b \Delta b}{a - b} \bigg| \leq max(|\Delta a|, |\Delta b|) \frac{|a|+|b|}{|a-b|}\]</span></p>
+<p><a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9</a></p>
+<p>Notice how this is an upper bound for the error and includes the term <span class="math inline">\(\frac{|a|+|b|}{|a-b|}\)</span>. This implies that, “the relative error bound for <span class="math inline">\(\hat{x}\)</span> is large when <span class="math inline">\(|a - b| &lt;&lt; |a| + |b|\)</span>” (subtractive cancelation can bring emphasis on early errors/ approximations)</p>
+<p>See 10 digit rounding example on <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9</a> for a extreme example.</p>
+</div>
+<div id="take-away-1" class="section level1">
+<h1>Take away 1:</h1>
+<ul>
+<li>be careful with subtraction cancelation (expecially when <span class="math inline">\(|a - b| &lt;&lt; |a| + |b|\)</span>)</li>
+</ul>
+</div>
+<div id="myth-busting-accumulation-of-errors-will-always-be-bad" class="section level1">
+<h1>Myth busting: (accumulation of errors will always be bad)</h1>
+<p>“Most often, instability is caused by just a few rounding errors” ~ <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002, pg 9</a></p>
+<p>Example:</p>
+<p><span class="math display">\[
+e := \underset{n \to \infty}{\text{lim}} (1+1/n)^n
+\]</span></p>
+<pre class="r"><code>f &lt;- function(n) { (1 + 1/n)^n }
+n &lt;- 10^seq(2,20, by = 2)</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[[100,10000,1000000,100000000,10000000000,1000000000000,100000000000000,1e+16,1e+18,1e+20],[2.70481382942153,2.71814592682493,2.71828046909575,2.71828179834736,2.71828205323479,2.71852349603724,2.71611003408702,1,1,1],[0.0134679990375166,0.000135901634119584,1.3593632917086e-06,3.01116873657747e-08,2.24775742463379e-07,0.000241667578192661,0.00217179437202208,1.71828182845905,1.71828182845905,1.71828182845905]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>f(n)<\/th>\n      <th>error (|f(n) -e|)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatSignif(this, row, data, 0, 1, 3, \",\", \".\");\nDTWidget.formatSignif(this, row, data, 1, 5, 3, \",\", \".\");\nDTWidget.formatRound(this, row, data, 2, 7, 3, \",\", \".\");\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<p><img src="../../../../../post/2019-08-21-talk-floating-points-living-in-discretized-computerized-world_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="early-take-aways" class="section level1">
+<h1>Early take aways:</h1>
+<ul>
+<li>be prepared to allow for some tolerance (<code>all.equal(tolerance = ...)</code>) - if you spend enough time thinking about the floating point compression and the operations you could get a potentially good starting point.</li>
+<li>be careful with subtraction cancelation (expecially when <span class="math inline">\(|a - b| &lt;&lt; |a| + |b|\)</span>)</li>
+<li>instability is caused by just a few rounding errors</li>
+</ul>
+</div>
+<div id="part-iii" class="section level1">
+<h1><span style="color: blue">Part III</span></h1>
+<p><span style="color: blue"><em>Understanding and Avoiding Errors (linear algebra)</em></span></p>
+</div>
+<div id="matrix-multiplications-designing-stable-algorithms" class="section level1">
+<h1>Matrix multiplications (designing stable algorithms)</h1>
+<p>To understanding what’s going on in our matrix problems we need a few more concepts. They are related to the above and empahasize that stability of an algorithm is based on more the just truncation of true values (based on floating point representation)</p>
+<p><strong>Message</strong>: even if you know a mathmatical representation - look for stable algorithms instead of writing your own</p>
+</div>
+<div id="general-stability-analysis" class="section level1">
+<h1>General Stability Analysis</h1>
+<ol style="list-style-type: decimal">
+<li>backward and forward errors (perturbation theory)</li>
+<li>Condition number (tools: <code>kappa</code>)</li>
+</ol>
+</div>
+<div id="stability-in-terms-of-backwards-and-forward-errors" class="section level1">
+<h1>Stability in terms of backwards and forward errors</h1>
+<p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/backward_forward.png" width="100%" style="display: block; margin: auto;" /></p>
+<ul>
+<li><p><em>backward</em> stable: <span class="math inline">\(y = f(x)\)</span> is backward stable if, for any <span class="math inline">\(x\)</span> with <span class="math inline">\(\hat{y}\)</span> as it’s computed value, then <span class="math inline">\(\hat{y} = f(x + \Delta x)\)</span> for some small <span class="math inline">\(\Delta x\)</span>.</p></li>
+<li><p><em>backward-forward</em> stable: similar but <span class="math inline">\(\hat{y} + \Delta y = f(x + \Delta x)\)</span> for small <span class="math inline">\(\Delta y\)</span>, <span class="math inline">\(\Delta x\)</span>.</p></li>
+</ul>
+<p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/backward_and_forward.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002</a></p>
+</div>
+<div id="stability" class="section level1">
+<h1>Stability</h1>
+<ul>
+<li><p><em>condition number</em>: relative change in the output for a given relative change in the input, and it is called the (relative) condition number of f.</p></li>
+<li><p>a large condition number means an unstable algorithm (there are built-in tools to assess the condition number of object and functions)</p></li>
+</ul>
+</div>
+<div id="stability-of-a-matrix" class="section level1">
+<h1>Stability of a Matrix</h1>
+<p>Recalling the <span class="math inline">\(Ax = b\)</span> problem:</p>
+<p><span class="math display">\[
+A = \begin{bmatrix} .78 &amp;.563 \\
+                    .913 &amp; .659 \end{bmatrix} \quad \quad 
+b = \begin{bmatrix}
+.217 \\ .254
+\end{bmatrix}
+\]</span></p>
+<p>Suppose we were going to use the built in <code>solve</code> function to calculate <code>x</code>. How stable would this approach be (in terms of condition number)?</p>
+<pre class="r"><code># adding Error
+E &lt;- .001 * matrix(c(1,1,
+                     1,-1),
+                   byrow = T, nrow = 2)
+A2 &lt;- A + E
+A2; A</code></pre>
+<pre><code>##       [,1]  [,2]
+## [1,] 0.781 0.564
+## [2,] 0.914 0.658</code></pre>
+<pre><code>##       [,1]  [,2]
+## [1,] 0.780 0.563
+## [2,] 0.913 0.659</code></pre>
+<pre class="r"><code>x_hat3 &lt;- solve(a = A2,b = b)
+x_hat3</code></pre>
+<pre><code>## [1]  0.29411765 -0.02252816</code></pre>
+<pre class="r"><code># delta_y
+rc_x &lt;- norm(x_true - x_hat3, type = &quot;2&quot;)/norm(x_true, type = &quot;2&quot;); rc_x</code></pre>
+<pre><code>## [1] 0.8525612</code></pre>
+<pre class="r"><code># delta_x
+rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</code></pre>
+<pre><code>## [1] 0.0009549354</code></pre>
+<p>This seems pretty instable, and in <code>R</code> we have ways to that the matrix would lead to this type of thing</p>
+</div>
+<div id="condition-numbers-for-matrices" class="section level1">
+<h1>Condition Numbers for Matrices</h1>
+<ul>
+<li><code>kappa()</code>: computes condition number (<span class="math inline">\(l_2\)</span> norm). “The 2-norm condition number can be shown to be the ratio of the largest to the smallest non-zero singular value of the matrix.”</li>
+</ul>
+<pre class="r"><code>kappa(A) # remember large is bad</code></pre>
+<pre><code>## [1] 2482775</code></pre>
+<pre class="r"><code>kappa(diag(2))</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p><em>Why should you care?</em> this should seem useful if you’re doing things like linear regression (if you code it up yourself or even if you don’t) - as a high <code>kappa</code> value means you have a matrix that is close to having zero eigenvalues (which could suggest that your matrix is almost “non-invertible”)</p>
+<p>For <code>lm</code>, Chamber and Hastie<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> say we should only worry when</p>
+<pre class="r"><code>.Machine$double.eps * kappa(A) # isn&#39;t super large </code></pre>
+<pre><code>## [1] 5.512868e-10</code></pre>
+</div>
+<div id="random-last-slides-log-probabilities" class="section level1">
+<h1>Random last slides: log probabilities</h1>
+<ul>
+<li><a href="https://mc-stan.org/docs/2_18/functions-reference/get-log-prob.html">Rstan</a> “The basic purpose of a Stan program is to compute a log probability function and its derivatives.” (#bayesiancomputing)</li>
+<li>General reasoning for log probs example: <a href="http://www.cs.rhodes.edu/~kirlinp/courses/ai/f18/projects/proj3/naive-bayes-log-probs.pdf">Naive bayes on log probs</a></li>
+</ul>
+<p><strong>Naive Bayes</strong></p>
+<p>Imagine that you’re doing a naive bayes model for bag-of-word analysis (say the spam/not-spam example)</p>
+<span class="math display">\[\begin{align*}
+    H^{MAP} &amp;= \underset{i \in \{spam, not-spam\}}{\text{argmax}} \left[\prod_{w=1}^W \mathbb{P}(\text{Freq}_w|H_i) \right] \mathbb{P}(H_i) \\
+    &amp;= \underset{i \in \{spam, not-spam\}}{\text{argmax}} \left[\sum_{w=1}^W \text{log } \mathbb{P}(\text{Freq}_w|H_i) \right] + \text{log } \mathbb{P}(H_i) 
+\end{align*}\]</span>
+<pre class="r"><code>(1/2)^1000</code></pre>
+<pre><code>## [1] 9.332636e-302</code></pre>
+</div>
+<div id="part-iv" class="section level1">
+<h1><span style="color: blue">Part IV</span></h1>
+<p><span style="color: blue"><em>Summary</em></span></p>
+</div>
+<div id="designing-stable-algorithms" class="section level1">
+<h1>Designing Stable Algorithms</h1>
+<ol style="list-style-type: decimal">
+<li><p>Try to avoid subtracting quantities contaminated by error (though such subtractions may be unavoidable) .</p></li>
+<li><p>Minimize the size of intermediate quantities relative to the final solution.</p></li>
+<li><p>Look for different formulations of a computation that are mathematically but not numerically equivalent. <em>Don’t assume just because you know a mathematical expression that it’s going to be stable</em></p></li>
+<li><p>It is advantageous to express update formulae as <span class="math display">\[\text{new-value} = \text{old-value} + \text{small-correction}\]</span> if the small correction can be computed with many correct significant figures. Natural examples: Netwon’s method, some ODEs</p></li>
+<li><p>Use only well-conditioned transformations of the problem. (associated with number 3)</p></li>
+<li><p>Take precautions to avoid unnecessary overflow and underflow (log prob)</p></li>
+</ol>
+<p>From: <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Higham, Nicholas J. Accuracy and stability of numerical algorithms. Vol. 80. Siam, 2002.</a></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+
+</main>
+
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js">
+  	$(window).resize(function(){
+
+	    $('.container').css({
+	        position:'absolute',
+	        left: ($(window).width() - $('body').outerWidth())/2,
+	        top: ($(window).height() - $('body').outerHeight())/2
+	    });
+
+	});
+
+	
+	$(window).resize();
+  
+</script>
+
+
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "stat-cmu-edu-bpleroy" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  
+  </footer>
+  </body>
+</html>
+

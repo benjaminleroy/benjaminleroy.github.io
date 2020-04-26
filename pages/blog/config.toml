@@ -20,3 +20,7 @@ relativeURLs = true
     name = "Posts"
     url = "/post/index.html"
     weight = 2
+[[menu.main]]
+    name = "Categories"
+    url = "/categories/index.html"
+    weight = 3

@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>Poisson Regression (and GAM) Lecture</title>
-      <link>/post/2018/06/30/poisson-regression-and-gam-lecture/</link>
+      <title>Lecture: Poisson Regression (and GAMs)</title>
+      <link>/post/2018/06/30/lecture-poisson-regression-and-gams/</link>
       <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/2018/06/30/poisson-regression-and-gam-lecture/</guid>
+      <guid>/post/2018/06/30/lecture-poisson-regression-and-gams/</guid>
       <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
 Introduction This lecture focuses on introducing a set of tools associated with poisson regression (and general additive models).</description>
     </item>

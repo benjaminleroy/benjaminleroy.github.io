@@ -6,29 +6,28 @@
     <description>Recent content in Lecture on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 30 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 21 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/lecture/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Poisson Regression (and GAM) Lecture</title>
-      <link>/post/2018/06/30/poisson-regression-and-gam-lecture/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      <title>Talk: Floating points, living in discretized, computerized world</title>
+      <link>/post/2019/08/21/talk-floating-points-living-in-discretized-computerized-world/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2018/06/30/poisson-regression-and-gam-lecture/</guid>
-      <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
-Introduction This lecture focuses on introducing a set of tools associated with poisson regression (and general additive models).</description>
+      <guid>/post/2019/08/21/talk-floating-points-living-in-discretized-computerized-world/</guid>
+      <description>The following is the “notes” version of a talk I gave to useR Pittsburgh in August of 2019. I’d always been interesting in learning more about precision and figured giving a talk would help me learn about it. I definitely am not expert on this material (and I’d say that my grad school colleague Neil Spencer is much more an expert than I am). You can find the original slides (html) and notes (Rmd, html) imbedded in this sentence, and you’ll find that this document has been cleaned up a little for a more easy read.</description>
     </item>
     
     <item>
-      <title>Logistic Regression Lecture</title>
-      <link>/post/2018/06/23/logistic-regression-lecture/</link>
-      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      <title>Lecture: Poisson Regression (and GAMs)</title>
+      <link>/post/2018/06/30/lecture-poisson-regression-and-gams/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/2018/06/23/logistic-regression-lecture/</guid>
+      <guid>/post/2018/06/30/lecture-poisson-regression-and-gams/</guid>
       <description>I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using R. Note: this document was written for summer students in CMU Statistics and Data Sciences’ SURE program, and was presented to them live.
-Introduction This lecture focuses on introducing a set of tools associated with logistic regression.</description>
+Introduction This lecture focuses on introducing a set of tools associated with poisson regression (and general additive models).</description>
     </item>
     
   </channel>

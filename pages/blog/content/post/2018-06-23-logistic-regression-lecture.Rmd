@@ -1,17 +1,16 @@
 ---
-title: "Logistic Regression Lecture"
+title: "Lecture: Logistic Regression"
 date: '2018-06-23'
-slug: logistic-regression-lecture
-tags:
-- Logistic Regression
-- Regression
-- Summer Program
-- Lecture
+slug: lecture-logistic-regression
 categories:
+- Lecture
+tags:
 - Regression
 - Lectures
 - Summer Program
 - Logistic Regression
+- Calibration
+- Teaching
 ---
 
 *I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using `R`. Note: this document was written for summer students in CMU Statistics and Data Sciences' [SURE](http://summer.stat.cmu.edu/) program, and was presented to them live.*

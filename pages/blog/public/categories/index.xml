@@ -12,110 +12,47 @@
     
     
     <item>
-      <title>Advising</title>
-      <link>/categories/advising/</link>
+      <title>Blog Post</title>
+      <link>/categories/blog-post/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/advising/</guid>
+      <guid>/categories/blog-post/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>DSI</title>
-      <link>/categories/dsi/</link>
-      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/dsi/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Data Science Initiative</title>
-      <link>/categories/data-science-initiative/</link>
-      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/data-science-initiative/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>GAM</title>
-      <link>/categories/gam/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/gam/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>General Additive Models</title>
-      <link>/categories/general-additive-models/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/general-additive-models/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Graphic Theory</title>
-      <link>/categories/graphic-theory/</link>
+      <title>Book Review</title>
+      <link>/categories/book-review/</link>
       <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>/categories/graphic-theory/</guid>
+      <guid>/categories/book-review/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Graphics</title>
-      <link>/categories/graphics/</link>
-      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/graphics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Lectures</title>
-      <link>/categories/lectures/</link>
+      <title>Lecture</title>
+      <link>/categories/lecture/</link>
       <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/categories/lectures/</guid>
+      <guid>/categories/lecture/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Logistic Regression</title>
-      <link>/categories/logistic-regression/</link>
-      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      <title>Misc</title>
+      <link>/categories/misc/</link>
+      <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/logistic-regression/</guid>
+      <guid>/categories/misc/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Poisson Regression</title>
-      <link>/categories/poisson-regression/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      <title>Talk</title>
+      <link>/categories/talk/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>/categories/poisson-regression/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Regression</title>
-      <link>/categories/regression/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/regression/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Summer Program</title>
-      <link>/categories/summer-program/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/summer-program/</guid>
+      <guid>/categories/talk/</guid>
       <description></description>
     </item>
     

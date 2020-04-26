@@ -21,6 +21,24 @@
     </item>
     
     <item>
+      <title>Book Review</title>
+      <link>/tags/book-review/</link>
+      <pubDate>Wed, 16 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/book-review/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Calibration</title>
+      <link>/tags/calibration/</link>
+      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/calibration/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>DSI</title>
       <link>/tags/dsi/</link>
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
@@ -35,6 +53,15 @@
       <pubDate>Thu, 03 Jan 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/data-science-inititive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Floating Points</title>
+      <link>/tags/floating-points/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/floating-points/</guid>
       <description></description>
     </item>
     
@@ -77,9 +104,18 @@
     <item>
       <title>Lecture</title>
       <link>/tags/lecture/</link>
-      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/lecture/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Lectures</title>
+      <link>/tags/lectures/</link>
+      <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lectures/</guid>
       <description></description>
     </item>
     
@@ -89,6 +125,24 @@
       <pubDate>Sat, 23 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/logistic-regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Numerical Errors</title>
+      <link>/tags/numerical-errors/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/numerical-errors/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Numerical Precision</title>
+      <link>/tags/numerical-precision/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/numerical-precision/</guid>
       <description></description>
     </item>
     
@@ -125,6 +179,24 @@
       <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/summer-program/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Talk</title>
+      <link>/tags/talk/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/talk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Teaching</title>
+      <link>/tags/teaching/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/teaching/</guid>
       <description></description>
     </item>
     

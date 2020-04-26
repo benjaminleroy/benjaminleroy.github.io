@@ -1,15 +1,10 @@
 ---
-title: Poisson Regression (and GAM) Lecture
+title: "Lecture: Poisson Regression (and GAMs)"
 author: Benjamin LeRoy
 date: '2018-06-30'
-slug: poisson-regression-and-gam-lecture
+slug: lecture-poisson-regression-and-gams
 categories:
-  - Lectures
-  - Poisson Regression
-  - GAM
-  - General Additive Models
-  - Regression
-  - Summer Program
+  - Lecture
 tags:
   - Poisson Regression
   - General Additive Models
@@ -17,6 +12,7 @@ tags:
   - Regression
   - Lecture
   - Summer Program
+  - Teaching
 ---
 
 *I decided to post this old lecture (with some clean up) online, as I think it really well captures a lot of things students might want to know about logistic regression while using `R`. Note: this document was written for summer students in CMU Statistics and Data Sciences' [SURE](http://summer.stat.cmu.edu/) program, and was presented to them live.*

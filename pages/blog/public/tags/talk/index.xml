@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Talk on Benjamin LeRoy&#39;s Blog</title>
+    <link>/tags/talk/</link>
+    <description>Recent content in Talk on Benjamin LeRoy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 21 Aug 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/talk/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Talk: Floating points, living in discretized, computerized world</title>
+      <link>/post/2019/08/21/talk-floating-points-living-in-discretized-computerized-world/</link>
+      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019/08/21/talk-floating-points-living-in-discretized-computerized-world/</guid>
+      <description>The following is the “notes” version of a talk I gave to useR Pittsburgh in August of 2019. I’d always been interesting in learning more about precision and figured giving a talk would help me learn about it. I definitely am not expert on this material (and I’d say that my grad school colleague Neil Spencer is much more an expert than I am). You can find the original slides (html) and notes (Rmd, html) imbedded in this sentence, and you’ll find that this document has been cleaned up a little for a more easy read.</description>
+    </item>
+    
+  </channel>
+</rss>
