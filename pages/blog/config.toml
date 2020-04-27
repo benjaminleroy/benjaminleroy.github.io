@@ -1,7 +1,7 @@
 baseurl = "http://benjaminleroy.github.io/pages/blog/public/"
 languageCode = "en-us"
 title = "Benjamin LeRoy's Blog"
-googleAnalytics = ""
+googleAnalytics = "G-3KXV6BW7S5"
 disqusShortname = "stat-cmu-edu-bpleroy"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 preserveTaxonomyNames = true
