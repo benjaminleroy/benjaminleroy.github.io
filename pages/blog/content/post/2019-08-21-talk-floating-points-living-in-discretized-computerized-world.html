@@ -79,7 +79,8 @@ x_true &lt;- solve(a = A,b = b); x_true</code></pre>
 <pre><code>## [1]  1 -1</code></pre>
 <p>That is, we know the true solution is <span class="math inline">\(\begin{bmatrix} 1 \\ -1 \end{bmatrix}\)</span>.</p>
 <hr />
-<p>So you decide that you want your answer (from your function) to be close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e. <span class="math display">\[|x-\hat{x}|/|x|\]</span></p>
+<p>So you decide that you want your answer (from your function) to be close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e.
+<span class="math display">\[|x-\hat{x}|/|x|\]</span></p>
 <p>The first function you write returns the following value for <span class="math inline">\(\hat{x}_1\)</span>:</p>
 <pre class="r"><code>x_hat1 &lt;- c(.999,-.999)
 res_1 &lt;- b - A %*% x_hat1
@@ -91,7 +92,8 @@ res_1</code></pre>
 <pre><code>## [1] &quot;l_2 norm of residual is 0.000471&quot;</code></pre>
 <pre class="r"><code>norm(x_true - x_hat1, type = &quot;2&quot;)/norm(x_true, type = &quot;2&quot;) </code></pre>
 <pre><code>## [1] 0.0009999999</code></pre>
-<p>A friend says they think they have a function that solved the problem, and sends over <span class="math inline">\(\hat{x}_2\)</span>.</p>
+<p>A friend says they think they have a function that solved the problem, and
+sends over <span class="math inline">\(\hat{x}_2\)</span>.</p>
 <pre class="r"><code>x_hat2 &lt;- c(.341, -.087)
 res_2 &lt;- b - A %*% x_hat2
 res_2</code></pre>
@@ -162,7 +164,8 @@ identical, etc
 </ol>
 <p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/640px-IEEE_754_Double_Floating_Point_Format.png" width="100%" style="display: block; margin: auto;" /></p>
 <hr />
-<p>I would recommend one watch the following video to understand how a value is actually stored - <a href="https://www.youtube.com/watch?v=8afbTaA-gOQ">Example - from youtube (in only 32 bits - we use 64)</a>.</p>
+<p>I would recommend one watch the following video to understand how a value is actually stored -
+<a href="https://www.youtube.com/watch?v=8afbTaA-gOQ">Example - from youtube (in only 32 bits - we use 64)</a>.</p>
 <p><strong>Express how to store: 263.3 in <code>R</code> (not going over).</strong></p>
 <pre class="r"><code>int2bin &lt;- function(x) { 
   R.utils::intToBin(x)
@@ -207,7 +210,8 @@ frac2bin &lt;- function(x){
 <div id="associating-the-storage-with-precision" class="section level1">
 <h1>Associating the storage with precision</h1>
 <ul>
-<li>“The exponent bits tell you which power of two numbers you are between – <span class="math inline">\([2^{exponent}, 2^{exponent+1})\)</span> – and the [fraction] tells you where you are in that range.” <span class="math inline">\(\sim\)</span> <a href="https://blog.demofox.org/2017/11/21/floating-point-precision/">Demystifying Floating Point Precision</a></li>
+<li>“The exponent bits tell you which power of two numbers you are between – <span class="math inline">\([2^{exponent}, 2^{exponent+1})\)</span> – and the [fraction] tells you where you are in that range.”
+<span class="math inline">\(\sim\)</span> <a href="https://blog.demofox.org/2017/11/21/floating-point-precision/">Demystifying Floating Point Precision</a></li>
 <li>I.E., the exponent and fraction <em>tells you about precision</em> - the number of values that between those values is exactly have precise you can be.</li>
 </ul>
 <p><img src="http://benjaminleroy.github.io/documents/talks/useR_floating_points_2019/images/640px-IEEE_754_Double_Floating_Point_Format.png" width="100%" style="display: block; margin: auto;" /></p>
@@ -240,7 +244,7 @@ frac2bin &lt;- function(x){
 <div id="when-calculating-sample-variance" class="section level1">
 <h1>When calculating sample variance…</h1>
 <p><strong>Be careful when you’re taking the difference of 2 number (that are large in absolute value), but their difference is relatively small</strong></p>
-<p>For example: calculation of sample variance<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>For example: calculation of sample variance<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <p>They observe that if we use that trick we learning in stats class (i.e. calculate the <span class="math inline">\(\sum x_i^2\)</span> and <span class="math inline">\(\sum x_i\)</span> terms seperately we can run into problems).</p>
 <p><span class="math display">\[\text{recall: } \quad 
 S = \frac{1}{n-1} \left( \sum_i x_i^2 - \frac{1}{n} \left(\sum_i x_i\right)^2\right) = \frac{1}{n-1} \left( \sum_i \left(x_i - \frac{1}{n}\sum_j x_j \right)^2 \right)\]</span></p>
@@ -282,7 +286,7 @@ e := \underset{n \to \infty}{\text{lim}} (1+1/n)^n
 <pre class="r"><code>f &lt;- function(n) { (1 + 1/n)^n }
 n &lt;- 10^seq(2,20, by = 2)</code></pre>
 <div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[[100,10000,1000000,100000000,10000000000,1000000000000,100000000000000,1e+16,1e+18,1e+20],[2.70481382942153,2.71814592682493,2.71828046909575,2.71828179834736,2.71828205323479,2.71852349603724,2.71611003408702,1,1,1],[0.0134679990375166,0.000135901634119584,1.3593632917086e-06,3.01116873657747e-08,2.24775742463379e-07,0.000241667578192661,0.00217179437202208,1.71828182845905,1.71828182845905,1.71828182845905]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>f(n)<\/th>\n      <th>error (|f(n) -e|)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"rowCallback":"function(row, data) {\nDTWidget.formatSignif(this, row, data, 0, 1, 3, \",\", \".\");\nDTWidget.formatSignif(this, row, data, 1, 5, 3, \",\", \".\");\nDTWidget.formatRound(this, row, data, 2, 7, 3, \",\", \".\");\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[[100,10000,1000000,100000000,10000000000,1000000000000,100000000000000,1e+16,1e+18,1e+20],[2.70481382942153,2.71814592682493,2.71828046909575,2.71828179834736,2.71828205323479,2.71852349603724,2.71611003408702,1,1,1],[0.0134679990375166,0.000135901634119584,1.3593632917086e-06,3.01116873657747e-08,2.24775742463379e-07,0.000241667578192661,0.00217179437202208,1.71828182845905,1.71828182845905,1.71828182845905]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>n<\/th>\n      <th>f(n)<\/th>\n      <th>error (|f(n) -e|)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) { return DTWidget.formatRound(data, 7, 3, \",\", \".\"); }"},{"targets":1,"render":"function(data, type, row, meta) { return DTWidget.formatSignif(data, 5, 3, \",\", \".\"); }"},{"targets":0,"render":"function(data, type, row, meta) { return DTWidget.formatSignif(data, 1, 3, \",\", \".\"); }"},{"className":"dt-right","targets":[0,1,2]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render"],"jsHooks":[]}</script>
 <p><img src="/post/2019-08-21-talk-floating-points-living-in-discretized-computerized-world_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 </div>
 <div id="early-take-aways" class="section level1">
@@ -322,7 +326,8 @@ n &lt;- 10^seq(2,20, by = 2)</code></pre>
 <div id="stability" class="section level1">
 <h1>Stability</h1>
 <ul>
-<li><p><em>condition number</em>: relative change in the output for a given relative change in the input, and it is called the (relative) condition number of f.</p></li>
+<li><p><em>condition number</em>: relative change in the output for a given relative
+change in the input, and it is called the (relative) condition number of f.</p></li>
 <li><p>a large condition number means an unstable algorithm (there are built-in tools to assess the condition number of object and functions)</p></li>
 </ul>
 </div>
@@ -370,7 +375,7 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 <pre class="r"><code>kappa(diag(2))</code></pre>
 <pre><code>## [1] 1</code></pre>
 <p><em>Why should you care?</em> this should seem useful if you’re doing things like linear regression (if you code it up yourself or even if you don’t) - as a high <code>kappa</code> value means you have a matrix that is close to having zero eigenvalues (which could suggest that your matrix is almost “non-invertible”)</p>
-<p>For <code>lm</code>, Chamber and Hastie<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> say we should only worry when</p>
+<p>For <code>lm</code>, Chamber and Hastie<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> say we should only worry when</p>
 <pre class="r"><code>.Machine$double.eps * kappa(A) # isn&#39;t super large </code></pre>
 <pre><code>## [1] 5.512868e-10</code></pre>
 </div>
@@ -382,10 +387,10 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 </ul>
 <p><strong>Naive Bayes</strong></p>
 <p>Imagine that you’re doing a naive bayes model for bag-of-word analysis (say the spam/not-spam example)</p>
-<span class="math display">\[\begin{align*}
+<p><span class="math display">\[\begin{align*}
     H^{MAP} &amp;= \underset{i \in \{spam, not-spam\}}{\text{argmax}} \left[\prod_{w=1}^W \mathbb{P}(\text{Freq}_w|H_i) \right] \mathbb{P}(H_i) \\
     &amp;= \underset{i \in \{spam, not-spam\}}{\text{argmax}} \left[\sum_{w=1}^W \text{log } \mathbb{P}(\text{Freq}_w|H_i) \right] + \text{log } \mathbb{P}(H_i) 
-\end{align*}\]</span>
+\end{align*}\]</span></p>
 <pre class="r"><code>(1/2)^1000</code></pre>
 <pre><code>## [1] 9.332636e-302</code></pre>
 </div>
@@ -399,7 +404,9 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 <li><p>Try to avoid subtracting quantities contaminated by error (though such subtractions may be unavoidable) .</p></li>
 <li><p>Minimize the size of intermediate quantities relative to the final solution.</p></li>
 <li><p>Look for different formulations of a computation that are mathematically but not numerically equivalent. <em>Don’t assume just because you know a mathematical expression that it’s going to be stable</em></p></li>
-<li><p>It is advantageous to express update formulae as <span class="math display">\[\text{new-value} = \text{old-value} + \text{small-correction}\]</span> if the small correction can be computed with many correct significant figures. Natural examples: Netwon’s method, some ODEs</p></li>
+<li><p>It is advantageous to express update formulae as
+<span class="math display">\[\text{new-value} = \text{old-value} + \text{small-correction}\]</span>
+if the small correction can be computed with many correct significant figures. Natural examples: Netwon’s method, some ODEs</p></li>
 <li><p>Use only well-conditioned transformations of the problem. (associated with number 3)</p></li>
 <li><p>Take precautions to avoid unnecessary overflow and underflow (log prob)</p></li>
 </ol>
@@ -408,7 +415,7 @@ rc_A &lt;- norm(E, type = &quot;2&quot;)/norm(A, type = &quot;2&quot;); rc_A</co
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref2">↩</a></p></li>
+<li id="fn1"><p><a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref2" class="footnote-back">↩</a></p></li>
 </ol>
 </div>

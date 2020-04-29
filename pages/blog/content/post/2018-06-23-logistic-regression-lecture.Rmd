@@ -216,6 +216,17 @@ pchisq(diff_deviance,df = diff_df,lower.tail = FALSE)
 
 A small p-value suggests our logistic model is better than the null. Significant reduction in deviance of the fitted model from the null model.
 
+**Warning: (@ 402 students)** Althought the above test might be called a goodness of fit test, the more standard goodness of fit test is related to the question of how the current model fits vs the *saturated* model. In this situation, the deviance of the *staturated* model is actually $0$, and although we can do a similar analysis (we still get a $\chi^2$ distribution under the null), we instead examine:
+
+```{r}
+pchisq(logit_fit$deviance, nrow(ga_train) - logit_fit$df.residual, lower.tail = FALSE)
+
+# which can also be expressed
+# pchisq(logit_fit$deviance - 0, df(staturated model) - logit_fit$df.residual, lower.tail = FALSE)
+```
+
+This is *intrisically* testing a different of hypothesis, in this test a small p-value suggests that our logistic model doesn't well fit the data.
+
 ## Dispersion
 
 Unlike Normal Regression, logistic and poisson regression has another parameter (which effects the variance of the $\beta$ values).

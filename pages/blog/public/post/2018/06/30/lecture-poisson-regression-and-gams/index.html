@@ -128,10 +128,7 @@ smoking &lt;- read_csv(paste0(&quot;https://raw.githubusercontent.com/benjaminle
   mutate(smoke_binary = ifelse(smoke == &quot;no&quot;, 0, 1),
          age = factor(age)) %&gt;%
   select(-X1)</code></pre>
-<div class="figure">
-<img src="https://admission.princeton.edu/sites/default/files/speaking_of_princeton/img_0823_2_0.jpg" />
-
-</div>
+<p><img src="https://admission.princeton.edu/sites/default/files/speaking_of_princeton/img_0823_2_0.jpg" /></p>
 <p>The data we will be using today (explorable below) contains information from a Canadian study that focusing the relationship between smoking and death (related to different age groups).</p>
 <pre class="r"><code>DT::datatable(smoking)</code></pre>
 <div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
@@ -204,11 +201,11 @@ gg1d &lt;- function(data, ncol = 3){
 </ul>
 <p>They obviously relate with a rate = count of deaths / total individuals.</p>
 <p>If we are looking at the regression</p>
-<span class="math display">\[\begin{align*}
+<p><span class="math display">\[\begin{align*}
 \log(\lambda | X) &amp;= X\beta \\
 \log(count/total |X) &amp;= X\beta \\
 \Leftrightarrow \log(count |X) &amp;= X\beta + \log(total)
-\end{align*}\]</span>
+\end{align*}\]</span></p>
 <p>In the final transformation we call <span class="math inline">\(log(total)\)</span> the offset. There are cases when we don’t use offsets (e.g. number of papers a graduate student has published), but offsets can be like our example or more complicated, like area of region for growing mushrooms (vs number of mushrooms) etc. Also notice that the <span class="math inline">\(\log(total)\)</span> does not have a <span class="math inline">\(\beta\)</span> value associated with it.</p>
 <p><em>Additionally, in the graduate student example (where the population is 1 individual), you can also think of the offset being <span class="math inline">\(\log(1) = 0\)</span>.</em></p>
 <p>As such, in <code>R</code> we’d do the following:</p>
@@ -366,10 +363,10 @@ predict %&gt;% head</code></pre>
 <div id="gam" class="section level1">
 <h1>GAM</h1>
 <p>Now, let’s look at some GAMs (general additive models). From lecture you learned about nonlinear regression and that we can change a glm to a gam like so:</p>
-<span class="math display">\[\begin{align*}
+<p><span class="math display">\[\begin{align*}
 g(y) = \beta_0 + \beta_1 X_1 + \beta_2 X_2... \\
 g(y) = \beta_0 + f(X_1) + g(X_2) + ...
-\end{align*}\]</span>
+\end{align*}\]</span></p>
 <p>Specifically, we generally have <span class="math inline">\(f,g\)</span> be loess (local polynomial regression) or smoothing splines. Using the <code>library(gam)</code>, we can use <code>gam</code> very similarly to what we do with <code>glm</code>, the only difference is we use <code>lo(X1)</code> or <code>s(X1)</code> to create a 1d Loess or Smoothing spline with that variable. <em>After this lecture I learned that <code>library(mgcv)</code> provides better toos for GAM - specifically, it allows the user to have interaction terms between features.</em></p>
 <pre class="r"><code>library(gam)
 data(iris)
