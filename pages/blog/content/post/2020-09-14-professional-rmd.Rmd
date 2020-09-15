@@ -2,8 +2,16 @@
 title: "Making Professional RMD files (for PDF production)"
 date: '2020-09-14'
 slug: professional-rmd
-categories: []
-tags: []
+categories: 
+  - Misc
+  - Blog Post
+tags: 
+  - Teaching
+  - MSP
+  - Master of Statistical Practice
+  - R
+  - Rmd
+  - Professional
 ---
 
 # 1. Introduction
@@ -26,7 +34,7 @@ Additionally, we will be demonstrating tools associated with pdf output through 
 
 # 2 Cross-References
 
-A lot of the time in professional documents, we want to be able to be able to clearly **reference** which bit of additional information we are talking about. In our context this might relate to 1) Figures, 2) Tables, 3) Sections, 4) equations, theorems, etc. `bookdown`'s pdf_document2 provides us with lots of tools to correctly reference the items in a way we'd expect (if we're used to $LaTeX$).
+A lot of the time in professional documents, we want to be able to be able to clearly **reference** which bit of additional information we are talking about. In our context this might relate to 1) Figures, 2) Tables, 3) Sections, 4) equations, theorems, etc. `bookdown`'s `pdf_document2` provides us with lots of tools to correctly reference the items in a way we'd expect (if we're used to $LaTeX$).
 
 **Getting started**: For these referencing we need to use `bookdown` as such our `yaml` section of the `.Rmd` should be changed to something like
 ```
@@ -136,20 +144,13 @@ Suppose you'd like to include a figure already created or saved online. In order
 
 Inside code chunks (to be able to leverage figure referencing), the following links provide ways to do so (some sizing is different for each):
 
-- https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown. 
-
-````markdown
-`r ''````{r figure-name4, fig.cap = "Go Bears!", fig.align="center", fig.width=5, fig.asp=1, fig.pos="H"}
-knitr::include_graphics("locally/saved/image/file/OSKI.png")
-```
-````
+- https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown.
 
 - http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/ 
 
 ````markdown
 `r ''````{r figure-name5, fig.cap = "Go Tartans!", fig.align="center", fig.width=5, fig.asp=1, fig.pos="H"}
-img_path <- "locally/saved/image/file/SCOTTY.png"
-include_graphics(img_path)
+knitr::include_graphics("locally/saved/image/file/SCOTTY.png")
 ```
 ````
 
@@ -346,7 +347,7 @@ header-includes:
 ---
 ````
 
-where `style` is the style you want to use **OR** you can use a can include a style guide in the form of a `.csl` file. This [github repository](https://github.com/citation-style-language/styles) provides a lot of options to look over. An example is shown below (and you can also store the `.csl` locally). This Rmarkdown page also has more comments: https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html.
+where `style` is the style you want to use **OR** you can use a can include a style guide in the form of a `.csl` file. This [github repository](https://github.com/citation-style-language/styles) provides a lot of options to look over. An example is shown below (and you can also store the `.csl` locally). This [Rmarkdown]( https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)) page also has more comments about where to find `.csl` files.
 
 ````markdown
 ---

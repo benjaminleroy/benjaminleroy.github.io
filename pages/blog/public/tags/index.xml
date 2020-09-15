@@ -129,6 +129,24 @@
     </item>
     
     <item>
+      <title>MSP</title>
+      <link>/tags/msp/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/msp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Master of Statistical Practice</title>
+      <link>/tags/master-of-statistical-practice/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/master-of-statistical-practice/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Numerical Errors</title>
       <link>/tags/numerical-errors/</link>
       <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
@@ -165,11 +183,38 @@
     </item>
     
     <item>
+      <title>Professional</title>
+      <link>/tags/professional/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/professional/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>/tags/r/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Regression</title>
       <link>/tags/regression/</link>
       <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rmd</title>
+      <link>/tags/rmd/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/rmd/</guid>
       <description></description>
     </item>
     
@@ -194,7 +239,7 @@
     <item>
       <title>Teaching</title>
       <link>/tags/teaching/</link>
-      <pubDate>Wed, 21 Aug 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/teaching/</guid>
       <description></description>

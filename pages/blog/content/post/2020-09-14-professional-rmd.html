@@ -2,8 +2,16 @@
 title: "Making Professional RMD files (for PDF production)"
 date: '2020-09-14'
 slug: professional-rmd
-categories: []
-tags: []
+categories: 
+  - Misc
+  - Blog Post
+tags: 
+  - Teaching
+  - MSP
+  - Master of Statistical Practice
+  - R
+  - Rmd
+  - Professional
 ---
 
 
@@ -22,7 +30,7 @@ output: pdf_document
 </div>
 <div id="cross-references" class="section level1">
 <h1>2 Cross-References</h1>
-<p>A lot of the time in professional documents, we want to be able to be able to clearly <strong>reference</strong> which bit of additional information we are talking about. In our context this might relate to 1) Figures, 2) Tables, 3) Sections, 4) equations, theorems, etc. <code>bookdown</code>’s pdf_document2 provides us with lots of tools to correctly reference the items in a way we’d expect (if we’re used to <span class="math inline">\(LaTeX\)</span>).</p>
+<p>A lot of the time in professional documents, we want to be able to be able to clearly <strong>reference</strong> which bit of additional information we are talking about. In our context this might relate to 1) Figures, 2) Tables, 3) Sections, 4) equations, theorems, etc. <code>bookdown</code>’s <code>pdf_document2</code> provides us with lots of tools to correctly reference the items in a way we’d expect (if we’re used to <span class="math inline">\(LaTeX\)</span>).</p>
 <p><strong>Getting started</strong>: For these referencing we need to use <code>bookdown</code> as such our <code>yaml</code> section of the <code>.Rmd</code> should be changed to something like</p>
 <pre><code>---
 title: &quot;Algorithmic Learning in a Random World&quot;
@@ -99,17 +107,11 @@ data.frame(`model id` = 1:5,
 <h4>2.1.3.1. Locally saved images</h4>
 <p>Inside code chunks (to be able to leverage figure referencing), the following links provide ways to do so (some sizing is different for each):</p>
 <ul>
-<li><a href="https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown" class="uri">https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown</a>.</li>
-</ul>
-<pre class="markdown"><code>```{r figure-name4, fig.cap = &quot;Go Bears!&quot;, fig.align=&quot;center&quot;, fig.width=5, fig.asp=1, fig.pos=&quot;H&quot;}
-knitr::include_graphics(&quot;locally/saved/image/file/OSKI.png&quot;)
-```</code></pre>
-<ul>
-<li><a href="http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/" class="uri">http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/</a></li>
+<li><p><a href="https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown" class="uri">https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown</a>.</p></li>
+<li><p><a href="http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/" class="uri">http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/</a></p></li>
 </ul>
 <pre class="markdown"><code>```{r figure-name5, fig.cap = &quot;Go Tartans!&quot;, fig.align=&quot;center&quot;, fig.width=5, fig.asp=1, fig.pos=&quot;H&quot;}
-img_path &lt;- &quot;locally/saved/image/file/SCOTTY.png&quot;
-include_graphics(img_path)
+knitr::include_graphics(&quot;locally/saved/image/file/SCOTTY.png&quot;)
 ```</code></pre>
 <p>If you’re ok having a image outside a code chunk you can also use the format (which, again, will lose the referencing) then the standard way will work:</p>
 <p><code>![](local/path/to/file)</code></p>
@@ -270,7 +272,7 @@ bibliography: &quot;hopefully_a_bibliography.bib&quot;
 header-includes:
   - \bibliographystyle{plainnat.bst}
 ---</code></pre>
-<p>where <code>style</code> is the style you want to use <strong>OR</strong> you can use a can include a style guide in the form of a <code>.csl</code> file. This <a href="https://github.com/citation-style-language/styles">github repository</a> provides a lot of options to look over. An example is shown below (and you can also store the <code>.csl</code> locally). This Rmarkdown page also has more comments: <a href="https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html" class="uri">https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html</a>.</p>
+<p>where <code>style</code> is the style you want to use <strong>OR</strong> you can use a can include a style guide in the form of a <code>.csl</code> file. This <a href="https://github.com/citation-style-language/styles">github repository</a> provides a lot of options to look over. An example is shown below (and you can also store the <code>.csl</code> locally). This <a href="https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html">Rmarkdown</a>) page also has more comments about where to find <code>.csl</code> files.</p>
 <pre class="markdown"><code>---
 title: &quot;The functional mean-shift algorithm for mode hunting and clustering in infinite dimensions&quot;
 author: &quot;Mattia Ciollaro, Christopher Genovese, Jing Lei, and Larry Wasserman&quot;

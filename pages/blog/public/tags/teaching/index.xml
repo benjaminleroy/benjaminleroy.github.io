@@ -6,10 +6,19 @@
     <description>Recent content in Teaching on Benjamin LeRoy&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 21 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/teaching/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Making Professional RMD files (for PDF production)</title>
+      <link>/post/2020/09/14/professional-rmd/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/09/14/professional-rmd/</guid>
+      <description>1. Introduction In the past 4 years of my PhD I’ve TAed for multiple classes in our Masters in Statistical Practice program, a professional masters program - aim at students interested in learning more applied statistics to enter into the professional workforce. This program help students develop their capabilities in technical report writing. I decided to write this demo in making professional Rmd files as we’ve constantly been needing to give students the templates to get the desired outcomes.</description>
+    </item>
     
     <item>
       <title>Talk: Floating points, living in discretized, computerized world</title>
