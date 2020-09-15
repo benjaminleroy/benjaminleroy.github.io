@@ -30,11 +30,18 @@ Today we're going to use a pretty basic dataset. There are reasons for this (we'
 ![](https://uclaadmissions.files.wordpress.com/2011/05/image2_ed.jpg?w=1000)
 
 
-```{r message = F, warning = F}
+```{r message = F, warning = F, eval = F}
 grad_admit <- read_csv("https://stats.idre.ucla.edu/stat/data/binary.csv") %>%
   mutate(admit = factor(admit),
          rank = factor(rank))
 ```
+
+```{r message = F, warning = F, echo = F}
+grad_admit <- read_csv("../../static/data/binary.csv") %>%
+  mutate(admit = factor(admit),
+         rank = factor(rank))
+```
+
 
 The data (explorable below) contains a set of features associated with 'students' records for students that applied to UCLA, with a binary variable (`admit`) which indicates where or not the student was admitted.
 

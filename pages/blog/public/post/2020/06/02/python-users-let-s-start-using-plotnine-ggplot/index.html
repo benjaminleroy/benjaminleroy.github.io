@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blog Post: Python Users: Let’s start using &lt;code&gt;plotnine&lt;/code&gt; &#43; &lt;code&gt;ggplot&lt;/code&gt;  | Benjamin LeRoy&#39;s Blog</title>
+    
+    <link rel="stylesheet" href="../../../../../pages/blog/public/css/fonts.css" />
+    	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+		$(function(){
+			var includes = $('[data-include]');
+			jQuery.each(includes, function(){
+				var file = 'pages/' + $(this).data('include') + '.html';
+				$(this).load(file);
+			});
+		});
+	</script>
+
+	<script>
+		$(window).load(function() {
+		$("#container1").twentytwenty();
+		});
+	</script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+
+
+
+
+	
+
+
+
+
+    <link rel="stylesheet" href="../../../../../pages/blog/public/css/style.css" />
+    
+
+
+  
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
+		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html"> Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#about">About</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#research">Research</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#teaching">Teaching</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#cv">Resume/CV</a>
+				</li>
+				<li class="nav-item dropdown">
+					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
+					  <div class="dropdown-menu dropdown-menu-right bg-light", style = "border-style:none">
+					    
+					    <a class="dropdown-item nav-link" href="../../../../../pages/blog/public/pages/blog/public/index.html">&ensp;Blog Home</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../pages/blog/public/pages/blog/public/post/index.html">&ensp;Posts</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../pages/blog/public/pages/blog/public/categories/index.html">&ensp;Categories</a>
+              
+						</li>
+					</div>
+					</li>
+				</ul>
+			</div>
+	</nav>
+	
+
+	</head>
+	<body>
+	<div id = "container">
+
+<div class="article-meta">
+<h1><span class="title">Blog Post: Python Users: Let’s start using &lt;code&gt;plotnine&lt;/code&gt; &#43; &lt;code&gt;ggplot&lt;/code&gt; </span></h1>
+<h2 class="author">Benjamin LeRoy</h2>
+<h2 class="date">2020/06/02</h2>
+</div>
+
+<main>
+
+
+
+<p>I don’t pretend to think that R and python are the same, and I also don’t think one really completely outperforms the other (especially conditional on specific research areas).</p>
+<p>That being said, I think the “Grammar Graphics” (<span class="citation">@reference</span>) paradigm that exists through the R package <code>ggplot2</code> (and also is the foundation for stand-alone graphical software like Tableau) can be useful to abstract-ify the <em>building</em> of graphics. Moreover R’s <code>ggplot2</code> “tidy” and consistent parameter structure makes building graphics with <code>ggplot</code> easy and enjoyable.</p>
+<p>A python package <code>plotnine</code> finally provides similar base-level functionality to write <code>ggplot</code> code in python! Moreover, the skill at which the main package developer <a href="https://github.com/has2k1">Hassan Kibirige</a> has moved the package along is impressive and suggests that, the <strong>long term strength and quality of the package will be high</strong> (interestingly Hassan has also recently come out with a <code>plydata</code> which mirrors R’s <code>dplyr</code> - though I cannot comment on in depth).</p>
+<p>The major reason that I’ve decided to write this blog post is that Hassan has been able to get changes made in the “base” python graphics package <code>matplotlib</code> to allow for the full functionality of ggplot through <code>plotnine</code> .</p>
+<p>Even though there are other resources here (given that I’ve taught R’s version of <code>ggplot</code> before I figured I should demonstrate the functionality of it using plotnine .</p>
+<hr />
+<p>Note that this blog was created with R’s <code>blogdown</code> package along with <code>reticulate</code>.</p>
+<div id="some-quick-setup-comments" class="section level1">
+<h1>Some quick setup comments</h1>
+<p>Although not standard in python’s object oriented language, it is common to load all of plotnine ’s internal functions into the namespace</p>
+<pre class="python"><code>from plotnine import *</code></pre>
+<p>We also add some useful packages and load a quick dataset that we’ll use to visualize.</p>
+<pre class="python"><code>import pandas as pd
+import numpy as np
+import sklearn.datasets as datasets
+
+iris_load = datasets.load_iris()
+iris = pd.DataFrame(np.append(iris_load.data, iris_load.target.reshape((-1,1)),
+                              axis = 1),
+                    columns = iris_load.feature_names+[&quot;species&quot;])
+iris.species = pd.Categorical.from_codes(iris.species.astype(np.int), 
+                                         categories = iris_load.target_names)</code></pre>
+</div>
+<div id="lets-get-into-ggplot-through-plotnine" class="section level1">
+<h1>Let’s get into ggplot through plotnine</h1>
+<ol style="list-style-type: decimal">
+<li>Pandas</li>
+<li>Grab lecture notes from 350</li>
+<li>Try to correct relative to things I brushed over</li>
+<li>How to present multiple plots</li>
+</ol>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+</div>
+
+</main>
+
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js">
+  	$(window).resize(function(){
+
+	    $('.container').css({
+	        position:'absolute',
+	        left: ($(window).width() - $('body').outerWidth())/2,
+	        top: ($(window).height() - $('body').outerHeight())/2
+	    });
+
+	});
+
+	
+	$(window).resize();
+  
+</script>
+
+
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "stat-cmu-edu-bpleroy" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  
+  </footer>
+  </body>
+</html>
+

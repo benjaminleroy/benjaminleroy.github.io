@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Package Review on Benjamin LeRoy&#39;s Blog</title>
+    <link>http://benjaminleroy.github.io/pages/blog/public/tags/package-review/</link>
+    <description>Recent content in Package Review on Benjamin LeRoy&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Jun 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://benjaminleroy.github.io/pages/blog/public/tags/package-review/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Blog Post: Python Users: Let’s start using &lt;code&gt;plotnine&lt;/code&gt; &#43; &lt;code&gt;ggplot&lt;/code&gt; </title>
+      <link>http://benjaminleroy.github.io/pages/blog/public/post/2020/06/02/python-users-let-s-start-using-plotnine-ggplot/</link>
+      <pubDate>Tue, 02 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://benjaminleroy.github.io/pages/blog/public/post/2020/06/02/python-users-let-s-start-using-plotnine-ggplot/</guid>
+      <description>I don’t pretend to think that R and python are the same, and I also don’t think one really completely outperforms the other (especially conditional on specific research areas).
+That being said, I think the “Grammar Graphics” (@reference) paradigm that exists through the R package ggplot2 (and also is the foundation for stand-alone graphical software like Tableau) can be useful to abstract-ify the building of graphics. Moreover R’s ggplot2 “tidy” and consistent parameter structure makes building graphics with ggplot easy and enjoyable.</description>
+    </item>
+    
+  </channel>
+</rss>

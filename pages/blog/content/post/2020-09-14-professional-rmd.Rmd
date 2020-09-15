@@ -1,0 +1,441 @@
+---
+title: "Making Professional RMD files (for PDF production)"
+date: '2020-09-14'
+slug: professional-rmd
+categories: []
+tags: []
+---
+
+# 1. Introduction
+
+In the past 4 years of my PhD I've TAed for multiple classes in our Masters in Statistical Practice program, a professional masters program - aim at students interested in learning more applied statistics to enter into the professional workforce. This program help students develop their capabilities in technical report writing. I decided to write this demo in making professional `Rmd` files as we've constantly been needing to give students the templates to get the desired outcomes. Potential other resources include: https://rmd4sci.njtierney.com/
+
+In general, thanks to Yihui Xue at Rstudio, `Rmd` files have improved to do most of what is expected from $\LaTeX$  files. It should be noted that the Sweave (`Rnw`) files have long been able combine `R` code with $\LaTeX$  more directly.
+
+A lot of the specialization of the `Rmd` file will occur in the `yaml` section of the document, which is the head of the document that might original look like:
+
+```
+---
+title: "Mathematics and the picturing of data"
+author: "John Tukey"
+output: pdf_document
+---
+```
+
+Additionally, we will be demonstrating tools associated with pdf output through the [`bookdown`](https://bookdown.org/yihui/bookdown/) which extends off the standard [`rmarkdown`](https://bookdown.org/yihui/rmarkdown/) pdf output.
+
+# 2 Cross-References
+
+A lot of the time in professional documents, we want to be able to be able to clearly **reference** which bit of additional information we are talking about. In our context this might relate to 1) Figures, 2) Tables, 3) Sections, 4) equations, theorems, etc. `bookdown`'s pdf_document2 provides us with lots of tools to correctly reference the items in a way we'd expect (if we're used to $LaTeX$).
+
+**Getting started**: For these referencing we need to use `bookdown` as such our `yaml` section of the `.Rmd` should be changed to something like
+```
+---
+title: "Algorithmic Learning in a Random World"
+author: "Vladimir Vovk, Alex Gammerman, and Glenn Shafer"
+output: bookdown:pdf_document2
+---
+```
+
+## 2.1 Tables and Figures references
+
+If you're using Rmd you're probably using `R` to produce tables and figures. I highly recommend always "linking" to the plots/tables you produce by "referencing" them directly in your text (e.g. "Figure 6 provides..." or "... (as seen in Figure 6)"). And then the next step is to have smart referencing that gives the user a way to quickly jump to the figure / table and also not have to keep track of the number yourself. 
+
+I also recommend making sure your captions of all your figures and tables can stand on their own (aka make sense even if I take them out of the document they are in).
+
+### 2.1.1 Tables
+
+Bookdown Reference: https://bookdown.org/yihui/bookdown/tables.html#tables
+ 
+You'll find that packages `knitr` (and `knitrExtra`) or `xtable` are useful to help make presentable tables (especially to pdf). Moreover `broom` can help compress lots of models in `R` into data frames that can then be passed into these functions (ex. `broom::tidy`). And the `pander` package also can convert summary data of models pretty well.
+
+To reference a table we need a few things. First we need to have an `R` block with a name. In the following example we name our code block "table-name" (and the code in the box would produces a basic table). Section A.2 provides more details on parameters that can be used in `R` code blocks
+
+````markdown
+`r ''````{r table-name}
+knitr::kable(
+  data.frame(`model id` = 1:5,
+             `score` = c(1,1.1,3,.5,2)))
+```
+````
+
+
+Now that we have a table with a name we can use `\@ref(tab:table-name)` to reference the table (note the differences between the $\LaTeX$ approach which would be `\ref{tab:table-name}`). Note that the underlying `pandoc` and `bookdown` code knows that this is a table, so it will index the table we made above differently than figures we might also have. Additionally note that `bookdown::pdf_document2` won't allow for underscores (`_`) in the names of the table - so we use dashes (`-`).
+
+#### 2.1.1.1. Table Captions and hold positions
+
+Table captions in `R` are generated with the "table"-generating code. For the above code, we used `knitr::kable` to create the table. It has a `caption` parameter that allows us to create the a caption and the `kableExtra` package gives us tools to hold the position of the table (similar to $\LaTeX$ `\begin{tabular}[h]` command). The below code shows how we'd get a caption for the above table and make it "hover" in place (if possible). *Note*: I will start using `tidyverse` sythax as it is easier to read.
+
+````markdown
+`r ''````{r table-name2}
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2)) %>%
+  knitr::kable(format = "latex", caption = "Model Scores") %>%
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+```
+````
+
+### 2.1.2 Figures
+
+Bookdown reference: https://bookdown.org/yihui/bookdown/figures.html#figures
+
+In `R` referencing figures is similar to referencing tables, but the creation of the names and captions are different. Below we demonstrate creating some code with a figure (with the name `figure-name` for the code block)
+
+````markdown
+`r ''````{r figure-name}
+library(ggplot2)
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2))) %>%
+  ggplot() + geom_bar(aes(x = `model id`, y = score))
+```
+````
+
+We can use the same referencing idea from the tables, i.e. we use `\@ref(fig:figure-name)` to reference the figure (again, note the differences between the $\LaTeX$ approach which would be `\ref{fig:figure-name}`).
+
+
+#### 2.1.2.1. Figure Captions and floating, centering, size, etc
+
+For Figures, we actually specific the additional details that we would deal with in $LaTeX$ figures in the `R` code block information header, for example we use the `fig.cap` parameter to creation a figure caption, `fig.align` to determine alignment of the figure, and we can change the size of the figure with `fig.width` and `fig.height` (and `fig.asp`). The parameter `fig.pos` allows us to define floating in a similar way as the table options.
+
+````markdown
+`r ''````{r figure-name2, fig.cap = "Model Scores", fig.align="center", fig.width=5, fig.asp=1, fig.pos="H"}
+library(ggplot2)
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2))) %>%
+  ggplot() + geom_bar(aes(x = `model id`, y = score))
+```
+````
+
+**Note:** That because `pandoc` (the processor behind `Rmd`) converts things to $LaTeX$ (for pdf), it should be noted that sometimes you will need to use the $LaTeX$ notation to refer to things. For example if we wanted to do some referals in captions we'd need to do the following
+
+````markdown
+`r ''````{r figure-name3, fig.cap = "Model Scores (like Table \\ref{tab:table-name3})", fig.align="center", fig.width=5, fig.asp=1, fig.pos="H"}
+library(ggplot2)
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2))) %>%
+  ggplot() + geom_bar(aes(x = `model id`, y = score))
+```
+````
+
+````markdown
+`r ''````{r table-name3}
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2)) %>%
+  knitr::kable(format = "latex", 
+               caption = "Model Scores (like Figure \\ref{fig:figure-name3})"
+               ) %>%
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+```
+````
+
+### 2.1.3. Non-code based Figures
+
+Suppose you'd like to include a figure already created or saved online. In order to work with it in the Figure referencing, there are a few approaches that can be used.
+
+#### 2.1.3.1. Locally saved images
+
+Inside code chunks (to be able to leverage figure referencing), the following links provide ways to do so (some sizing is different for each):
+
+- https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown. 
+
+````markdown
+`r ''````{r figure-name4, fig.cap = "Go Bears!", fig.align="center", fig.width=5, fig.asp=1, fig.pos="H"}
+knitr::include_graphics("locally/saved/image/file/OSKI.png")
+```
+````
+
+- http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/ 
+
+````markdown
+`r ''````{r figure-name5, fig.cap = "Go Tartans!", fig.align="center", fig.width=5, fig.asp=1, fig.pos="H"}
+img_path <- "locally/saved/image/file/SCOTTY.png"
+include_graphics(img_path)
+```
+````
+
+If you're ok having a image outside a code chunk you can also use the format (which, again, will lose the referencing) then the standard way will work:
+
+`![](local/path/to/file)`
+
+#### 2.1.3.2. Images from the web
+
+Including images are slightly different. Below is one way to get around it
+
+````markdown
+`r ''````{r fig-webimage, fig.cap = "Random image from the web.", echo=F, message=F, warning=F, fig.align="center", out.width = "100%"}
+url <- "https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/percolation1.png"
+library(png)
+library(RCurl)
+url_cont <- getURLContent(url)
+img <- readPNG(url_cont)
+rimg <- as.raster(img) # raster multilayer object
+r <- nrow(rimg) / ncol(rimg) # image ratio
+plot(rimg)
+```
+````
+
+## 2.2 Sections
+
+Sections: https://bookdown.org/yihui/bookdown/cross-references.html
+
+Appendix: https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html#special-headers
+
+## 2.3 Equations, theorems, etc
+
+Equations/ Theorems: https://bookdown.org/yihui/bookdown/markdown-extensions-by-bookdown.html#equations
+
+# 3 Citations
+
+For lots of documents we wish to cite other articles and books in our work. There are multiple options in $LaTeX$ and as such there are multiple options with Rmd files. A good resource is [`bookdown`'s chapter 2.8](https://bookdown.org/yihui/bookdown/citations.html) which discusses a lot of what I will be presenting here.
+
+To get started we have to have a bibliography of items to actually cite!
+
+## 3.1 Linking the bibliography
+
+It is the most common (in the Statistics community) to use `.bib` files to store all references, but there are many more options, and in `.Rmd`s we can also store them in the `yaml` section of the document. 
+
+### 3.1.1 *Special* Bibliography in the `yaml` (aka "inline references")
+
+The "most basic" but least easy to maintain approach to creating a bibliography is to do so in the `yaml` header (and example of which can be seen below). Rmarkdown gives useful help with the approach [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) *need references to all field options*.
+
+````markdown
+---
+title: "All of Statistics"
+author: "Larry Wasserman"
+output: bookdown:pdf_document2
+references:
+- id: wassserman2013
+  title: All of statistics: a concise course in statistical inference
+  author:
+  - family: Wasserman
+    given: Larry
+  publisher: Springer Science & Business Media
+  type: book
+  issued:
+    year: 2013
+- id: lopezpintado2011
+  title: A half-region depth for functional data
+  author:
+  - family: L{\'o}pez-Pintado
+    given: Sara 
+  - family: Romo
+    given: Juan
+  container-title: Computational Statistics \& Data Analysis,
+  volume: 55
+  issue: 4
+  page: 1679-1695
+  year: 2011
+  publisher: Elsevier
+  tyle: article-journal
+---
+````
+
+### 3.1.2 Using external files to store your bibliography
+
+As mentioend above it's pretty common to use an external file to store your bibliography. There are many options of files that you can use (see Rmarkdown's cite for the [list](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)), but we will be showing the `.bib` BibLaTeX approach (which we think is the most common in Statistics).
+
+To link an external style to be used we change the yaml from above to:
+
+````markdown
+---
+title: "A half-region depth for functional data"
+author: "Sara Lopez-Pintado and Juan Romo"
+output: bookdown:pdf_document2
+bibliography: "my_bibliography.bib"
+---
+````
+With the understanding that in the same folder as your `.Rmd` file you also have a 
+`my_bibliography.bib` file, that looks something like:
+
+````markdown
+@book{wasserman2013,
+  title={All of statistics: a concise course in statistical inference},
+  author={Wasserman, Larry},
+  year={2013},
+  publisher={Springer Science \& Business Media}
+}
+
+@article{lopezpintado2011,
+  title={A half-region depth for functional data},
+  author={L{\'o}pez-Pintado, Sara and Romo, Juan},
+  journal={Computational Statistics \& Data Analysis},
+  volume={55},
+  number={4},
+  pages={1679--1695},
+  year={2011},
+  publisher={Elsevier}
+}
+````
+
+You can find more about the potential fields and types of things you can reference
+in lots of places including the [wikipedia page](https://en.wikipedia.org/wiki/BibTeX#/Bibliographic_information_file).
+
+## 3.2 Referencing the biblography
+
+### 3.2.1 Which tool shall we use?
+
+Now that we have a group of documents to reference, how do we reference them? The answer is that we have a lot of options, and that the options mirror our options in $LaTeX$ where we can choose to use the build into `biblatex` referencing or use the `\usepackage{natbib}`.  There are lots of discussion about the differences (one of which on slackexchange can be found [here](https://tex.stackexchange.com/a/25702). To get a clear visual understanding I recommend the detailed commentary on each from overleaf: [biblatex](https://www.overleaf.com/learn/latex/Bibliography_management_with_biblatex), [natbib](https://www.overleaf.com/learn/latex/bibliography_management_with_natbib)). 
+
+
+
+### 3.2.1.1 Introduction to Biblatex (the default)
+
+To use biblatex as your biliography tool, in the `yaml` top of the file we want to change it to:
+
+````markdown
+---
+title: "Distribution-free prediction sets"
+author: "Jing Lei, James Robins, and Larry Wasserman"
+output: 
+  bookdown:pdf_document2:
+    citation_package: biblatex
+bibliography: "our_bibliography.bib"
+---
+````
+
+Provide image and code of basic document (maybe copy overleaf a bit?)
+
+### 3.2.1.2 Introduction to Natbib (my preferred)
+
+````markdown
+---
+title: "The functional mean-shift algorithm for mode hunting and clustering in infinite dimensions"
+author: "Mattia Ciollaro, Christopher Genovese, Jing Lei, and Larry Wasserman"
+output: 
+  bookdown:pdf_document2:
+    citation_package: natbib
+bibliography: "hopefully_a_bibliography.bib"
+---
+````
+
+Provide image and code of basic document (maybe copy overleaf a bit?)
+
+Other references: 
+http://merkel.texture.rocks/Latex/natbib.php
+
+
+### 3.2.1.3 More on Styling
+
+Even after you've decided on `biblatex` vs `natbib` there are still a lot of different styles that can be used. The most basic change is setting a style of the references and table using a `yaml` parameter `biblio-style` demostrated in the following example:
+
+````markdown
+---
+title: "The functional mean-shift algorithm for mode hunting and clustering in infinite dimensions"
+author: "Mattia Ciollaro, Christopher Genovese, Jing Lei, and Larry Wasserman"
+output: 
+  bookdown:pdf_document2:
+    citation_package: natbib
+bibliography: "hopefully_a_bibliography.bib"
+biblio-style: plainnat.bst
+---
+````
+
+The options are presented well in a document from [Reed college](https://www.reed.edu/cis/help/LaTeX/bibtexstyles.html), but note that 
+`natbib` and `biblatex` don't call the styles the same thing. Additionally, if you find that some the `biblio-style` isn't working as expected you can either do:
+
+````markdown
+---
+title: "The functional mean-shift algorithm for mode hunting and clustering in infinite dimensions"
+author: "Mattia Ciollaro, Christopher Genovese, Jing Lei, and Larry Wasserman"
+output: 
+  bookdown:pdf_document2:
+    citation_package: natbib
+bibliography: "hopefully_a_bibliography.bib" 
+header-includes:
+  - \bibliographystyle{plainnat.bst}
+---
+````
+
+where `style` is the style you want to use **OR** you can use a can include a style guide in the form of a `.csl` file. This [github repository](https://github.com/citation-style-language/styles) provides a lot of options to look over. An example is shown below (and you can also store the `.csl` locally). This Rmarkdown page also has more comments: https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html.
+
+````markdown
+---
+title: "The functional mean-shift algorithm for mode hunting and clustering in infinite dimensions"
+author: "Mattia Ciollaro, Christopher Genovese, Jing Lei, and Larry Wasserman"
+output: 
+  bookdown:pdf_document2:
+    citation_package: natbib
+bibliography: "hopefully_a_bibliography.bib" 
+csl: "https://github.com/citation-style-language/styles/blob/master/american-statistical-association.csl"
+---
+````
+
+
+extra Pandoc resource: https://pandoc.org/demo/example19/Extension-citations.html
+
+
+### 3.2.2 Let's ACTUALLY Reference something
+
+To use the reference tools in `bookdown`'s `.Rmd` files we can do 
+
+- `[@wasserman2013]` to get a parenthesis based reference (e.g. natbib: [Wasserman, 2013] and biblatex: [1])
+
+- `@wasserman2013` to get an inline text presentation (e.g. natbib: Wasserman [2013], doesn't work for biblatex)
+
+- `-@wasserman2013` removes author mention (e.g. natbib: [2013], doesn't work for biblatex)
+
+
+# 4. Code Appendix 
+
+If you're still including blocks of code to create figures and tables / do analysis throughout your report but would like them all combined together at the end you can leverage the following approach. This requires doing some things at the beginning and end of your document.
+
+**Step 1: At the start**
+
+Because you're looking for no code / warnings / messages shown through out the document (and only a code appendix at the end), we recommend leveraging `knitr::options_chuck$set` to set a set of options for all code chunks at the beginning of the document. Specifically we recommend the following code block
+
+````markdown
+`r ''````{r, include=FALSE}
+###########################
+# STYLE EDITS: IGNORE THIS
+###########################
+
+knitr::opts_chunk$set(message = FALSE) 
+# ^include this if you don't want markdown to knit messages
+knitr::opts_chunk$set(warning = FALSE) 
+# ^include this if you don't want markdown to knit warnings
+knitr::opts_chunk$set(echo = FALSE) 
+# ^set echo = FALSE to hide code from html output
+```
+````
+
+Note that you can naturally pre-set more code block parameters. 
+
+**Step 2: Combining all code together**
+
+Run the following code at the end of your document
+
+````markdown
+`r ''````{r ref.label=knitr::all_labels(), echo = T, eval = F}
+```
+````
+
+## 4.1 Recommendations
+
+Note that this still allows code to extend off the page. To avoid this make sure you obey and 80 character limit in your code. You can make a line in your Rstudio to show the 80 character line. This can be found from this path:
+
+```
+Rstudio > Preferences > Code > Show Margin 
+```
+
+# A. Actual Appendix 
+
+## A.1 Sweave (the 'original' $\LaTeX$  + `R` combination)
+
+After you create a new Sweave file, you'll see that it looks like a standard $\LaTeX$ (with the `\documentclass{article}` and `\begin{document}`/`\end{document}`).
+
+To add r code inline (in Rmd we do as) we use  `\Sexpr{}` and to start code blocks we start with `<< >>=` and end the block with `@` (in Rmd we used <code>\`\`\`{r}</code> and end the block with <code>\`\`\`</code>).
+
+## A.2 Full list of `R` code block parameters and descriptions 
+
+Reference can be found [here (yihui and knitr)](https://yihui.org/knitr/options/)
+
+## A.3. "Standard" tools that can be used inside `.Rmd` files
+
+- `\pagebreak`
+- equations, etc 
+
+## A.3. Making a $\LaTeX$ template for your Rmd
+
+Resource from [bookdown](https://bookdown.org/yihui/rmarkdown-cookbook/latex-template.html)
+
+

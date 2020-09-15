@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Making Professional RMD files (for PDF production) | Benjamin LeRoy&#39;s Blog</title>
+    
+    <link rel="stylesheet" href="../../../../../css/fonts.css" />
+    	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+		$(function(){
+			var includes = $('[data-include]');
+			jQuery.each(includes, function(){
+				var file = 'pages/' + $(this).data('include') + '.html';
+				$(this).load(file);
+			});
+		});
+	</script>
+
+	<script>
+		$(window).load(function() {
+		$("#container1").twentytwenty();
+		});
+	</script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="https://benjaminleroy.github.io/css/main.css">
+
+
+
+
+
+	
+
+
+
+
+    <link rel="stylesheet" href="../../../../../css/style.css" />
+    
+
+
+  
+ 	<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light" id="mainNav">
+		<a class="navbar-brand" href="https://benjaminleroy.github.io/index.html"> Benjamin LeRoy</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+		aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#about">About</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#research">Research</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#teaching">Teaching</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" href="https://benjaminleroy.github.io/index.html#cv">Resume/CV</a>
+				</li>
+				<li class="nav-item dropdown">
+					  <a href = "#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
+					  <div class="dropdown-menu dropdown-menu-right bg-light", style = "border-style:none">
+					    
+					    <a class="dropdown-item nav-link" href="../../../../../index.html">&ensp;Blog Home</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../post/index.html">&ensp;Posts</a>
+              
+					    <a class="dropdown-item nav-link" href="../../../../../categories/index.html">&ensp;Categories</a>
+              
+						</li>
+					</div>
+					</li>
+				</ul>
+			</div>
+	</nav>
+	
+
+	</head>
+	<body>
+	<div id = "container">
+
+<div class="article-meta">
+<h1><span class="title">Making Professional RMD files (for PDF production)</span></h1>
+
+<h2 class="date">2020/09/13</h2>
+</div>
+
+<main>
+
+
+
+<div id="introduction" class="section level1">
+<h1>1. Introduction</h1>
+<p>In the past 4 years of my PhD I’ve TAed for multiple classes in our Masters in Statistical Practice program, a professional masters program - aim at students interested in learning more applied statistics to enter into the professional workforce. This program help students develop their capabilities in technical report writing. I decided to write this demo in making professional <code>Rmd</code> files as we’ve constantly been needing to give students the templates to get the desired outcomes.</p>
+<p>In general, thanks to Yihui Xue at Rstudio, <code>Rmd</code> files have improved to do most of what is expected from <span class="math inline">\(\LaTeX\)</span> files. It should be noted that the Sweave (<code>Rnw</code>) files have long been able combine <code>R</code> code with <span class="math inline">\(\LaTeX\)</span> more directly.</p>
+<p>A lot of the specialization of the <code>Rmd</code> file will occur in the <code>yaml</code> section of the document, which is the head of the document that might original look like:</p>
+<pre><code>---
+title: &quot;Mathematics and the picturing of data&quot;
+author: &quot;John Tukey&quot;
+output: pdf_document
+---</code></pre>
+<p>Additionally, we will be demonstrating tools associated with pdf output through the <a href="https://bookdown.org/yihui/bookdown/"><code>bookdown</code></a> which extends off the standard <code>rmarkdown</code> pdf output.</p>
+</div>
+<div id="references" class="section level1">
+<h1>2 References</h1>
+<p>A lot of the time in professional documents, we want to be able to be able to clearly <strong>reference</strong> which bit of additional information we are talking about. In our context this might relate to 1) Figures, 2) Tables, 3) Sections, 4) equations, theorems, etc. <code>bookdown</code>’s pdf_document2 provides us with lots of tools to correctly reference the items in a way we’d expect (if we’re used to <span class="math inline">\(LaTeX\)</span>).</p>
+<p><strong>Getting started</strong>: For these referencing we need to use <code>bookdown</code> as such our <code>yaml</code> section of the <code>.Rmd</code> should be changed to something like</p>
+<pre><code>---
+title: &quot;Algorithmic Learning in a Random World&quot;
+author: &quot;Vladimir Vovk, Alex Gammerman, and Glenn Shafer&quot;
+output: bookdown:pdf_document2
+---</code></pre>
+<div id="tables-and-figures-references" class="section level2">
+<h2>2.1 Tables and Figures references</h2>
+<p>If you’re using Rmd you’re probably using <code>R</code> to produce tables and figures. I highly recommend always “linking” to the plots/tables you produce by “referencing” them directly in your text (e.g. “Figure 6 provides…” or “… (as seen in Figure 6)”). And then the next step is to have smart referencing that gives the user a way to quickly jump to the figure / table and also not have to keep track of the number yourself.</p>
+<p>I also recommend making sure your captions of all your figures and tables can stand on their own (aka make sense even if I take them out of the document they are in).</p>
+<div id="tables" class="section level3">
+<h3>2.1.1 Tables</h3>
+<p>You’ll find that packages <code>knitr</code> (and <code>knitrExtra</code>) or <code>xtable</code> are useful to help make presentable tables (especially to pdf). Moreover <code>broom</code> can help compress lots of models in <code>R</code> into data frames that can then be passed into these functions (ex. <code>broom::tidy</code>). And the <code>pander</code> package also can convert summary data of models pretty well.</p>
+<p>To reference a table we need a few things. First we need to have an <code>R</code> block with a name. In the following example we name our code block “table-name” (and the code in the box would produces a basic table). Section A.2 provides more details on parameters that can be used in <code>R</code> code blocks</p>
+<pre>
+\`\`\`{r table-name}
+knitr::kable(
+  data.frame(`model id` = 1:5,
+             `score` = c(1,1.1,3,.5,2)))
+\`\`\`
+</pre>
+<p>Now that we have a table with a name we can use <code>\@ref(tab:table-name)</code> to reference the table (note the differences between the <span class="math inline">\(\LaTeX\)</span> approach which would be <code>\ref{tab:table-name}</code>). Note that the underlying <code>pandoc</code> and <code>bookdown</code> code knows that this is a table, so it will index the table we made above differently than figures we might also have. Additionally note that <code>bookdown::pdf_document2</code> won’t allow for underscores (<code>_</code>) in the names of the table - so we use dashes (<code>-</code>).</p>
+<div id="table-captions-and-hold-positions" class="section level4">
+<h4>2.1.1.1. Table Captions and hold positions</h4>
+<p>Table captions in <code>R</code> are generated with the “table”-generating code. For the above code, we used <code>knitr::kable</code> to create the table. It has a <code>caption</code> parameter that allows us to create the a caption and the <code>kableExtra</code> package gives us tools to hold the position of the table (similar to <span class="math inline">\(\LaTeX\)</span> <code>\begin{tabular}[h]</code> command). The below code shows how we’d get a caption for the above table and make it “hover” in place (if possible). <em>Note</em>: I will start using <code>tidyverse</code> sythax as it is easier to read.</p>
+<pre>
+\`\`\`{r table-name2}
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2)) %>%
+  knitr::kable(format = "latex", caption = "Model Scores") %>%
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+\`\`\`
+</pre>
+</div>
+</div>
+<div id="figures" class="section level3">
+<h3>2.1.2 Figures</h3>
+<p>In <code>R</code> referencing figures is similar to referencing tables, but the creation of the names and captions are different. Below we demonstrate creating some code with a figure (with the name <code>figure-name</code> for the code block)</p>
+<pre>
+\`\`\`{r figure-name}
+library(ggplot2)
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2))) %>%
+  ggplot() + geom_bar(aes(x = `model id`, y = score))
+\`\`\`
+</pre>
+<p>We can use the same referencing idea from the tables, i.e. we use <code>\@ref(fig:figure-name)</code> to reference the figure (again, note the differences between the <span class="math inline">\(\LaTeX\)</span> approach which would be <code>\ref{fig:figure-name}</code>).</p>
+<div id="figure-captions-and-floating-centering-size-etc" class="section level4">
+<h4>2.1.2.1. Figure Captions and floating, centering, size, etc</h4>
+<p>For Figures, we actually specific the additional details that we would deal with in <span class="math inline">\(LaTeX\)</span> figures in the <code>R</code> code block information header, for example we use the <code>fig.cap</code> parameter to creation a figure caption, <code>fig.align</code> to determine alignment of the figure, and we can change the size of the figure with <code>fig.width</code> and <code>fig.height</code>. The parameter <code>fig.pos</code> allows us to define floating in a similar way as the table options.</p>
+<pre>
+\`\`\`{r figure-name2, fig.cap = "Model Scores", fig.align="center", fig.width=80%, fig.pos="H"}
+library(ggplot2)
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2))) %>%
+  ggplot() + geom_bar(aes(x = `model id`, y = score))
+\`\`\`
+</pre>
+<p><strong>Note:</strong> That because <code>pandoc</code> (the processor behind <code>Rmd</code>) converts things to <span class="math inline">\(LaTeX\)</span> (for pdf), it should be noted that sometimes you will need to use the <span class="math inline">\(LaTeX\)</span> notation to refer to things. For example if we wanted to do some referals in captions we’d need to do the following</p>
+<pre>
+\`\`\`{r figure-name3, fig.cap = "Model Scores (like Table \\ref{tab:table-name3})", fig.align="center", fig.width=80%, fig.pos="H"}
+library(ggplot2)
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2))) %>%
+  ggplot() + geom_bar(aes(x = `model id`, y = score))
+\`\`\`
+
+\`\`\`{r table-name3}
+data.frame(`model id` = 1:5,
+           `score` = c(1,1.1,3,.5,2)) %>%
+  knitr::kable(format = "latex", 
+               caption = "Model Scores (like Figure \\ref{fig:figure-name3})"
+               ) %>%
+  kableExtra::kable_styling(latex_options = "HOLD_position")
+\`\`\`
+</pre>
+</div>
+</div>
+<div id="non-code-based-figures" class="section level3">
+<h3>2.1.3. Non-code based Figures</h3>
+<p>Suppose you’d like to include a figure already created or saved online. In order to work with it in the Figure referencing, there are a few approaches that can be used.</p>
+<div id="locally-saved-images" class="section level4">
+<h4>2.1.3.1. Locally saved images</h4>
+<p>Inside code chunks (to be able to leverage figure referencing), the following links provide ways to do so (some sizing is different for each):</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown" class="uri">https://stackoverflow.com/questions/46901438/bringing-an-image-into-rmarkdown</a>.</li>
+</ul>
+<pre>
+\`\`\`{r figure-name4, fig.cap = "Go Bears!", fig.align="center", fig.width=80%, fig.pos="H"}
+knitr::include_graphics("locally/saved/image/file/OSKI.png")
+\`\`\`
+</pre>
+<ul>
+<li><a href="http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/" class="uri">http://zevross.com/blog/2017/06/19/tips-and-tricks-for-working-with-images-and-figures-in-r-markdown-documents/</a></li>
+</ul>
+<pre>
+\`\`\`{r figure-name5, fig.cap = "Go Tartans!", fig.align="center", fig.width=80%, fig.pos="H"}
+img_path <- "locally/saved/image/file/SCOTTY.png"
+include_graphics(img_path)
+\`\`\`
+</pre>
+<p>If you’re ok having a image outside a code chunk you can also use the format (which, again, will lose the referencing) then the standard way will work:</p>
+<p><code>![](local/path/to/file)</code></p>
+</div>
+<div id="images-from-the-web" class="section level4">
+<h4>2.1.3.2. Images from the web</h4>
+<p>Including images are slightly different. Below is one way to get around it</p>
+<pre>
+\`\`\`{r fig-webimage, fig.cap = "Random image from the web.", echo=F, message=F, warning=F, fig.align="center", out.width = "100%"}
+url <- "https://raw.githubusercontent.com/benjaminleroy/36-350-summer-data/master/Week5/percolation1.png"
+library(png)
+library(RCurl)
+url_cont <- getURLContent(url)
+img <- readPNG(url_cont)
+rimg <- as.raster(img) # raster multilayer object
+r <- nrow(rimg) / ncol(rimg) # image ratio
+plot(rimg)
+\`\`\`
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="citations" class="section level1">
+<h1>3 Citations</h1>
+<p>For lots of documents we wish to cite other articles and books in our work. There are multiple options in <span class="math inline">\(LaTeX\)</span> and as such there are multiple options with Rmd files. A good resource is <a href="https://bookdown.org/yihui/bookdown/citations.html"><code>bookdown</code>’s chapter 2.8</a> which discusses a lot of what I will be presenting here.</p>
+<p>The “first” option is where to define the references. It is the most common (in the Statistics community) to use <code>.bib</code> files to store all references, but there are many more options, and in <code>.Rmd</code>s we can also store them in the <code>yaml</code> section of the document.</p>
+<div id="special-bibliography-in-the-yaml-aka-inline-references" class="section level2">
+<h2>3.0 <em>Special</em> Bibliography in the <code>yaml</code> (aka “inline references”)</h2>
+<p>The “most basic” but least easy to maintain approach to creating a bibliography is to do so in the <code>yaml</code> header (and example of which can be seen below). Rmarkdown gives useful help with the approach <a href="https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html">here</a> <em>need references to all field options</em>.</p>
+<pre><code>---
+title: &quot;All of Statistics&quot;
+author: &quot;Larry Wasserman&quot;
+output: bookdown:pdf_document2
+references:
+- id: wassserman2013
+  title: All of statistics: a concise course in statistical inference
+  author:
+  - family: Wasserman
+    given: Larry
+  publisher: Springer Science &amp; Business Media
+  type: book
+  issued:
+    year: 2013
+- id: lopezpintado2011
+  title: A half-region depth for functional data
+  author:
+  - family: L{\&#39;o}pez-Pintado
+    given: Sara 
+  - family: Romo
+    given: Juan
+  container-title: Computational Statistics \&amp; Data Analysis,
+  volume: 55
+  issue: 4
+  page: 1679-1695
+  year: 2011
+  publisher: Elsevier
+  tyle: article-journal
+---</code></pre>
+</div>
+<div id="using-external-files-to-store-your-bibliography" class="section level2">
+<h2>3.1 Using external files to store your bibliography</h2>
+<p>get all biblio-style</p>
+<p>options for .bib entry values
+<a href="https://en.wikipedia.org/wiki/BibTeX" class="uri">https://en.wikipedia.org/wiki/BibTeX</a></p>
+<p>Options:
+.bib file or not</p>
+<p>The standard approach is to include</p>
+<p>natbib vs biblatex</p>
+<p><span class="citation">(<span class="citeproc-not-found" data-reference-id="parker2003"><strong>???</strong></span>)</span> vs <span class="citation">(<span class="citeproc-not-found" data-reference-id="parker2003"><strong>???</strong></span>)</span></p>
+<p>biblio-style: plain (with natbib) - <a href="https://www.overleaf.com/learn/latex/bibtex_bibliography_styles">options</a>
+- looks like only some work - and if expected just brackets for everything (vs inline text, then need to do [])
+- if they don’t work try in the yaml (works with biblatex):</p>
+<pre><code>header-includes:
+  - \bibliographystyle{style}
+</code></pre>
+<p><a href="https://pandoc.org/demo/example19/Extension-citations.html" class="uri">https://pandoc.org/demo/example19/Extension-citations.html</a></p>
+<p>including items not cited with (or all <code>@*</code>)</p>
+<pre><code>nocite: | 
+  @item1, @item2</code></pre>
+</div>
+<div id="code-appendix" class="section level2">
+<h2>Code Appendix</h2>
+<p>If you’re still including blocks of code to create figures and tables / do analysis throughout your report but would like them all combined together at the end you can leverage the following approach. This requires doing some things at the beginning and end of your document.</p>
+<p><strong>Step 1: At the start</strong></p>
+<p>Because you’re looking for no code / warnings / messages shown through out the document (and only a code appendix at the end), we recommend leveraging <code>knitr::options_chuck$set</code> to set a set of options for all code chunks at the beginning of the document. Specifically we recommend the following code block</p>
+<pre>
+\`\`\`{r, include=FALSE}
+###########################
+# STYLE EDITS: IGNORE THIS
+###########################
+
+knitr::opts_chunk$set(message = FALSE) 
+# ^include this if you don't want markdown to knit messages
+knitr::opts_chunk$set(warning = FALSE) 
+# ^include this if you don't want markdown to knit warnings
+knitr::opts_chunk$set(echo = FALSE) 
+# ^set echo = FALSE to hide code from html output
+\`\`\`
+</pre>
+<p>Note that you can naturally pre-set more code block parameters.</p>
+<p><strong>Step 2: Combining all code together</strong></p>
+<p><em>Notice how the appendix below gathers all code blocks above and nicely pastes them together.</em></p>
+<pre>
+\`\`\`{r ref.label=knitr::all_labels(), echo = T, eval = F}
+\`\`\`
+</pre>
+<div id="recommendations" class="section level3">
+<h3>Recommendations</h3>
+<p>Note that this still allows code to extend off the page. To avoid this make sure you obey and 80 character limit in your code. You can make a line in your Rstudio to show the 80 character line. This can be found from this path:</p>
+<pre><code>Rstudio &gt; Preferences &gt; Code &gt; Show Margin </code></pre>
+</div>
+</div>
+</div>
+<div id="a.-actual-appendix" class="section level1">
+<h1>A. Actual Appendix</h1>
+<div id="a.1-sweave-the-original-latex-r-combindation" class="section level2">
+<h2>A.1 Sweave (the ‘original’ <span class="math inline">\(\LaTeX\)</span> + <code>R</code> combindation)</h2>
+<p>After you create a new Sweave file, you’ll see that it looks like a standard <span class="math inline">\(\LaTeX\)</span> (with the <code>\documentclass{article}</code> and <code>\begin{document}</code>/<code>\end{document}</code>).</p>
+<p>To add r code inline (in Rmd we do as <code>`r expression`</code>) we use </code><code>\Sexpr{}</code></code> and to start code blocks we start with <code><code>&lt;&lt; &gt;&gt;=</code></code> and end the block with <code><code>@</code></code> (in Rmd we used <code>```{r}</code> and end the block with <code>```</code>).</p>
+</div>
+<div id="a.2-full-list-of-r-code-block-parameters-and-descriptions" class="section level2">
+<h2>A.2 Full list of <code>R</code> code block parameters and descriptions</h2>
+<p><a href="https://yihui.org/knitr/options/" class="uri">https://yihui.org/knitr/options/</a></p>
+</div>
+<div id="a.3.-standard-tools-that-can-be-used-inside-.rmd-files" class="section level2">
+<h2>A.3. “Standard” tools that can be used inside <code>.Rmd</code> files</h2>
+<ul>
+<li><code>\pagebreak</code></li>
+</ul>
+</div>
+</div>
+
+</main>
+
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js">
+  	$(window).resize(function(){
+
+	    $('.container').css({
+	        position:'absolute',
+	        left: ($(window).width() - $('body').outerWidth())/2,
+	        top: ($(window).height() - $('body').outerHeight())/2
+	    });
+
+	});
+
+	
+	$(window).resize();
+  
+</script>
+
+
+  <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "stat-cmu-edu-bpleroy" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  
+  </footer>
+  </body>
+</html>
+

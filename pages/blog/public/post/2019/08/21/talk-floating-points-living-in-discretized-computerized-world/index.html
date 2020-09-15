@@ -167,7 +167,7 @@ x_true &lt;- solve(a = A,b = b); x_true</code></pre>
 <pre><code>## [1]  1 -1</code></pre>
 <p>That is, we know the true solution is <span class="math inline">\(\begin{bmatrix} 1 \\ -1 \end{bmatrix}\)</span>.</p>
 <hr />
-<p>So you decide that you want your answer (from your function) to be close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e.
+<p>So you decide that you want your answer (from your function) to be close to solving the equation, that is <span class="math inline">\(A\hat{x} - b\)</span> is really close to zero (say <span class="math inline">\(l_2\)</span> norm <code>&lt; 1e-5</code>). Note that, since we know the true solution (<span class="math inline">\(x\)</span>), we will also be checking the <strong>relative error</strong> of the <span class="math inline">\(\hat{x}\)</span> (your answer from your function), i.e. 
 <span class="math display">\[|x-\hat{x}|/|x|\]</span></p>
 <p>The first function you write returns the following value for <span class="math inline">\(\hat{x}_1\)</span>:</p>
 <pre class="r"><code>x_hat1 &lt;- c(.999,-.999)
@@ -234,7 +234,7 @@ identical, etc
 ## + 0.2000000000000000111022302462515654042363166809082031250
 ## ------------------------------------------------------------
 ##   0.3000000000000000444089209850062616169452667236328125000</code></pre>
-<p>vs. <span class="math inline">\(0.3\)</span>:</p>
+<p>vs. <span class="math inline">\(0.3\)</span>:</p>
 <pre><code>##   0.2999999999999999888977697537484345957636833190917968750</code></pre>
 <p><strong>why is “<span class="math inline">\(.3\)</span>” is printed?</strong></p>
 <pre class="r"><code>#?print.default</code></pre>
@@ -242,7 +242,7 @@ identical, etc
 <pre class="r"><code>getOption(&quot;digits&quot;) #7</code></pre>
 <pre class="r"><code>signif(.1 + .2, digits = 7)</code></pre>
 <pre><code>## [1] 0.3</code></pre>
-<p>And above we were showing 55 significant digits is base 10… Technically we just used <code>sprintf(&quot;%1.55f&quot;, .1)</code> (see Rmd file).</p>
+<p>And above we were showing 55 significant digits is base 10… Technically we just used <code>sprintf("%1.55f", .1)</code> (see Rmd file).</p>
 </div>
 <div id="ieee-754-usage-in-r-finite-storage" class="section level1">
 <h1>IEEE 754 usage in R (finite storage)</h1>
@@ -307,7 +307,7 @@ frac2bin &lt;- function(x){
 <div id="aside-what-about-the-integers" class="section level1">
 <h1>Aside: What about the integers?</h1>
 <ul>
-<li>“An numeric constant immediately followed by <code>L</code> is regarded as an integer number when possible” ~ <a href="https://www.rdocumentation.org/packages/base/versions/3.6.1/topics/NumericConstants"><code>help(NumericConstants)</code></a>.</li>
+<li><p>“An numeric constant immediately followed by <code>L</code> is regarded as an integer number when possible” ~ <a href="https://www.rdocumentation.org/packages/base/versions/3.6.1/topics/NumericConstants"><code>help(NumericConstants)</code></a>.</p></li>
 <li><p>But at the same time - we actually don’t store it as an integer (we still store it as a float – “we” <code>==</code> <code>R</code>).</p></li>
 <li><p><code>1L</code> vs <code>1</code></p></li>
 </ul>
@@ -503,8 +503,8 @@ if the small correction can be computed with many correct significant figures. N
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p><a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p><a href="https://amstat.tandfonline.com/doi/abs/10.1080/00031305.1983.10483115">Algorithms for Computing the Sample Variance: Analysis and Recommendations</a>)<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Chambers, John M., and Trevor J. Hastie, eds. Statistical models in S. Vol. 251. Pacific Grove, CA: Wadsworth &amp; Brooks/Cole Advanced Books &amp; Software, 1992.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
